@@ -1,7 +1,6 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-*$py.class
 
 # C extensions
 *.so
@@ -14,7 +13,6 @@ develop-eggs/
 dist/
 downloads/
 eggs/
-.eggs/
 lib/
 lib64/
 parts/
@@ -38,12 +36,9 @@ pip-delete-this-directory.txt
 htmlcov/
 .tox/
 .coverage
-.coverage.*
 .cache
 nosetests.xml
 coverage.xml
-*,cover
-.hypothesis/
 
 # Translations
 *.mo
@@ -51,39 +46,120 @@ coverage.xml
 
 # Django stuff:
 *.log
-local_settings.py
-
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
+*.bak
 
 # Sphinx documentation
 docs/_build/
 
 # PyBuilder
 target/
+sessions/
+databases/
+errors/
 
-# IPython Notebook
-.ipynb_checkpoints
 
-# pyenv
-.python-version
+# =========================
+# Operating System Files
+# =========================
 
-# celery beat schedule file
-celerybeat-schedule
+# OSX
+# =========================
 
-# dotenv
-.env
+.DS_Store
+.AppleDouble
+.LSOverride
 
-# virtualenv
-venv/
-ENV/
+# Thumbnails
+._*
 
-# Spyder project settings
-.spyderproject
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
 
-# Rope project settings
-.ropeproject
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+# =========================
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+/test.txt
+/.idea/workspace.xml
+/.idea/encodings.xml
+/.idea/gdms.iml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/vcs.xml
+/private/mysql.key
+/private/*.bak
+/private/*.ini
+
+workspace.xml
+libraries
+encodings.xml
+misc.xml
+modules.xml
+nds.iml
+vcs.xml
+/.idea/workspace.xml
+/.idea/.name
+/.idea/encodings.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/nds.iml
+/.idea/vcs.xml
+.idea
+.idea
+
+.*
+*.pyc
+*.pyo
+*~
+#*
+*.1
+*.bak
+*.bak2
+*.svn
+*.w2p
+*.class
+*.rej
+*.orig
+Thumbs.db
+.DS_Store
+
+
+/databases/*
+/sessions/*
+/errors/*
+/cache/*
+/uploads/*
+/*.py[oc]
+/static/temp
+/progress.log
+/static/epydoc
+/static/sphinx
+/cron/cron.master
+/private/*
+
+
