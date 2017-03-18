@@ -26,3 +26,11 @@ db.define_table('activity',
                 Field('tags', 'list:string'),
                 Field('numratings', 'integer', default=0)
                 )
+
+db.define_table('user_rating',
+                Field('activityid', db.activity, writable=False ),
+                Field('auth_userid', 'reference auth_user', writable=False, readable=False),
+                Field('rating', 'decimal(6,2)', default=5, writable=False, label='We feel'),
+                Field('impact', 'decimal(6,2)', default=5, writable=False, label='Importance'),
+                Field('reject', 'boolean', default=False),
+                Field('createdate', 'datetime', writable=False, label='Date Created', default=request.utcnow))
