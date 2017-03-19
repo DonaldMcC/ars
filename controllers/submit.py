@@ -1,5 +1,5 @@
 @auth.requires_login()
-def new_question():
+def index():
     # This allows creation of questions, actions and issues so the first
     # thing to do is establish whether question or action being submitted the
     # default is question unless action or issue specified and
@@ -15,14 +15,13 @@ def new_question():
     db.activity.status.requires = IS_IN_SET(['Draft', 'Complete'])
 
     heading = 'Submit Activity'
-    labels = {'questiontext': 'Question'}
-    fields = ['questiontext', 'projid', 'eventid', 'resolvemethod', 'duedate', 'answer_group', 'category',
-                  'activescope', 'continent', 'country', 'subdivision', 'coord', 'status', 'answers']
+    fields = ['activity', 'details', 'forename', 'surname', 'organisation', 'orgtype', 'town',
+                 'continent', 'country', 'subdivision', 'coord', 'status', 'category']
 
     if activityid:
-        form = SQLFORM(db.activity, record, fields=fields, labels=labels, deletable=True)
+        form = SQLFORM(db.activity, record, fields=fields, deletable=True)
     else:
-        form = SQLFORM(db.activity, fields=fields, labels=labels)
+        form = SQLFORM(db.activity, fields=fields)
 
     form.element(_type='submit')['_class'] = "btn btn-success"
 
