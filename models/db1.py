@@ -1,4 +1,37 @@
 
+db.define_table('website_parameters',
+                Field('website_name', label=T('Website name'), comment=T('Not currently used')),
+                Field('website_init', 'boolean', default=False, label=T('Website Setup'),
+                      comment=T('Set to True once initialised')),
+                Field('website_title', label=T('Website title'), comment=T('Displayed in title if not blank')),
+                Field('website_subtitle', label=T('Website subtitle'), comment=T('Not used')),
+                Field('website_url', label=T('Url'), comment=T('URL of the website used for emailing external links')),
+                Field('longdesc', 'text', label=T('Long Description'), comment=T('Subject of the website')),
+                Field('shortdesc', label=T('Url'), comment=T('Short Description of the website')),
+                Field('level1desc', label=T('Level1Desc'), comment=T('First Location Level')),
+                Field('level2desc', label=T('Level2Desc'), comment=T('Second Location Level')),
+                Field('level3desc', label=T('Level3Desc'), comment=T('Third Location Level')),
+                Field('copyright', label=T('Copyright'), default='Has probably been eliminated on more advanced planets'),
+                Field('del_answers',  'boolean', default=False, label=T('Delete User Answer on Resolution - not used')),
+                Field('force_language', label=T('Force a language (en, it, es, fr, ...)')),
+                Field('google_analytics_id', label=T('Google analytics id'),
+                      comment=T('Your Google Analytics account ID')),
+                Field('seo_website_title', label=T('SEO : Website title'),
+                      comment=T('Displayed in <title> tag of the HTML source code')),
+                Field('seo_meta_author', label=T('SEO : Meta "author"'),
+                      comment=T('Displayed in <meta author> tag of the HTML source code')),
+                Field('seo_meta_description', label=T('SEO : Meta "description"'),
+                      comment=T('Displayed in <meta description> tag of the HTML source code')),
+                Field('seo_meta_keywords', label=T('SEO : Meta "keywords"'),
+                      comment=T('Displayed in <meta keywords> tag of the HTML source code')),
+                Field('seo_meta_generator', label=T('SEO : Meta "generator"'),
+                      comment=T('Displayed in <meta generator> tag of the HTML source code')),
+                Field('quests_per_page', 'integer', default=20, label=T('Questions Per Page'),
+                      comment=T('Port of the mailserver (used to send email in forms)')),
+                Field('comments_per_page', 'integer', default=20, label=T('Comments Per Page'),
+                      comment=T('Port of the mailserver (used to send email in forms)')),
+                Field('default_resolve_name', 'string', default='Standard', label='Default Resolve Name'))
+
 
 db.define_table('activity',
                 Field('activity', 'string', label='Activity'),
@@ -34,3 +67,10 @@ db.define_table('user_rating',
                 Field('impact', 'decimal(6,2)', default=5, writable=False, label='Importance'),
                 Field('reject', 'boolean', default=False),
                 Field('createdate', 'datetime', writable=False, label='Date Created', default=request.utcnow))
+                
+                
+if not iniit:
+    if db(db.continent.continent_name == "Unspecified").isempty():
+        contid = db.continent.insert(continent_name="Unspecified")
+    if db(db.resolve.resolve_name == "Standard").isempty():
+        resolveid = db.resolve.insert(resolve_name="Standard")

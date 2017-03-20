@@ -28,9 +28,10 @@ if not request.env.web2py_runtime_gae:
     # ---------------------------------------------------------------------
     # if NOT running on Google App Engine use SQLite or other DB
     # ---------------------------------------------------------------------
-    db = DAL(myconf.get('db.uri'),
-             pool_size=myconf.get('db.pool_size'),
-             migrate_enabled=myconf.get('db.migrate'),
+    db = DAL(myconf.take('db.uri'),
+             pool_size=myconf.take('db.pool_size', cast=int),
+             migrate=myconf.take('db.migrate', cast=int),
+             lazy_tables=myconf.take('db.lazy_tables', cast=int),
              check_reserved=['all'])
 else:
     # ---------------------------------------------------------------------
@@ -82,8 +83,16 @@ response.form_label_separator = myconf.get('forms.separator') or ''
 
 from gluon.tools import Auth, Service, PluginManager
 
+if login == 'socialauth':
+    from plugin_social_auth.utils import SocialAuth
+    auth = SocialAuth(db)
+    username_field = True  # This is required
+else:
+    auth = Auth(db, hmac_key=Auth.get_or_create_key())
+    username_field = False  # can set to true if you want login by username rather than email
+
 # host names must be a list of allowed host names (glob syntax allowed)
-auth = Auth(db, host_names=myconf.get('host.names'))
+#auth = Auth(db, host_names=myconf.get('host.names'))
 service = Service()
 plugins = PluginManager()
 
@@ -96,11 +105,35 @@ auth.define_tables(username=False, signature=False)
 # configure email
 # -------------------------------------------------------------------------
 mail = auth.settings.mailer
-mail.settings.server = 'logging' if request.is_local else myconf.get('smtp.server')
-mail.settings.sender = myconf.get('smtp.sender')
-mail.settings.login = myconf.get('smtp.login')
+#mail.settings.server = 'logging' if request.is_local else myconf.get('smtp.server')
+#mail.settings.sender = myconf.get('smtp.sender')
+#mail.settings.login = myconf.get('smtp.login')
 mail.settings.tls = myconf.get('smtp.tls') or False
 mail.settings.ssl = myconf.get('smtp.ssl') or False
+
+
+
+mail.settings.server = myconf.take('smtp.server')
+mail.settings.sender = myconf.take('smtp.sender')
+mail.settings.login = myconf.take('smtp.login')
+
+if debug:
+    mail.settings.server = 'logging:emailout.html'
+
+# -------------------------------------------------------------------------
+# configure other settings
+# -------------------------------------------------------------------------
+debug = myconf.take('developer.debug', cast=int)
+backend = myconf.take('search.backend')
+response.formstyle = myconf.take('forms.formstyle')  # or 'bootstrap3_stacked'
+response.form_label_separator = myconf.take('forms.separator')
+login = myconf.take('login.logon_methods')
+requires_login = myconf.take('site.require_login', cast=int)
+dbtype = myconf.take('db.dbtype')
+hostadds = myconf.take('google.hostadds', cast=int)
+ad_client = myconf.take('google.ad_client')
+ad_slot = myconf.take('google.ad_slot', cast=int)
+init = myconf.take('developer.initalised', cast=int)
 
 # -------------------------------------------------------------------------
 # configure auth policy
