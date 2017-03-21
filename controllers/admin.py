@@ -36,7 +36,8 @@
 
     """
 
-from ndsfunctions import getindex, score_question, email_setup
+
+from arsfunctions import email_setup, getindex
 
 @auth.requires_membership('manager')
 def emailtest():
@@ -313,22 +314,14 @@ def datasetup():
         db.category.insert(cat_desc="Unspecified",
                            categorydesc="Catchall category")
 
-    if db(db.initialised.id > 0).isempty():
-        db.initialised.insert(website_init=True)
-        global INIT
-        INIT = db(db.initialised).select().first()
-
     if db(db.website_parameters.id > 0).isempty():
-        db.website_parameters.insert(website_name='NDS Test System', website_title='Net Decision Making',
+        db.website_parameters.insert(website_name='ARS Test System', website_title='Activity Recording System',
                                      website_url='http://127.0.0.1:8081',
-                                     longdesc='This is a test version of networked decision making',
+                                     longdesc='This is a test version of activity recording',
                                      shortdesc='Test net decision making',
                                      level1desc='Contnent', level2desc='Countrie', level3desc='Area',
                                      seo_meta_author='Russ King',
-                                     seo_meta_description='Platform for group decision making without meetings')
-
-    # setup the basic scopes that are to be in use and populate some default
-    # continents, countrys and regions
+                                     seo_meta_description='Platform for recording activity')
 
     if db(db.system_scope.description == "1 Global").isempty():
         db.system_scope.insert(description="1 Global")
@@ -345,18 +338,8 @@ def datasetup():
     if db(db.country.country_name == "Unspecified").isempty():
         db.country.insert(country_name="Unspecified", continent="Unspecified")
 
-    if db(db.locn.location_name == "Unspecified").isempty():
-        locid = db.locn.insert(location_name="Unspecified", locn_shared=True,
-                               description='The unspecified location is used as a default for all events that are not'
-                                           'allocated a specific location')
-    if db(db.evt.evt_name == "Unspecified").isempty():
-        locid = db(db.locn.location_name == 'Unspecified').select(db.locn.id).first().id
-        evid = db.evt.insert(evt_name="Unspecified", locationid=locid, evt_shared=True,
-                             startdatetime=request.utcnow - datetime.timedelta(days=10),
-                             enddatetime=request.utcnow - datetime.timedelta(days=9))
-
-    email_setup()
-    schedule_email_runs()
+    # email_setup()
+    # schedule_email_runs()
 
     return locals()
 
@@ -371,13 +354,9 @@ def init():
     # 4  Provide details of how to admin the system
     # 5  Add a default category
 
-    if useappconfig:
-        login = myconf.take('login.logon_methods')
+    login = myconf.take('login.logon_methods')
     if db(db.website_parameters.id > 0).isempty():
-        if useappconfig:
-            google_analytics_id = myconf.take('google.analytics_id')
-        else:
-            google_analytics_id = None
+        google_analytics_id = myconf.take('google.analytics_id')
         db.website_parameters.insert(shortdesc="This system should be used for any topic",
                                      longdesc='This system should be used for questions on any topic that '
                                               'you consider important to human progress',
@@ -386,17 +365,6 @@ def init():
     # Need to also ensure unspecified continent,region and country are present
     # think values will now be mandatory for new user registration
 
-    #   Populate the scoring table
-    scores = db(db.scoring.id > 0).select().first()
-
-    if scores is None:
-        for k in xrange(1, 30):
-            db.scoring.insert(scoring_level=k, correct=k * 10, wrong=k, rightchallenge=k * 10,
-                              wrongchallenge=k * -10, rightaction=k * 5, wrongaction=k,
-                              nextlevel=k * k * 20, submitter=k * 10)
-
-        db.commit()
-
     # Update the first user to have manager access
     # Add an auth_group record of manager if it doesn't exist
 
@@ -404,15 +372,6 @@ def init():
     if mgr is None:
         mgr = auth.add_group('manager', 'The admin group for the app')
         auth.add_membership(mgr, auth.user_id)
-    if db(db.locn.location_name == "Unspecified").isempty():
-        locid = db.locn.insert(location_name="Unspecified", locn_shared=True)
-    if db(db.project.proj_name == "Unspecified").isempty():
-        projid = db.project.insert(proj_name="Unspecified")
-    if db(db.evt.evt_name == "Unspecified").isempty():
-        locid = db(db.locn.location_name == 'Unspecified').select(db.locn.id).first().id
-        evid = db.evt.insert(evt_name="Unspecified", locationid=locid, projid=projid, evt_shared=True,
-                             startdatetime=request.utcnow - datetime.timedelta(days=10),
-                             enddatetime=request.utcnow - datetime.timedelta(days=9))
     return locals()
 
 
@@ -421,44 +380,14 @@ def addstdcategories():
     categories = [["Unspecified", "Catchall category"],
                   ["Water", "Clean Water and Sanitation"],
                   ["No Poverty", "No Poverty"], ["Gender Equality", "Gender Equality"],
-                  ["Food", "Zero Hunger"], ["Shelter", "Shelter"], ["Energy", "Affordable and Clean Energy"],
-                  ["Healthcare", "Healthcare"], ["Freedom", "Freedom"], ["Fairness", "Fairness"], ["Fun", "Fun"],
-                  ["Net Decision Making", "Net Decision Making"], ["Strategy", "Strategy"],
-                  ["Organisation", "Organisation"], ["Education", "Quality Education"], ["Philosophy", "Philosophy"]]
+                  ["Food", "Zero Hunger"],  ["Energy", "Affordable and Clean Energy"],
+                  ["Healthcare", "Good Health and Well-being"], ["Industry", "Industry, Innovation and Infrastructure"],
+                  ["Reduced Inequalities", "Reduced Inequalities"],  ["Education", "Quality Education"],
+                  ["Work", "Decent Work and Economic Growth"]]
 
     for x in categories:
         if db(db.category.cat_desc == x[0]).isempty():
             db.category.insert(cat_desc=x[0], categorydesc=x[1])
-
-    return locals()
-
-
-
-@auth.requires_membership('manager')
-def stdmessages():
-    stdmsg = """You have been identified as a significant global leader either through a political or corporate leadership position, or due to
-    having significant wealth or influence within a region.  We are frustrated at the lack of progress this planet appears to be making towards providing the majority of its inhabitants with longer happier lives.
- A key issue we have identified is the lack of an agreed global strategy and we are proposing the adoption of a short term objective of getting global life expectancy to 80 by the year 2020. This can be considered to be our 2020 vision and can also be described as a re-definition of the 80/20 rule or pareto principal with which you may already be familiar.
-We will be holding you accountable to help drive this vision forward and make an active contribution to achieving this strategy.  In our eyes you are now accountable to the planet as a whole rather than just your current stakeholders or citizens.  We will be assessing how well you align your activities with our vision and we will be sending you reports periodically advising you of how well we assess you are performing.  We will also be setting up an on-line tracking system so other people can review and comment on our assessment of your performance.
-As an added incentive to your participation in our vision it is proposed that we migrate entitlement to more advanced and expensive healthcare treatments which you may require in future towards those whose behaviour is well aligned with our strategy.  The precise eligibility criteria in future will depend on resource availability but you should be clear that evidence that you have failed to align your activities with the global strategy will not be helpful to your chances of being eligible for some of the advanced treatments which may become available.
-Obviously at present we lack full credibility in this mission, however we will be building this up over the coming years.  The improvements in communication technology now make global crowdsourcing of strategy for planet earth a viable activity and we will be refining the strategy as more people come on board.  Our longer term aim is very much to make dying optional/reversible as eternal life seems to be a popular global concept and it seems many people would be interested in this if we could address some of the other inequalities of life at present.
-However eternal life for all poses some challenges and so we think it’s sensible to suggest that good behaviour rather than accumulated wealth will be the correct criteria for entitlement to longevity as it is theoretically possible for everybody to be well behaved, whereas it is presently impossible for everyone to be wealthy at the same time, and the competition for wealth is arguably the greatest blight on the world today.
-Your time in power will be relatively fleeting – however our objective is to establish a system that can run the world for many years to come.  It will be built on the established technologies we have today and using them to empower the best people to make decisions that are right for the planet as a whole rather than the specific benefactors most closely associated with the decision maker.
-We look forward to your help in making the world a better place."""
-
-    actmsg = """You have been identified as responsible or partly responsible for an action identified as part of an initiative to develop a global strategy for the planet.
-
-We are frustrated at the lack of progress this planet appears to be making towards providing the majority of its inhabitants with longer happier lives.
-
-We look forward to your help in making the world a better place.  The specific action you have been tasked with supporting is:"""
-
-    if db(db.app_message.msgtype == 'std').isempty():
-        db.app_message.insert(msgtype='std', description='This is a general message without a specific action',
-                              app_message_text=stdmsg)
-
-    if db(db.app_message.msgtype == 'act').isempty():
-        db.app_message.insert(msgtype='act', description='This is a message related to an  action',
-                              app_message_text=actmsg)
 
     return locals()
 
@@ -496,5 +425,4 @@ def import_files():
     form = FORM(INPUT(_type='file', _name='data'), INPUT(_type='submit'))
     if form.process().accepted:
         db.import_from_csv_file(form.vars.data.file, unique=False)
-
     return locals()

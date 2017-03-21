@@ -1,151 +1,94 @@
 # -*- coding: utf-8 -*-
+# - Coding UTF8 -
+#
+# Networked Decision Making
+# Development Sites (source code): http://github.com/DonaldMcC/gdms
+#
+# Demo Sites (Pythonanywhere)
+#   http://netdecisionmaking.com/nds/
+#   http://netdecisionmaking.com/gdmsdemo/
+#
+# License Code: MIT
+# License Content: Creative Commons Attribution 3.0
+#
+# Also visit: www.web2py.com
+# or Groups: http://groups.google.com/group/web2py
+# For details on the web framework used for this development
+#
+# With thanks to Guido, Massimo and many other that make this sort of thing
+# much easier than it used to be
+
+# ########################################################################
+# Customize your APP title, subtitle and menus here
+# #######################################################################
+response.title = request.application.replace('_', ' ').title()
+# response.title = ' '.join(word.capitalize() for word in request.application.split('_'))
+# response.subtitle = T('A whole new paradigm for decision making')
+
+# -*- coding: utf-8 -*-
 # this file is released under public domain and you can use without limitations
 
-# ----------------------------------------------------------------------------------------------------------------------
-# Customize your APP title, subtitle and menus here
-# ----------------------------------------------------------------------------------------------------------------------
+# #######################################################################
+#  Customize your APP title, subtitle and menus here
+# #######################################################################
 
-response.logo = A(B('web', SPAN(2), 'py'), XML('&trade;&nbsp;'),
-                  _class="navbar-brand", _href="http://www.web2py.com/",
-                  _id="web2py-logo")
-response.title = request.application.replace('_', ' ').title()
-response.subtitle = ''
 
-# ----------------------------------------------------------------------------------------------------------------------
+response.logo = IMG(_src=URL('static', 'images/ndslogo.svg'), _class="img-thumbnail img-responsive visible-lg-inline",
+                    _alt="NDS Logo")
+
 # read more at http://dev.w3.org/html5/markup/meta.name.html
-# ----------------------------------------------------------------------------------------------------------------------
-response.meta.author = myconf.get('app.author')
-response.meta.description = myconf.get('app.description')
-response.meta.keywords = myconf.get('app.keywords')
-response.meta.generator = myconf.get('app.generator')
+response.meta.author = 'Russ King <newglobalstrategy@gmail.com>'
+response.meta.description = 'Network Decision Making'
+response.meta.keywords = 'web2py, python, framework, global, decision-making'
+response.meta.generator = 'Web2py Web Framework, Networked Decision Making'
+response.meta.copyright = 'Has been phased out on more advanced planets'
 
-# ----------------------------------------------------------------------------------------------------------------------
 # your http://google.com/analytics id
-# ----------------------------------------------------------------------------------------------------------------------
 response.google_analytics_id = None
 
-# ----------------------------------------------------------------------------------------------------------------------
-# this is the main application menu add/remove items as required
-# ----------------------------------------------------------------------------------------------------------------------
+# #######################################################################
+# # this is the main application menu add/remove items as required
+# #######################################################################
+#  [('Search', False, URL('search', 'index'))]),
+
 
 response.menu = [
-    (T('Home'), False, URL('default', 'index'), [])
+    ('About', False, '#',
+     [('Home', False, URL('default', 'index')),
+      ('Search', False, URL('search', 'newsearch')),
+      ('About ARS', False, URL('about', 'index')),
+      ('FAQ', False, URL('about', 'faq')),
+      ('Presentation', False, URL('about', 'present')),
+      ('Enhancements', False, URL('about', 'enhance')),
+      ('Privacy Policy', False, URL('about', 'privacy')),
+      ('Downloads', False, URL('about', 'download'))]),
+      ('Create', False, URL('submit', 'index')),
+      ('Review', False, URL('review', 'newindex')),
+      ('Answer', False, '#',
+     [('Approve Issues', False, URL('answer', 'get_question', args=['issue'])),
+      ('Answer Questions', False, URL('answer', 'get_question', args=['quest'])),
+      ('Approve Actions', False, URL('answer', 'get_question', args=['action']))]),
+      ('Review', False, '#',
+     [('Locations', False, URL('location', 'index')),
+      ('Projects', False, URL('project', 'index')),
+      ('Events', False, URL('event', 'index')),
+      ('Groups', False, URL('accessgroups', 'index')),
+      ('Issues', False, URL('review', 'newindex', args=['issue', 'InProg', 'priority', 0, 'Yes'])),
+      ('Questions', False, URL('review', 'newindex', args=['quest', 'resolved', 'priority', 0, 'Yes'])),
+      ('Actions', False, URL('review', 'newindex', args=['action', 'agreed', 'priority', 0, 'Yes'])),
+      ('Proposals', False, URL('review', 'newindex', args=['action', 'InProg', 'priority', 0, 'Yes'])),
+      ('Resolved', False, URL('review', 'newindex', args=['quest', 'resolved', 'priority', 0, 'Yes'])),
+      ('Activity', False, URL('review', 'newindex', args=['activity']))]),
+      ('My ARS', False, '#',
+     [('My Activity', False, URL('review', 'newindex', args=['issue', 'my'])),
+      ('My Draft Activity', False, URL('review', 'newindex', args=['items', 'Draft'])),
+      ('My Actions', False, URL('review', 'newindex', args=['action', 'my'])),
+      ('My Answers', False, URL('review', 'my_answers'))])
 ]
 
-DEVELOPMENT_MENU = True
 
-
-# ----------------------------------------------------------------------------------------------------------------------
-# provide shortcuts for development. remove in production
-# ----------------------------------------------------------------------------------------------------------------------
-
-def _():
-    # ------------------------------------------------------------------------------------------------------------------
-    # shortcuts
-    # ------------------------------------------------------------------------------------------------------------------
-    app = request.application
-    ctr = request.controller
-    # ------------------------------------------------------------------------------------------------------------------
-    # useful links to internal and external resources
-    # ------------------------------------------------------------------------------------------------------------------
+if auth.has_membership('manager'): 
     response.menu += [
-        (T('My Sites'), False, URL('admin', 'default', 'site')),
-        (T('This App'), False, '#', [
-            (T('Design'), False, URL('admin', 'default', 'design/%s' % app)),
-            LI(_class="divider"),
-            (T('Controller'), False,
-             URL(
-                 'admin', 'default', 'edit/%s/controllers/%s.py' % (app, ctr))),
-            (T('View'), False,
-             URL(
-                 'admin', 'default', 'edit/%s/views/%s' % (app, response.view))),
-            (T('DB Model'), False,
-             URL(
-                 'admin', 'default', 'edit/%s/models/db.py' % app)),
-            (T('Menu Model'), False,
-             URL(
-                 'admin', 'default', 'edit/%s/models/menu.py' % app)),
-            (T('Config.ini'), False,
-             URL(
-                 'admin', 'default', 'edit/%s/private/appconfig.ini' % app)),
-            (T('Layout'), False,
-             URL(
-                 'admin', 'default', 'edit/%s/views/layout.html' % app)),
-            (T('Stylesheet'), False,
-             URL(
-                 'admin', 'default', 'edit/%s/static/css/web2py-bootstrap3.css' % app)),
-            (T('Database'), False, URL(app, 'appadmin', 'index')),
-            (T('Errors'), False, URL(
-                'admin', 'default', 'errors/' + app)),
-            (T('About'), False, URL(
-                'admin', 'default', 'about/' + app)),
-        ]),
-        ('web2py.com', False, '#', [
-            (T('Download'), False,
-             'http://www.web2py.com/examples/default/download'),
-            (T('Support'), False,
-             'http://www.web2py.com/examples/default/support'),
-            (T('Demo'), False, 'http://web2py.com/demo_admin'),
-            (T('Quick Examples'), False,
-             'http://web2py.com/examples/default/examples'),
-            (T('FAQ'), False, 'http://web2py.com/AlterEgo'),
-            (T('Videos'), False,
-             'http://www.web2py.com/examples/default/videos/'),
-            (T('Free Applications'),
-             False, 'http://web2py.com/appliances'),
-            (T('Plugins'), False, 'http://web2py.com/plugins'),
-            (T('Recipes'), False, 'http://web2pyslices.com/'),
-        ]),
-        (T('Documentation'), False, '#', [
-            (T('Online book'), False, 'http://www.web2py.com/book'),
-            LI(_class="divider"),
-            (T('Preface'), False,
-             'http://www.web2py.com/book/default/chapter/00'),
-            (T('Introduction'), False,
-             'http://www.web2py.com/book/default/chapter/01'),
-            (T('Python'), False,
-             'http://www.web2py.com/book/default/chapter/02'),
-            (T('Overview'), False,
-             'http://www.web2py.com/book/default/chapter/03'),
-            (T('The Core'), False,
-             'http://www.web2py.com/book/default/chapter/04'),
-            (T('The Views'), False,
-             'http://www.web2py.com/book/default/chapter/05'),
-            (T('Database'), False,
-             'http://www.web2py.com/book/default/chapter/06'),
-            (T('Forms and Validators'), False,
-             'http://www.web2py.com/book/default/chapter/07'),
-            (T('Email and SMS'), False,
-             'http://www.web2py.com/book/default/chapter/08'),
-            (T('Access Control'), False,
-             'http://www.web2py.com/book/default/chapter/09'),
-            (T('Services'), False,
-             'http://www.web2py.com/book/default/chapter/10'),
-            (T('Ajax Recipes'), False,
-             'http://www.web2py.com/book/default/chapter/11'),
-            (T('Components and Plugins'), False,
-             'http://www.web2py.com/book/default/chapter/12'),
-            (T('Deployment Recipes'), False,
-             'http://www.web2py.com/book/default/chapter/13'),
-            (T('Other Recipes'), False,
-             'http://www.web2py.com/book/default/chapter/14'),
-            (T('Helping web2py'), False,
-             'http://www.web2py.com/book/default/chapter/15'),
-            (T("Buy web2py's book"), False,
-             'http://stores.lulu.com/web2py'),
-        ]),
-        (T('Community'), False, None, [
-            (T('Groups'), False,
-             'http://www.web2py.com/examples/default/usergroups'),
-            (T('Twitter'), False, 'http://twitter.com/web2py'),
-            (T('Live Chat'), False,
-             'http://webchat.freenode.net/?channels=web2py'),
-        ]),
-    ]
-
-
-if DEVELOPMENT_MENU:
-    _()
-
-if "auth" in locals():
-    auth.wikimenu()
+        (T('Admin'), False, '#', [(T('Admin'), False, URL('admin', 'index')),
+                                  (T('Upgrade'), False, URL('upgrade', 'index')),
+                                  ('Appadmin', False, URL('appadmin', 'manage', args=['auth']))])]

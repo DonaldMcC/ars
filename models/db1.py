@@ -34,6 +34,15 @@ db.define_table('website_parameters',
                       comment=T('Port of the mailserver (used to send email in forms)')),
                 Field('default_resolve_name', 'string', default='Standard', label='Default Resolve Name'))
 
+db.define_table('system_scope',
+                Field('description', 'string'),
+                format='%(description)s')
+
+db.define_table('category',
+                Field('cat_desc', 'string', label='Category',
+                      requires=[not_empty, IS_NOT_IN_DB(db, 'category.cat_desc'), IS_LOWER()]),
+                Field('categorydesc', 'text', label='Description'),
+                format='%(cat_desc)s')
 
 db.define_table('continent',
                 Field('continent_name', 'string', label='Continent',

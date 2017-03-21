@@ -11,15 +11,22 @@
 
 def index():
     """
-    example action using the internationalization operator T and flash
-    rendered by views/default/index.html or views/generic.html
-
-    if you need a simple wiki simply replace the two lines below with:
-    return auth.wiki()
+    This is the startup function.
+    It retrieves the 5 highest priority actions, 5 most recently resolved quests
+    and highest priority quests in progress.
+    For actions - any status except rejected are wanted but to avoid an or or a
+    not for GAE we will use ans3 for this purpose with numans always two for an
+    action this is ok.  All queries are cached for 2 mins which should be OK
     """
+
+    response.flash = "Welcome to ARS "
+    if not init:
+        redirect(URL('admin', 'init'))
+
     activities = db(db.activity.id>0).select()
-    response.flash = T("Hello World")
-    return dict(activities=activities)
+
+    WEBSITE_PARAMETERS = db(db.website_parameters).select(cache=(cache.ram, 1200), cacheable=True).first()
+    return dict(title=response.title, WEBSITE_PARAMETERS=WEBSITE_PARAMETERS, activities=activities)
 
 
 def user():
