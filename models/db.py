@@ -5,7 +5,7 @@
 # File is released under public domain and you can use without limitations
 # -------------------------------------------------------------------------
 
-#if request.global_settings.web2py_version < "2.14.1":
+# if request.global_settings.web2py_version < "2.14.1":
 #    raise HTTP(500, "Requires web2py 2.13.3 or newer")
 
 # -------------------------------------------------------------------------
@@ -18,6 +18,7 @@
 # app configuration made easy. Look inside private/appconfig.ini
 # -------------------------------------------------------------------------
 from gluon.contrib.appconfig import AppConfig
+from gluon.tools import Auth, Service, PluginManager
 
 # -------------------------------------------------------------------------
 # once in production, remove reload=True to gain full speed
@@ -81,7 +82,7 @@ response.form_label_separator = myconf.get('forms.separator') or ''
 # (more options discussed in gluon/tools.py)
 # -------------------------------------------------------------------------
 
-from gluon.tools import Auth, Service, PluginManager
+login = myconf.take('login.logon_methods')
 
 if login == 'socialauth':
     from plugin_social_auth.utils import SocialAuth
@@ -92,7 +93,7 @@ else:
     username_field = False  # can set to true if you want login by username rather than email
 
 # host names must be a list of allowed host names (glob syntax allowed)
-#auth = Auth(db, host_names=myconf.get('host.names'))
+# auth = Auth(db, host_names=myconf.get('host.names'))
 service = Service()
 plugins = PluginManager()
 
@@ -117,23 +118,24 @@ mail.settings.server = myconf.take('smtp.server')
 mail.settings.sender = myconf.take('smtp.sender')
 mail.settings.login = myconf.take('smtp.login')
 
+
+debug = myconf.take('developer.debug', cast=int)
 if debug:
     mail.settings.server = 'logging:emailout.html'
 
 # -------------------------------------------------------------------------
 # configure other settings
 # -------------------------------------------------------------------------
-debug = myconf.take('developer.debug', cast=int)
+
 backend = myconf.take('search.backend')
 response.formstyle = myconf.take('forms.formstyle')  # or 'bootstrap3_stacked'
 response.form_label_separator = myconf.take('forms.separator')
-login = myconf.take('login.logon_methods')
 requires_login = myconf.take('site.require_login', cast=int)
 dbtype = myconf.take('db.dbtype')
 hostadds = myconf.take('google.hostadds', cast=int)
 ad_client = myconf.take('google.ad_client')
 ad_slot = myconf.take('google.ad_slot', cast=int)
-init = myconf.take('developer.initalised', cast=int)
+init = myconf.take('init.initialised', cast=int)
 
 # -------------------------------------------------------------------------
 # configure auth policy

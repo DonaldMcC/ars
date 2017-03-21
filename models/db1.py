@@ -1,4 +1,6 @@
 
+not_empty = IS_NOT_EMPTY()
+
 db.define_table('website_parameters',
                 Field('website_name', label=T('Website name'), comment=T('Not currently used')),
                 Field('website_init', 'boolean', default=False, label=T('Website Setup'),
@@ -32,6 +34,22 @@ db.define_table('website_parameters',
                       comment=T('Port of the mailserver (used to send email in forms)')),
                 Field('default_resolve_name', 'string', default='Standard', label='Default Resolve Name'))
 
+
+db.define_table('continent',
+                Field('continent_name', 'string', label='Continent',
+                      requires=[not_empty, IS_SLUG(), IS_NOT_IN_DB(db, 'continent.continent_name')]),
+                format='%(continent_name)s')
+
+db.define_table('country',
+                Field('country_name', 'string', label='Country',
+                      requires=[not_empty, IS_SLUG(), IS_NOT_IN_DB(db, 'country.country_name')]),
+                Field('continent', 'string', label='Continent'),
+                format='%(country_name)s')
+
+db.define_table('subdivision',
+                Field('subdiv_name', 'string', label='Sub-division'),
+                Field('country', 'string'),
+                format='%(subdiv_name)s')
 
 db.define_table('activity',
                 Field('activity', 'string', label='Activity'),
@@ -69,8 +87,7 @@ db.define_table('user_rating',
                 Field('createdate', 'datetime', writable=False, label='Date Created', default=request.utcnow))
                 
                 
-if not iniit:
+if not init:
     if db(db.continent.continent_name == "Unspecified").isempty():
         contid = db.continent.insert(continent_name="Unspecified")
-    if db(db.resolve.resolve_name == "Standard").isempty():
-        resolveid = db.resolve.insert(resolve_name="Standard")
+
