@@ -20,8 +20,8 @@ def index():
     """
 
     response.flash = "Welcome to ARS "
-    if not init:
-        redirect(URL('admin', 'init'))
+    #if not init:
+    #    redirect(URL('admin', 'init'))
 
     activities = db(db.activity.id>0).select()
 

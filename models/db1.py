@@ -68,9 +68,8 @@ db.define_table('activity',
                 Field('organisation', label='Organisation'),
                 Field('orgtype', label='Organisation Type'),
                 Field('town', label='nearest town or city'),
-                Field('subdivision', label='area/subdivision'),
-                Field('country', label='country'),
-                Field('continent', label='continent'),
+                Field('subdivision', 'reference subdivision', label='area/subdivision'),
+                Field('country', 'reference country', label='country'),
                 Field('coord', 'string', label='Lat/Longitude'),
                 Field('question_long', 'double', default=0.0, label='Latitude', writable=False, readable=False),
                 Field('question_lat', 'double', default=0.0, label='Longitude', writable=False, readable=False),
@@ -80,12 +79,22 @@ db.define_table('activity',
                       comment='Select draft to defer for later editing'),
                 Field('createdate', 'datetime', writable=False, label='Date Created', default=request.utcnow),
                 Field('submitdate', 'datetime', writable=False, label='Date Completed'),
-                Field('category', 'string', default='Unspecified', label='Category'),
+                Field('category', 'reference category', default='Unspecified', label='Category'),
                 Field('rating', 'decimal(6,2)', default=5, writable=False, label='We feel'),
                 Field('impact', 'decimal(6,2)', default=5, writable=False, label='Importance'),
                 Field('tags', 'list:string'),
-                Field('numratings', 'integer', default=0)
+                Field('numratings', 'integer', default=0),
+                Field('numimpacts', 'integer', default=0)
                 )
+
+db.activity.orgtype.requires=IS_IN_SET(['Corporation', 'Government', 'Not For Profit', 'Other'])
+
+
+db.define_table('image',
+                Field('activity', 'reference activity'),
+                Field('title', unique=True),
+                Field('mediafile', 'upload'),
+                format = '%(title)s')
 
 db.define_table('user_rating',
                 Field('activityid', db.activity, writable=False ),
@@ -94,9 +103,5 @@ db.define_table('user_rating',
                 Field('impact', 'decimal(6,2)', default=5, writable=False, label='Importance'),
                 Field('reject', 'boolean', default=False),
                 Field('createdate', 'datetime', writable=False, label='Date Created', default=request.utcnow))
-                
-                
-if not init:
-    if db(db.continent.continent_name == "Unspecified").isempty():
-        contid = db.continent.insert(continent_name="Unspecified")
+
 

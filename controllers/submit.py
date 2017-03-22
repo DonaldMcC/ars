@@ -16,7 +16,7 @@ def index():
 
     heading = 'Submit Activity'
     fields = ['activity', 'details', 'forename', 'surname', 'organisation', 'orgtype', 'town',
-                 'continent', 'country', 'subdivision', 'coord', 'status', 'category']
+              'country', 'subdivision', 'coord', 'status', 'category']
 
     if activityid:
         form = SQLFORM(db.activity, record, fields=fields, deletable=True)
