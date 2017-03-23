@@ -1,3 +1,13 @@
+import datetime
+from plugin_bs_datepicker import bsdatepicker_widget
+from plugin_hradio_widget import hradio_widget, hcheckbutton_widget
+from plugin_range_widget import range_widget
+from plugin_haystack import Haystack
+if backend == 'whoosh':
+    from plugin_haystack import WhooshBackend
+else:
+    from plugin_haystack import SimpleBackend
+from plugin_location_picker import IS_GEOLOCATION, location_widget
 
 not_empty = IS_NOT_EMPTY()
 
@@ -34,6 +44,8 @@ db.define_table('website_parameters',
                       comment=T('Port of the mailserver (used to send email in forms)')),
                 Field('default_resolve_name', 'string', default='Standard', label='Default Resolve Name'))
 
+                
+
 db.define_table('system_scope',
                 Field('description', 'string'),
                 format='%(description)s')
@@ -61,22 +73,23 @@ db.define_table('subdivision',
                 format='%(subdiv_name)s')
 
 db.define_table('activity',
-                Field('activity', 'string', label='Activity'),
+                Field('activity', 'string', label='What's happening'),
                 Field('details', 'text', label='Details'),
-                Field('forename', 'string', label='First Name'),
-                Field('surname', label='Surname'),
-                Field('organisation', label='Organisation'),
+                Field('why', 'text', label='Why are they doing this'),
+                Field('fullname', 'string', label='Who'),
+                Field('organisation', label='Organisation Involved (if any)'),
                 Field('orgtype', label='Organisation Type'),
                 Field('town', label='nearest town or city'),
                 Field('subdivision', 'reference subdivision', label='area/subdivision'),
                 Field('country', 'reference country', label='country'),
-                Field('coord', 'string', label='Lat/Longitude'),
+                Field('coord', 'string', label='Where', comment='Approx location of the activity'),
                 Field('question_long', 'double', default=0.0, label='Latitude', writable=False, readable=False),
                 Field('question_lat', 'double', default=0.0, label='Longitude', writable=False, readable=False),
-                Field('auth_userid', 'reference auth_user', writable=False, label='Submitter', default=auth.user_id),
+                Field('auth_userid', 'reference auth_user', writable=False, label='Reporter', default=auth.user_id),
                 Field('status', 'string', default='In Progress',
                       requires=IS_IN_SET(['Draft', 'Complete',  'Rejected']),
                       comment='Select draft to defer for later editing'),
+                Field('when', 'datetime', writable=False, label='Date Created', default=request.utcnow),
                 Field('createdate', 'datetime', writable=False, label='Date Created', default=request.utcnow),
                 Field('submitdate', 'datetime', writable=False, label='Date Completed'),
                 Field('category', 'reference category', default='Unspecified', label='Category'),
@@ -88,7 +101,9 @@ db.define_table('activity',
                 )
 
 db.activity.orgtype.requires=IS_IN_SET(['Corporation', 'Government', 'Not For Profit', 'Other'])
-
+db.activity.coord.requires = IS_GEOLOCATION()
+db.activity.coord.widget = location_widget()
+                
 
 db.define_table('image',
                 Field('activity', 'reference activity'),
@@ -100,7 +115,7 @@ db.define_table('user_rating',
                 Field('activityid', db.activity, writable=False ),
                 Field('auth_userid', 'reference auth_user', writable=False, readable=False),
                 Field('rating', 'decimal(6,2)', default=5, writable=False, label='We feel'),
-                Field('impact', 'decimal(6,2)', default=5, writable=False, label='Importance'),
+                Field('impact', 'decimal(6,2)', default=5, writable=False, label='Importance', comment='How many people does this impact'),
                 Field('reject', 'boolean', default=False),
                 Field('createdate', 'datetime', writable=False, label='Date Created', default=request.utcnow))
 
