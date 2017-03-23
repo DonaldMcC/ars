@@ -73,10 +73,11 @@ db.define_table('subdivision',
                 format='%(subdiv_name)s')
 
 db.define_table('activity',
-                Field('activity', 'string', label='What's happening'),
+                Field('activity', 'string', label="What's happening"),
                 Field('details', 'text', label='Details'),
                 Field('why', 'text', label='Why are they doing this'),
                 Field('fullname', 'string', label='Who'),
+                Field('fbid','integer', label='Facebook Id'),
                 Field('organisation', label='Organisation Involved (if any)'),
                 Field('orgtype', label='Organisation Type'),
                 Field('town', label='nearest town or city'),
@@ -89,7 +90,7 @@ db.define_table('activity',
                 Field('status', 'string', default='In Progress',
                       requires=IS_IN_SET(['Draft', 'Complete',  'Rejected']),
                       comment='Select draft to defer for later editing'),
-                Field('when', 'datetime', writable=False, label='Date Created', default=request.utcnow),
+                Field('activity_time', 'datetime', writable=False, label='When', default=request.utcnow),
                 Field('createdate', 'datetime', writable=False, label='Date Created', default=request.utcnow),
                 Field('submitdate', 'datetime', writable=False, label='Date Completed'),
                 Field('category', 'reference category', default='Unspecified', label='Category'),
@@ -119,4 +120,47 @@ db.define_table('user_rating',
                 Field('reject', 'boolean', default=False),
                 Field('createdate', 'datetime', writable=False, label='Date Created', default=request.utcnow))
 
+scopes = ['1 Global', '2 Continental', '3 National', '4 Provincial', '5 Local']
+db.define_table('viewscope',
+                Field('sortorder', 'string', default='1 Priority', label='Sort Order'),
+                Field('showscope', 'boolean', label='Show scope Filter', comment='Uncheck to show all'),
+                Field('filters', 'string'),
+                Field('view_scope', 'string', default='1 Global'),
+                Field('continent', 'string', default='Unspecified', label='Continent'),
+                Field('country', 'string', default='Unspecified', label='Country'),
+                Field('subdivision', 'string', default='Unspecified', label='Sub-division'),
+                Field('showcat', 'boolean', label='Show Category Filter', comment='Uncheck to show all'),
+                Field('category', 'string', default='Unspecified', label='Category', comment='Optional'),
+                Field('selection', 'string', default=['Issue', 'Question', 'Action', 'Resolved']),
+                Field('execstatus', 'string', label='Execution Status',
+                      default=['Proposed', 'Planned', 'In Progress', 'Completed']),
+                Field('answer_group', 'string', default='Unspecified', label='Answer Group'),
+                Field('searchstring', 'string', label='Search:', default=session.searchstring),
+                Field('coord', 'string', label='Lat/Longitude',
+                      default= (session.coord or (auth.user and auth.user.coord))),
+                Field('searchrange', 'integer', default=100, label='Search Range in Kilometers'),
+                Field('startdate', 'date', default=request.utcnow, label='From Date'),
+                Field('enddate', 'date', default=request.utcnow, label='To Date'),
+                Field('linklevels', 'integer', default=1, label='No of generations of linked items',
+                      requires=IS_IN_SET([0,1, 2, 3, 4, 5])))
 
+db.viewscope.view_scope.requires = IS_IN_SET(scopes)
+db.viewscope.sortorder.requires = IS_IN_SET(['1 Priority', '2 Resolved Date', '3 Submit Date', '4 Answer Date'])
+db.viewscope.selection.requires = IS_IN_SET(['Issue', 'Question', 'Action', 'Proposed', 'Resolved', 'Draft'],
+                                            multiple=True)
+db.viewscope.selection.widget = hcheckbutton_widget
+db.viewscope.execstatus.requires=IS_IN_SET(['Proposed', 'Planned', 'In Progress', 'Completed'], multiple=True)
+db.viewscope.execstatus.widget = hcheckbutton_widget
+db.viewscope.filters.requires = IS_IN_SET(['Scope', 'Category', 'AnswerGroup', 'Date', 'Project', 'Event'], multiple=True)
+db.viewscope.filters.widget = hcheckbutton_widget
+
+# db.viewscope.selection.widget = SQLFORM.widgets.checkboxes.widget
+db.viewscope.view_scope.widget = hradio_widget
+db.viewscope.sortorder.widget = hradio_widget
+# db.viewscope.sortorder.widget = SQLFORM.widgets.radio.widget
+db.viewscope.searchstring.requires = IS_NOT_EMPTY()
+
+db.viewscope.coord.requires = IS_GEOLOCATION()
+db.viewscope.coord.widget = location_widget()
+
+PARAMS = db(db.website_parameters).select().first()

@@ -23,7 +23,6 @@
 # activity: this is designed to show overview of what has been happening on the site between a range of dates
 # my_answers - which should now be changed to use datatables
 
-from ndspermt import get_groups, get_exclude_groups
 from datetime import timedelta
 
 
@@ -76,10 +75,10 @@ def newindex():
     v = request.args(0, default='None')  # lets use this for my
     if v == 'plan':
         fields = ['selection', 'execstatus', 'sortorder', 'filters', 'view_scope', 'continent', 'country',
-                  'subdivision', 'category', 'answer_group', 'eventid', 'projid', 'startdate', 'enddate']
+                  'subdivision', 'category', 'answer_group', 'startdate', 'enddate']
     else:
         fields = ['selection', 'sortorder', 'filters', 'view_scope', 'continent', 'country', 'subdivision',
-                  'category', 'answer_group', 'eventid', 'projid', 'startdate', 'enddate', 'coord',
+                  'category', 'answer_group', 'startdate', 'enddate', 'coord',
                   'searchrange']
     q = request.args(1, default='None')  # this matters
     s = request.args(2, default='None')  # this is the sort order
