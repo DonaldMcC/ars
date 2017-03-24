@@ -89,81 +89,35 @@ def questload():
     # db.viewscope.selection.requires = IS_IN_SET(['Issue','Question','Action','Proposed','Resolved','Draft'
     # so possibly maybe IP, IR, IM, QP, QR, QM, AP, AR, AM - but this can maybe always be in the URL
 
-    if request.vars.selection == 'QP':
-        strquery = (db.question.qtype == 'quest') & (db.question.status == 'In Progress')
-    elif request.vars.selection == 'QR':
-        strquery = (db.question.qtype == 'quest') & (db.question.status == 'Resolved')
-    elif request.vars.selection == 'QD' and auth.user:  # changed to all drafts with event filter
-        strquery = (db.question.status == 'Draft') & (db.question.auth_userid == auth.user.id)
-    elif request.vars.selection == 'IP':
-        strquery = (db.question.qtype == 'issue') & (db.question.status == 'In Progress')
-        response.view = 'default/issueload.load'
-    elif request.vars.selection == 'IR':
-        strquery = (db.question.qtype == 'issue') & (db.question.status == 'Agreed')
-        response.view = 'default/issueload.load'
-    elif request.vars.selection == 'IM':
-        strquery = (db.question.qtype == 'issue') & (db.question.status == 'Draft') & (
-            db.question.auth_userid == auth.user_id)
-        response.view = 'default/issueload.load'
-    elif request.vars.selection == 'AP':
-        strquery = (db.question.qtype == 'action') & (db.question.status == 'In Progress')
-        response.view = 'default/actionload.load'
-    elif request.vars.selection == 'AR':
-        strquery = (db.question.qtype == 'action') & (db.question.status == 'Agreed')
-        response.view = 'default/actionload.load'
-        if source == 'default':
-            strquery &= db.question.execstatus != 'Completed'
-    elif request.vars.selection == 'PL':
-        strquery = (db.question.qtype == 'action') & (db.question.status == 'Agreed') & (
-        db.question.execstatus.belongs(session.execstatus))
-        response.view = 'default/planload.load'
-    elif request.vars.selection == 'AM':
-        strquery = (db.question.qtype == 'action') & (db.question.status == 'Draft') \
-                   & (db.question.auth_userid == auth.user_id)
-        response.view = 'default/actionload.load'
-    else:
-        strquery = (db.question.qtype == 'quest') & (db.question.status == 'Resolved')
-
+#top 5 and bottom 5 only?
+    strquery = (db.activity.status == 'Complete')
+    
     if date_filter:
-        strquery &= (db.question.createdate >= startdate) & (db.question.createdate <= enddate)
+        strquery &= (db.activity.createdate >= startdate) & (db.activity.createdate <= enddate)
 
     if cat_filter and cat_filter != 'False':
-        strquery &= (db.question.category == category)
-
-    if source == 'eventadditems':
-        unspeceventid = db(db.evt.evt_name == 'Unspecified').select(db.evt.id).first().id
-        strquery &= db.question.eventid == unspeceventid
-    elif source == 'projadditems':
-        unspecprojid = db(db.project.proj_name == 'Unspecified').select(db.project.id).first().id
-        strquery &= db.question.projid == unspecprojid
-    elif event_filter and event != 0:
-        strquery &= db.question.eventid == event
-    elif project_filter and project != 'Unspecified':
-        strquery &= db.question.projid == project
+        strquery &= (db.activity.category == category)
 
     if scope_filter is True:
-        strquery &= db.question.activescope == scope
+        strquery &= db.activity.activescope == scope
         if session.view_scope == '1 Global':
-            strquery &= db.question.activescope == scope
+            strquery &= db.activity.activescope == scope
         elif session.view_scope == '2 Continental':
-            strquery = strquery & (db.question.activescope == session.view_scope) & (
-                db.question.continent == vwcontinent)
+            strquery = strquery & (db.activity.activescope == session.view_scope) & (
+                db.activity.continent == vwcontinent)
         elif session.view_scope == '3 National':
-            strquery = strquery & (db.question.activescope == session.view_scope) & (
-                db.question.country == vwcountry)
+            strquery = strquery & (db.activity.activescope == session.view_scope) & (
+                db.activity.country == vwcountry)
         elif session.view_scope == '4 Provincial':
-            strquery = strquery & (db.question.activescope == session.view_scope) & (
-                db.question.subdivision == vwsubdivision)
+            strquery = strquery & (db.activity.activescope == session.view_scope) & (
+                db.activity.subdivision == vwsubdivision)
         elif session.view_scope == '5 Local':
             minlat, minlong, maxlat, maxlong = getbbox(session.coord, session.searchrange)
-            strquery = strquery & (db.question.activescope == session.view_scope) & (
-                (current.db.question.question_lat > minlat) &
-                (current.db.question.question_lat < maxlat) &
-                (current.db.question.question_long > minlong) &
-                (current.db.question.question_long < maxlong))
-
-    if group_filter and group_filter != 'False':
-        strquery &= db.question.answer_group == answer_group
+            strquery = strquery & (db.activity.activescope == session.view_scope) & (
+                (current.db.activity.question_lat > minlat) &
+                (current.db.activity.question_lat < maxlat) &
+                (current.db.activity.question_long > minlong) &
+                (current.db.activity.question_long < maxlong))
 
     if request.vars.sortby == 'ResDate':
         sortorder = '2 Resolved Date'
@@ -172,12 +126,8 @@ def questload():
     elif request.vars.sortby == 'CreateDate':
         sortorder = '3 Submit Date'
 
-    if sortorder == '1 Priority':
-        sortby = ~db.question.priority
-    elif sortorder == '3 Submit Date':
-        sortby = ~db.question.createdate
-    else:
-        sortby = ~db.question.resolvedate
+
+    sortby = ~db.activity.createdate
 
     if request.vars.page:
         page = int(request.vars.page)
@@ -199,34 +149,9 @@ def questload():
     quests = db(strquery).select(orderby=[sortby], limitby=limitby)
 
     # remove excluded groups always
-    if session.exclude_groups is None:
-        session.exclude_groups = get_exclude_groups(auth.user_id)
-
-    if quests:
-        alreadyans = quests.exclude(lambda r: r.answer_group in session.exclude_groups)
-
-    if request.vars.selection == 'PL' and quests:
-        projxml = get_gantt_data(quests)
-    else:
-        projxml = "<project></project>"
-    # if request.vars.selection == 'PL':
-    #    questlist = [x.id for x in quests]
-    #    dependlist = [[] for x in xrange(len(questlist))]
-    #    intlinks = getlinks(questlist)
-    #    for x in intlinks:
-    #        dependlist[questlist.index(x.targetid)].append(x.sourceid)
-    #
-    #    if quests:
-    #        for i, row in enumerate(quests):
-    #            z = str(dependlist[i])
-    #            y = max(len(z)-2, 1)
-    #            strdepend = z[1:y]
-    #            projxml += convrow(row, strdepend)
-    #
-    # projxml += '</project>'
 
     return dict(strquery=strquery, quests=quests, page=page, source=source, items_per_page=items_per_page, q=q,
-                view=view, no_page=no_page, event=event, project=projxml)
+                view=view, no_page=no_page, event=event)
 
 
 def user():
