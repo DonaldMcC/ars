@@ -40,7 +40,7 @@ def newsearch():
     results = None
 
     if form.validate():
-        query = indsearch.search(questiontext=form.vars.searchstring)
+        query = indsearch.search(details=form.vars.searchstring)
         results = db(query).select()
         session.searchstring = form.vars.searchstring
     if results:

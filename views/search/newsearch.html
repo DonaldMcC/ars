@@ -15,11 +15,9 @@
         {{if count>0:}}
         <thead>
         <tr>
-            <th width="5%">{{=T('Type')}}</th>
-            <th width="45%">{{=T('Question')}}</th>
-            <th width="10%">{{=T('Answer/Status')}}</th>
+            <th width="5%">{{=T('Activity')}}</th>
+            <th width="45%">{{=T('Details')}}</th>
             <th class="min-tablet-l" width="10%">{{=T('Date')}}</th>
-            <th class="min-tablet-l" width="13%">{{=T('Scope')}}</th>
             <th class="min-tablet-l" width="12%">{{=T('Category')}}</th>
             <th class="min-tablet-l" width="5%">{{=T('Priority')}}</th>
         </tr>
@@ -28,13 +26,11 @@
         {{if count>0:}}
         {{for row in results:}}
     	<tr>
-            <td><a href="{{=URL('viewquest','index',args=[row.id])}}">{{=getitem(row.qtype)}}</a></td>
-        	<td>{{=MARKMIN(row.questiontext)}}{{=get_buttons(row.qtype, row.status, row.resolvemethod, row.id, row.auth_userid, auth.user_id, False, 'search')}}</td>
-            <td>{{if row.status != 'Resolved':}}{{=row.status}}{{else:}}{{=row.correctanstext()}}{{pass}}</td>
-            <td>{{if row.resolvedate != None:}}Res:{{=prettydate(row.resolvedate)}}{{else:}}Crt:{{=prettydate(row.createdate)}}{{pass}}</td>
-        	<td>{{=row.activescope}}</td>
+            <td><a href="{{=URL('viewquest','index',args=[row.id])}}">{{=getitem(row.activity)}}</a></td>
+        	<td>{{=MARKMIN(row.details)}}{{#get_buttons(row.qtype, row.status, row.resolvemethod, row.id, row.auth_userid, auth.user_id, False, 'search')}}</td>
+            <td>{{=prettydate(row.createdate)}}</td>
             <td>{{=row.category}}</td>
-            <td>{{=row.priority}}</td>
+            <td>{{#row.priority}}</td>
         </tr>
         {{pass}}
         {{else:}}
@@ -43,9 +39,6 @@
         </tr>
         {{pass}}
     </table>
-        {{if count>0:}}
-        {{=LOAD('network','graph.load', args=[linklevels],ajax=True,target="eventmap")}}
-        {{pass}}
         {{pass}}
 
 <p>
@@ -72,13 +65,7 @@ Resolved items have thicker border" data-content="" VALUE="Key">
 </div>
 </p>
 
-    <h1>Network View</h1>
-   <div id="target"></div>
 
-    <div id="graph"></div>
-
-
-<div id="newallitems"></div>
 
     <script>
     var ajaxquesturl = '{{=URL('network','ajaxquest')}}'
