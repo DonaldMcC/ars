@@ -1,3 +1,5 @@
+from ndsfunctions import getitem
+
 @auth.requires_login()
 def index():
     # This allows creation of questions, actions and issues so the first
@@ -15,7 +17,7 @@ def index():
     db.activity.status.requires = IS_IN_SET(['Draft', 'Complete'])
 
     heading = 'Submit Activity'
-    fields = ['activity', 'details', 'forename', 'surname', 'organisation', 'orgtype', 'town',
+    fields = ['activity', 'details', 'fullname', 'organisation', 'orgtype', 'town',
               'country', 'subdivision', 'coord', 'status', 'category']
 
     if activityid:
@@ -29,7 +31,7 @@ def index():
         form.vars.activity_lat, form.vars.activity_long = IS_GEOLOCATION.parse_geopoint(form.vars.coord)
 
         if activityid:
-            form.vars.id = questid
+            form.vars.id = activityid
             if form.deleted:
                 db(db.activity.id == activityid).delete()
                 response.flash = 'Item deleted'
@@ -39,7 +41,7 @@ def index():
                 response.flash = 'Item updated'
                 redirect(URL('default', 'index'))
         else:
-            form.vars.id = db.question.insert(**dict(form.vars))
+            form.vars.id = db.activity.insert(**dict(form.vars))
         response.flash = 'form accepted'
         session.status = form.vars.status
 
@@ -50,3 +52,12 @@ def index():
         response.flash = 'please fill out the form'
 
     return dict(form=form, heading=heading)
+
+def accept_activity():
+    response.flash = "Details Submitted"
+    activityid = request.args(0, default=0)
+    status = request.args(1, default='InProg')
+    item = getitem(activityid)
+    activity = db(db.activity.id == activityid).select().first()
+
+    return dict(status=status, item=item, activity=activity)

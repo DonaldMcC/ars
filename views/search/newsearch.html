@@ -1,0 +1,90 @@
+{{load_graph=True}}
+{{extend 'layout.html'}}
+{{from ndsfunctions import getitem}}
+{{from ndspermt import get_buttons}}
+<h1>{{=T('Search')}}</h1>
+
+{{=form}}
+
+
+    <div id="ajaxlink"></div>
+    
+{{if results:}}
+<h2>{{=T('Search results')}}</h2>
+      <table id='TabSearch'  width="100%" class="table table-bordered table-condensed">
+        {{if count>0:}}
+        <thead>
+        <tr>
+            <th width="5%">{{=T('Type')}}</th>
+            <th width="45%">{{=T('Question')}}</th>
+            <th width="10%">{{=T('Answer/Status')}}</th>
+            <th class="min-tablet-l" width="10%">{{=T('Date')}}</th>
+            <th class="min-tablet-l" width="13%">{{=T('Scope')}}</th>
+            <th class="min-tablet-l" width="12%">{{=T('Category')}}</th>
+            <th class="min-tablet-l" width="5%">{{=T('Priority')}}</th>
+        </tr>
+        </thead>
+        {{pass}}
+        {{if count>0:}}
+        {{for row in results:}}
+    	<tr>
+            <td><a href="{{=URL('viewquest','index',args=[row.id])}}">{{=getitem(row.qtype)}}</a></td>
+        	<td>{{=MARKMIN(row.questiontext)}}{{=get_buttons(row.qtype, row.status, row.resolvemethod, row.id, row.auth_userid, auth.user_id, False, 'search')}}</td>
+            <td>{{if row.status != 'Resolved':}}{{=row.status}}{{else:}}{{=row.correctanstext()}}{{pass}}</td>
+            <td>{{if row.resolvedate != None:}}Res:{{=prettydate(row.resolvedate)}}{{else:}}Crt:{{=prettydate(row.createdate)}}{{pass}}</td>
+        	<td>{{=row.activescope}}</td>
+            <td>{{=row.category}}</td>
+            <td>{{=row.priority}}</td>
+        </tr>
+        {{pass}}
+        {{else:}}
+        <tr>
+            <td>{{=T('There are no topics found in this search.')}}</td>
+        </tr>
+        {{pass}}
+    </table>
+        {{if count>0:}}
+        {{=LOAD('network','graph.load', args=[linklevels],ajax=True,target="eventmap")}}
+        {{pass}}
+        {{pass}}
+
+<p>
+<div class="input-group">
+ <INPUT TYPE=BUTTON id="help" class="btn btn-primary btn-warning btn-xs " onClick="" data-toggle =" popover"
+        title ="In view mode you can drag items around the screen and shift click to create items, edit text or create directed links.
+Use edit, link, add and delete modes button to edit, link and create/delete without using shift key eg on a touchscreen
+Delete requires both a click/touch to select and a second click to remove the item but only links are removed from database until decison made on deletion of nodes" data-content="" VALUE="Help">
+             <INPUT TYPE=BUTTON id="key" class="btn btn-primary btn-success btn-xs " onClick="" data-toggle =" popover"
+        title ="Issues: Blue
+Questions: Green
+Actions: Yellow
+Colour depth: priority
+Resolved items have thicker border" data-content="" VALUE="Key">
+
+<div id="radioBtn" class="btn-group">
+<a class="btn btn-primary btn-xs active" data-toggle="fun" data-title="V">View</a>
+<a class="btn btn-primary btn-xs notActive" data-toggle="fun" data-title="E">Edit</a>
+<a class="btn btn-primary btn-xs notActive" data-toggle="fun" data-title="L">Link</a>
+<a class="btn btn-primary btn-xs notActive" data-toggle="fun" data-title="A">Add</a>
+    <a class="btn btn-primary btn-xs notActive" data-toggle="fun" data-title="D">Delete</a>
+</div>
+<input type="hidden" name="fun" id="fun">
+</div>
+</p>
+
+    <h1>Network View</h1>
+   <div id="target"></div>
+
+    <div id="graph"></div>
+
+
+<div id="newallitems"></div>
+
+    <script>
+    var ajaxquesturl = '{{=URL('network','ajaxquest')}}'
+    $(document).ready(function() {
+    $('#TabSearch').DataTable({responsive: true});
+    });
+        
+</script>
+

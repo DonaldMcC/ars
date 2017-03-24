@@ -69,8 +69,6 @@ def newindex():
     # s = 'resolved'
     message = ''
 
-    if auth.user:
-        db.viewscope.answer_group.requires = IS_IN_SET(set(get_groups(auth.user_id)))
 
     v = request.args(0, default='None')  # lets use this for my
     if v == 'plan':

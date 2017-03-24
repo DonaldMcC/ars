@@ -19,7 +19,13 @@
 # -------------------------------------------------------------------------
 from gluon.contrib.appconfig import AppConfig
 from gluon.tools import Auth, Service, PluginManager
+import os
+from gluon.tools import Auth, PluginManager, prettydate, Mail
+from gluon import *
+from gluon.custom_import import track_changes
 
+from gluon import current
+from ndsfunctions import generate_thumbnail
 # -------------------------------------------------------------------------
 # once in production, remove reload=True to gain full speed
 # -------------------------------------------------------------------------
@@ -136,6 +142,41 @@ hostadds = myconf.take('google.hostadds', cast=int)
 ad_client = myconf.take('google.ad_client')
 ad_slot = myconf.take('google.ad_slot', cast=int)
 init = myconf.take('init.initialised', cast=int)
+
+
+userfields = [
+    Field('numratings', 'integer', default=0, readable=False, writable=False, label='Answered'),
+    Field('exclude_categories', 'list:string', label='Excluded Categories',
+          comment="Select categories you DON'T want to see"),
+    Field('country', 'string', default='Unspecified', label='Country'),
+    Field('subdivision', 'string', default='Unspecified', label='Sub-division'),
+    Field('privacypref', 'string', default='Standard', label='Privacy Preference',
+          comment='Std user+avator, extreme is id only'),
+    Field('avatar', 'upload'),
+    Field('avatar_thumb', 'upload', compute=lambda r: generate_thumbnail(r['avatar'], 120, 120, True)),
+    Field('show_help', 'boolean', default=True, label='Show help')]
+
+
+
+userfields.append(Field('coord', 'string', label='Lat/Longitude'))
+userfields.append(Field('localrange', 'integer', default= 100, label='Radius for local issues', comment='In Kilometers',requires=IS_INT_IN_RANGE(1, 1000,
+                      error_message='Must be between 1 and 1000')))
+
+# , widget=range_widget #TODO see if this can be scalable
+
+
+userfields.append(Field('emaildaily', 'boolean', label='Send daily email'))
+userfields.append(Field('emailweekly', 'boolean', default=True, label='Send weekly email'))
+userfields.append(Field('emailmonthly', 'boolean', label='Send monthly email'))
+userfields.append(Field('emailresolved', 'boolean', default=True, label='Email when my items resolved'))
+
+auth.settings.extra_fields['auth_user'] = userfields
+auth.settings.username_case_sensitive = False
+auth.settings.email_case_sensitive = False
+
+# create all tables needed by auth if not custom tables
+auth.define_tables(username=username_field)
+auth.settings.auth_manager_role = 'manager'
 
 # -------------------------------------------------------------------------
 # configure auth policy

@@ -84,8 +84,8 @@ db.define_table('activity',
                 Field('subdivision', 'reference subdivision', label='area/subdivision'),
                 Field('country', 'reference country', label='country'),
                 Field('coord', 'string', label='Where', comment='Approx location of the activity'),
-                Field('question_long', 'double', default=0.0, label='Latitude', writable=False, readable=False),
-                Field('question_lat', 'double', default=0.0, label='Longitude', writable=False, readable=False),
+                Field('activity_long', 'double', default=0.0, label='Latitude', writable=False, readable=False),
+                Field('activity_lat', 'double', default=0.0, label='Longitude', writable=False, readable=False),
                 Field('auth_userid', 'reference auth_user', writable=False, label='Reporter', default=auth.user_id),
                 Field('status', 'string', default='In Progress',
                       requires=IS_IN_SET(['Draft', 'Complete',  'Rejected']),
@@ -136,14 +136,14 @@ db.define_table('viewscope',
                       default=['Proposed', 'Planned', 'In Progress', 'Completed']),
                 Field('answer_group', 'string', default='Unspecified', label='Answer Group'),
                 Field('searchstring', 'string', label='Search:', default=session.searchstring),
-                Field('coord', 'string', label='Lat/Longitude',
-                      default= (session.coord or (auth.user and auth.user.coord))),
+                Field('coord', 'string', label='Lat/Longitude'),
                 Field('searchrange', 'integer', default=100, label='Search Range in Kilometers'),
                 Field('startdate', 'date', default=request.utcnow, label='From Date'),
                 Field('enddate', 'date', default=request.utcnow, label='To Date'),
                 Field('linklevels', 'integer', default=1, label='No of generations of linked items',
                       requires=IS_IN_SET([0,1, 2, 3, 4, 5])))
 
+# default = (session.coord or (auth.user and auth.user.coord))
 db.viewscope.view_scope.requires = IS_IN_SET(scopes)
 db.viewscope.sortorder.requires = IS_IN_SET(['1 Priority', '2 Resolved Date', '3 Submit Date', '4 Answer Date'])
 db.viewscope.selection.requires = IS_IN_SET(['Issue', 'Question', 'Action', 'Proposed', 'Resolved', 'Draft'],

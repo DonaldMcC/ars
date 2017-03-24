@@ -1,6 +1,6 @@
 {{from ndspermt import make_button, get_actions, get_buttons}}
 {{extend 'layout.html'}}
-{{if qtype=='deleted':}}
+{{if activity=='deleted':}}
 <h1>{{=item.capitalize()}} deleted</h1>
 
           {{else:}}
@@ -18,11 +18,9 @@
 <p>You can submit a follow on item (issue, question or action). You can also create links between items and these can be seen using the show as network button which is available at various points on the site. </p>
 
  <p>
- {{=get_buttons(quest['qtype'], quest['status'], quest['resolvemethod'], quest['id'], quest['auth_userid'], auth.user_id, False, 'Submit')}}
+ {{#get_buttons(quest['qtype'], quest['status'], quest['resolvemethod'], quest['id'], quest['auth_userid'], auth.user_id, False, 'Submit')}}
 
    </p>
 
           {{pass}}
-{{block right_sidebar}}
 
-{{include 'sidebar3dv4js.html'}}
