@@ -18,11 +18,32 @@
 
 
 <div id="questload">
+    <table id='QR' class='table issuetable2 table-bordered table-condensed  dt-responsive' >
+				<thead>
+					<tr>
+                        <th>details</th>
+                    </tr>
+                </thead>
+</table>
+
 {{#LOAD('default','questload.load',args=['default'],vars=dict(selection='QR',items_per_page=5,sortby='ResDate',no_page=True),ajax=True,target="questload")}}
     <script>
-
+/*
 $( "#questload" ).load("{{=URL('default', 'questload.load',args=['default'], vars=dict(selection='QR',items_per_page=5,sortby='ResDate',no_page=True))}}","test", function() {
   $('#QR').DataTable({responsive: true});} );
+*/
+$(document).ready(function() {
+    $('#QR').DataTable(
+            {"processing": true,
+    "ajax": {
+        "url":  "{{=URL('default', 'api.json')}}",
+        "dataSrc": "quests"
+    },
+        "columns": [
+                        { "data": "details" }
+                            ]});
+
+});
 
 </script>
 

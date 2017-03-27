@@ -153,6 +153,25 @@ def questload():
     return dict(strquery=strquery, quests=quests, page=page, source=source, items_per_page=items_per_page, q=q,
                 view=view, no_page=no_page, event=event)
 
+@request.restful()
+def api():
+
+    def GET(*args, **vars):
+        strquery = (db.activity.id > 0)
+        quests = db(strquery).select(db.activity.details)
+        return dict(quests=quests)
+
+    def POST(*args, **vars):
+        return dict()
+
+    def PUT(*args, **vars):
+        return dict()
+
+    def DELETE(*args, **vars):
+        return dict()
+
+    return locals()
+
 
 def user():
     """
