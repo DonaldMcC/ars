@@ -80,9 +80,11 @@ db.define_table('activity',
                 Field('fbid','integer', label='Facebook Id'),
                 Field('organisation', label='Organisation Involved (if any)'),
                 Field('orgtype', label='Organisation Type'),
-                Field('town', label='nearest town or city'),
+                Field('town', label='town/city where the person is based'),
                 Field('subdivision', 'reference subdivision', label='area/subdivision'),
                 Field('country', 'reference country', label='country'),
+                Field('activity_scope', 'string', label='Activity Scope'),
+                Field('diff_locn', 'boolean', label='Check if activity at different location'),
                 Field('coord', 'string', label='Where', comment='Approx location of the activity'),
                 Field('activity_long', 'double', default=0.0, label='Latitude', writable=False, readable=False),
                 Field('activity_lat', 'double', default=0.0, label='Longitude', writable=False, readable=False),
@@ -98,7 +100,8 @@ db.define_table('activity',
                 Field('impact', 'decimal(6,2)', default=5, writable=False, label='Importance'),
                 Field('tags', 'list:string'),
                 Field('numratings', 'integer', default=0),
-                Field('numimpacts', 'integer', default=0)
+                Field('numimpacts', 'integer', default=0),
+                Field('numrejects', 'integer', default=0)
                 )
 
 db.activity.orgtype.requires=IS_IN_SET(['Corporation', 'Government', 'Not For Profit', 'Other'])

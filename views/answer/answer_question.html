@@ -1,0 +1,75 @@
+{{left_sidebar_enabled,right_sidebar_enabled=True,False}}
+{{load_multiselect=False}}
+{{load_graph=False}}
+{{extend 'layout.html'}}
+
+<script src="{{=URL('static','js/range-touch.min.js')}}"></script>
+<table class='table table-bordered'>
+<tbody>
+<tr>
+<th>Project:</th>
+<td> {{=quest.projid.proj_name }} </td>
+    <th>Event:</th>
+<td> {{=quest.eventid.evt_name }} </td>
+    <th>Category:</th>
+<td> {{=quest['category'] }} </td>
+    </tr>
+<tr>
+<th> Scope:</th>
+<td>{{=quest['activescope']}}</td>
+<th>Active Area:</th>
+<td>{{=quest['scopetext']}}</td>
+    <th>Resolve Method</th>
+<td>{{=quest['resolvemethod']}}</td>
+</tr>
+ </tbody>
+</table>
+
+
+<table class="table-condensed">
+<tbody>
+<tr>
+<th>
+{{if quest['qtype']=='action':}}
+Action
+{{elif quest['qtype']=='issue':}}
+    Issue
+{{else:}}
+Question
+{{pass}}
+</th>
+<td>
+<p>{{=MARKMIN(quest['questiontext'])}}</p>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<table id='TabAnswers' class=' table table-condensed table-bordered answers'>
+ <tbody>
+<tr>
+<td width="5%"> <input type="radio" name="ans" value="-1" onchange="showansValue(this.value)"></td>
+<td width="95%">Pass</td>
+</tr>
+{{anslist = quest['answers']}}
+{{anslen = len(anslist)}}
+{{if quest['qtype']!='quest':}}
+{{anslen-=1}}
+{{pass}}
+{{for k in xrange(0, anslen):}}
+<tr>
+<td><input type="radio" name="ans" value="{{=k}}" onchange="showansValue(this.value)" ></td>
+<td>{{=anslist[k]}}</td>
+</tr>
+{{pass}}
+ </tbody>
+</table>
+
+{{=form2}}
+
+
+<script>
+{{include 'answer/answer_question.js'}}
+</script>
+
