@@ -2,31 +2,19 @@
 {{from ndspermt import get_buttons}}
 {{from d3js2py import colourclass}}
 
-{{if quests:}}
 <table id='QR' class='table issuetable2 table-bordered table-condensed  dt-responsive' >
 				<thead>
 					<tr>
-                        <th>Question</th>
+                        <th>Activity</th>
                     </tr>
                 </thead>
                     <tbody>
-{{for i,row in enumerate(quests):}}
-{{if i==items_per_page: break}}
+{{for i,row in enumerate(activity):}}
 <tr>
 <td>{{=row.details}} {{#get_buttons(row.qtype, row.status, row.resolvemethod, row.id, row.auth_userid, auth.user_id, False, source, event)}}</td>
 </tr>
 {{pass}}
 </tbody>
 </table>
-{{if no_page is False:}}
-{{if page:}}
-{{=A('previous',callback=URL(vars=dict(page=page-1)),target="questload", _class="btn btn-primary btn-sm", _role="button")}}
-{{pass}}
-{{if len(quests)>items_per_page:}}
-{{=A('next',callback=URL(vars=dict(page=page+1)),target="questload", _class="btn btn-primary btn-sm", _role="button")}}
-{{pass}}
-{{pass}}
-{{else:}}
-<p></p>
-{{pass}}
+
 
