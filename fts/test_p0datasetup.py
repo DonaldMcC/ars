@@ -21,9 +21,6 @@ class AnswerQuestion (FunctionalTest):
         email = WebDriverWait(self, 10).until(lambda self: self.browser.find_element_by_name("email"))
         email.send_keys(mailstring)
 
-        # username = self.browser.find_element_by_name("username")
-        # username = WebDriverWait(self, 10).until(lambda self : self.browser.find_element_by_name("username"))
-        # username.send_keys(USERS['USER1'])
         password = self.browser.find_element_by_name("password")    
         password.send_keys(USERS['PASSWORD1'])    
 
@@ -56,19 +53,3 @@ class AnswerQuestion (FunctionalTest):
         body = WebDriverWait(self, 10).until(lambda self: self.browser.find_element_by_tag_name('body'))
         self.assertIn('Standard categories have been added', body.text)
 
-    def test_addresolvemethods(self):
-        self.url = ROOT + '/admin/addresolvemethods'
-        get_browser = self.browser.get(self.url)
-        time.sleep(1)
-
-        body = WebDriverWait(self, 10).until(lambda self: self.browser.find_element_by_tag_name('body'))
-        self.assertIn('Standard resolution methods have been added', body.text)
-
-    def test_addmessages(self):
-        self.url = ROOT + '/admin/stdmessages'        
-        get_browser = self.browser.get(self.url)
-        time.sleep(1)
-
-        body = WebDriverWait(self, 10).until(lambda self: self.browser.find_element_by_tag_name('body'))
-
-        self.assertIn('Standard messages have been added', body.text)

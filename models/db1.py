@@ -79,23 +79,23 @@ db.define_table('activity',
                 Field('fullname', 'string', label='Who'),
                 Field('fbid','integer', label='Facebook Id'),
                 Field('organisation', label='Organisation Involved (if any)'),
-                Field('orgtype', label='Organisation Type'),
+                Field('orgtype', label='Organisation Type', default='Not Known'),
                 Field('town', label='town/city where the person is based'),
-                Field('subdivision', 'reference subdivision', label='area/subdivision'),
-                Field('country', 'reference country', label='country'),
+                Field('subdivision', 'reference subdivision', label='area/subdivision', default=3),
+                Field('country', 'reference country', label='country', default=1),
                 Field('activity_scope', 'string', label='Activity Scope'),
                 Field('diff_locn', 'boolean', label='Check if activity at different location'),
                 Field('coord', 'string', label='Where', comment='Approx location of the activity'),
                 Field('activity_long', 'double', default=0.0, label='Latitude', writable=False, readable=False),
                 Field('activity_lat', 'double', default=0.0, label='Longitude', writable=False, readable=False),
                 Field('auth_userid', 'reference auth_user', writable=False, label='Reporter', default=auth.user_id),
-                Field('status', 'string', default='In Progress',
+                Field('status', 'string', default='Complete',
                       requires=IS_IN_SET(['Draft', 'Complete',  'Rejected']),
                       comment='Select draft to defer for later editing'),
                 Field('activity_time', 'datetime', writable=False, label='When', default=request.utcnow),
                 Field('createdate', 'datetime', writable=False, label='Date Created', default=request.utcnow),
                 Field('submitdate', 'datetime', writable=False, label='Date Completed'),
-                Field('category', 'reference category', default='Unspecified', label='Category'),
+                Field('category', 'reference category', default=1, label='Category'),
                 Field('rating', 'decimal(6,2)', default=5, writable=False, label='We feel'),
                 Field('impact', 'decimal(6,2)', default=5, writable=False, label='Importance'),
                 Field('tags', 'list:string'),
@@ -104,7 +104,7 @@ db.define_table('activity',
                 Field('numrejects', 'integer', default=0)
                 )
 
-db.activity.orgtype.requires=IS_IN_SET(['Corporation', 'Government', 'Not For Profit', 'Other'])
+db.activity.orgtype.requires=IS_IN_SET(['Corporation', 'Government', 'Not For Profit', 'Other', 'Not Known'])
 db.activity.coord.requires = IS_GEOLOCATION()
 db.activity.coord.widget = location_widget()
 

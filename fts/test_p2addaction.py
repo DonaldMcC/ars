@@ -29,14 +29,16 @@ class AddBasicAction (FunctionalTest):
         submit_button.click()
         time.sleep(1)    
 
-    @data(('/submit/new_question/action', 'Lets get this done'), ('/submit/new_question/issue', 'The world is under-achieving'))
+    @data(('/submit/index', 'Lets get this done'), ('/submit/index', 'The world is under-achieving'))
     @unpack
     def test_question(self, urltxt, itemtext):
         self.url = ROOT + urltxt
         get_browser = self.browser.get(self.url)
         time.sleep(2)  # still getting blank category for some reason but not if loaded manually
         # questiontext = self.browser.find_element_by_name('questiontext')
-        questiontext = WebDriverWait(self, 10).until(lambda self: self.browser.find_element_by_name('questiontext'))
+        questiontext = WebDriverWait(self, 10).until(lambda self: self.browser.find_element_by_name('activity'))
+        questiontext.send_keys(itemtext)
+        questiontext = WebDriverWait(self, 10).until(lambda self: self.browser.find_element_by_name('details'))
         questiontext.send_keys(itemtext)
 
         submit_button = self.browser.find_element_by_css_selector("#submit_record__row input")
