@@ -308,6 +308,11 @@ def datasetup():
     # and so tables won't be empty - I think approach is to add all missing data which is slow
     # but effective will pull everything and then add the missing ones
 
+    mgr = db(db.auth_group.role == 'manager').select().first()
+    if mgr is None:
+        mgr = auth.add_group('manager', 'The admin group for the app')
+        auth.add_membership(mgr, auth.user_id)
+
     if db(db.category.id > 0).isempty():
         db.category.insert(cat_desc="None",
                            categorydesc="Set to select all questions")

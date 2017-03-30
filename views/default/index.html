@@ -8,7 +8,9 @@
 {{pass}}
 
 <div class='MainDetails'>
+{{if WEBSITE_PARAMETERS:}}
 {{=MARKMIN(WEBSITE_PARAMETERS.longdesc)}}
+{{pass}}
 
 <div id="questcountload">
 {{#LOAD('default','questcountload.load',ajax=True,target="questcountload")}}

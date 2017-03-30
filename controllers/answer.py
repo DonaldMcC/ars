@@ -38,8 +38,9 @@ highest priority question out to all users and work on resolving it first
     
 """
 
+#@auth.requires_signature()
+
 @auth.requires_login()
-@auth.requires_signature()
 def answer_question():
     """
     This allows the user to answer the question or pass and the result is 
@@ -55,18 +56,18 @@ def answer_question():
     if ur:
         pass # TODO will insert record ID here and define fields above
 
-    form2 = SQLFORM(db.user_activity, showid=False, fields=['rating', 'impact', 'reject'],
+    form2 = SQLFORM(db.user_rating, showid=False, fields=['rating', 'impact', 'reject'],
                     submit_button='Submit', col3={'reject': 'Select if invalid or off subject '},
                                                   formstyle='table3cols')
 
     form2.element(_type='submit')['_class'] = "btn btn-success"
 
     if ur: # already rated so will need to populate form vars with current values
-    form2.vars.activescope = quest['activescope']
-    form2.vars.continent = quest['continent']
-    form2.vars.country = quest['country']
-    form2.vars.subdivision = quest['subdivision']
-    form2.vars.category = quest['category']
+        form2.vars.activescope = quest['activescope']
+        form2.vars.continent = quest['continent']
+        form2.vars.country = quest['country']
+        form2.vars.subdivision = quest['subdivision']
+        form2.vars.category = quest['category']
 
 
     if form2.validate():
@@ -85,7 +86,7 @@ def answer_question():
     elif form2.errors:
         response.flash = 'form has errors'
 
-    return dict(form2=form2, quest=quest)
+    return dict(form2=form2, activity=activity)
 
 
 @auth.requires_login()

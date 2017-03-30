@@ -45,11 +45,5 @@ class AnswerQuestion (FunctionalTest):
         body = WebDriverWait(self, 10).until(lambda self: self.browser.find_element_by_tag_name('body'))
         self.assertIn('Standard data has been added', body.text)
 
-    def test_addcategories(self):
-        self.url = ROOT + '/admin/addstdcategories'        
-        get_browser=self.browser.get(self.url)
-        time.sleep(1)
 
-        body = WebDriverWait(self, 10).until(lambda self: self.browser.find_element_by_tag_name('body'))
-        self.assertIn('Standard categories have been added', body.text)
 

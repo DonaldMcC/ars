@@ -16,7 +16,7 @@ sys.path.append('../../gluon')  # to use web2py modules
 
 # ROOT = 'http://localhost:8080/gdms'
 # ROOT = 'http://localhost:8081/gdms'
- ROOT = 'http://localhost:8081/ars'
+ROOT = 'http://localhost:8081/ars'
 # ROOT = 'http://www.netdecisionmaking.com/gdms'
 
 NUMCYCLES = 2  # Reduce this for quicker runs
@@ -24,8 +24,8 @@ CACHETIME = 1
 STARTSERVER = False
 
 # may update these later but possibly just have 3 options for now
-USERS={'USER1':'Testuser1','PASSWORD1':'user1',
-        'USER2':'Testuser2','PASSWORD2':'user2','USER3':'Testuser3','PASSWORD3':'user3','USER4':'Testuser4','PASSWORD4':'user4',
+USERS={'USER1':'testuser1','PASSWORD1':'user1',
+        'USER2':'testuser2','PASSWORD2':'user2','USER3':'testuser3','PASSWORD3':'user3','USER4':'Testuser4','PASSWORD4':'user4',
        'USER5':'Testuser5','PASSWORD5':'user5','USER6':'Testuser6','PASSWORD6':'user6','USER7':'Testuser7','PASSWORD7':'user7',
        'USER8':'Testuser8','PASSWORD8':'user8','USER9':'Testuser9','PASSWORD9':'user9'}
 
