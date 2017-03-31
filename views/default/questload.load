@@ -13,7 +13,7 @@
 {{for i,row in enumerate(activity):}}
 <tr>
 <td>{{=row.category.cat_desc}}</td>
-<td>{{=row.details}} {{#get_buttons(row.qtype, row.status, row.resolvemethod, row.id, row.auth_userid, auth.user_id, False, source, event)}}</td>
+<td>{{=row.details}} {{=get_buttons(row.status, row.id, row.auth_userid, auth.user_id)}}</td>
 </tr>
 {{pass}}
 </tbody>
