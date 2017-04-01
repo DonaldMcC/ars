@@ -1,0 +1,17 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout.html'}}
+
+<h1>Available Downloads</h1>
+
+<ul>
+{{for download in downloads:}}
+{{=LI(A(download.title, _href=URL("about", "download", args=download.download_file)))}}
+<p>{{=download.description}}</p>
+{{pass}}
+</ul>
+<h2>Links and Documentation</h2>
+<p>This is an open source project and feedback, suggestions and contributions are welcome.
+    The source code is maintained on github at the following url:
+    <a href="https://github.com/DonaldMcC/ars">https://github.com/DonaldMcC/ars</a> </p>
+
+

@@ -44,7 +44,14 @@ db.define_table('website_parameters',
                       comment=T('Port of the mailserver (used to send email in forms)')),
                 Field('default_resolve_name', 'string', default='Standard', label='Default Resolve Name'))
 
-                
+db.define_table('download',
+                Field('title'),
+                Field('download_file', 'upload'),
+                Field('description', 'text'),
+                Field('download_version', 'string', default='1'),
+                format='%(title)s')
+
+db.download.title.requires = IS_NOT_IN_DB(db, db.download.title)
 
 db.define_table('system_scope',
                 Field('description', 'string'),

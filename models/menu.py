@@ -58,7 +58,6 @@ response.menu = [
       ('Search', False, URL('search', 'newsearch')),
       ('About ARS', False, URL('about', 'index')),
       ('FAQ', False, URL('about', 'faq')),
-      ('Presentation', False, URL('about', 'present')),
       ('Enhancements', False, URL('about', 'enhance')),
       ('Privacy Policy', False, URL('about', 'privacy')),
       ('Downloads', False, URL('about', 'download'))]),
