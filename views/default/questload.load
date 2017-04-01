@@ -1,8 +1,7 @@
 {{from ndsfunctions import truncquest}}
 {{from ndspermt import get_buttons}}
-{{from d3js2py import colourclass}}
-
-<table id='QR' class='table issuetable2 table-bordered table-condensed  dt-responsive' >
+{{if q=='good':}}
+<table id='good' class='table issuetable2 table-bordered table-condensed  dt-responsive' >
 				<thead>
 					<tr>
 					<th>Category</th>
@@ -11,6 +10,7 @@
                 </thead>
                     <tbody>
 {{for i,row in enumerate(activity):}}
+{{if i==items_per_page: break}}
 <tr>
 <td>{{=row.category.cat_desc}}</td>
 <td>{{=row.details}} {{=get_buttons(row.status, row.id, row.auth_userid, auth.user_id)}}</td>
@@ -19,4 +19,30 @@
 </tbody>
 </table>
 
-
+{{elif q=='bad':}}
+<table id='bad' class='table issuetable2 table-bordered table-condensed  dt-responsive' >
+				<thead>
+					<tr>
+					<th>Category</th>
+                        <th>Activity</th>
+                    </tr>
+                </thead>
+                    <tbody>
+{{for i,row in enumerate(activity):}}
+{{if i==items_per_page: break}}
+<tr>
+<td>{{=row.category.cat_desc}}</td>
+<td>{{=row.details}} {{=get_buttons(row.status, row.id, row.auth_userid, auth.user_id)}}</td>
+</tr>
+{{pass}}
+</tbody>
+</table>
+{{pass}}
+{{if no_page is False:}}
+{{if page:}}
+{{=A('previous',callback=URL(vars=dict(page=page-1)),target="questload", _class="btn btn-primary btn-sm", _role="button")}}
+{{pass}}
+{{if len(quests)>items_per_page:}}
+{{=A('next',callback=URL(vars=dict(page=page+1)),target="questload", _class="btn btn-primary btn-sm", _role="button")}}
+{{pass}}
+{{pass}}

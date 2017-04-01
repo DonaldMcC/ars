@@ -11,45 +11,37 @@
 {{if WEBSITE_PARAMETERS:}}
 {{=MARKMIN(WEBSITE_PARAMETERS.longdesc)}}
 {{pass}}
+</div>
+
+<h1>The Best</h1>
+
+<div id="goodload">
+
+{{#LOAD('default','questload.load',args=['default'],vars=dict(items_per_page=5,sortby='Rating',no_page=False),ajax=True,target="questload")}}
+        <script>
+$( "#goodload" ).load("{{=URL('default', 'questload.load', vars=dict(q='good', items_per_page=5,sortby='rating'))}}","test", function() {
+  $('#good').DataTable({dom: 'Bfrtip', responsive: true});} );
+      </script>
+</div>
+
+
+<h1>The Worst</h1>
+<div id="badload">
+
+{{#LOAD('default','questload.load',args=['default'],vars=dict(items_per_page=5,sortby='Rating',no_page=False),ajax=True,target="questload")}}
+        <script>
+$( "#badload" ).load("{{=URL('default', 'questload.load', vars=dict(q='bad', items_per_page=5,sortby='revrating'))}}","test", function() {
+  $('#bad').DataTable({dom: 'Bfrtip', responsive: true});} );
+      </script>
+</div>
 
 <div id="questcountload">
 {{#LOAD('default','questcountload.load',ajax=True,target="questcountload")}}
-</div>
-    <div id="target"></div>
-<a href={{=URL('review', 'newindex', args=['action','agreed', 'priority', 0, 'Yes'])}}><h1>Highest Priority Actions</h1></a>
 
-
-<div id="questload">
-
-</div>
-{{=LOAD('default','questload.load',args=['default'],vars=dict(selection='QR',items_per_page=5,sortby='ResDate',no_page=True),ajax=True,target="questload")}}
-    <script>
-/*
-       $(document).ready(function() {
-$( "questload" ).load("{{=URL('default', 'questload.load',args=['default'], vars=dict(selection='QR',items_per_page=5,sortby='ResDate',no_page=True))}}","test", function() {
-  $('#QR').DataTable({responsive: true});} );
-});
-
-$(document).ready(function() {
-    $('#QR').DataTable(
-            {"processing": true,
-    "ajax": {
-        "url":  "{{=URL('default', 'api.json')}}",
-        "dataSrc": "quests"
-    },
-        "columns": [
-                        { "data": "details" }
-                            ]});
-
-});
-*/
-
-</script>
-
-</div>
+    </div>
 
 <p>Please be aware this is a prototype system and it is being actively developed.  No guarantees are made surrounding it's ongoing availability in its present form.  Feedback and suggestions for improvement are however very welcome. <a href="mailto:newglobalstrategy@gmail.com?Subject=Suggestion">Please E-Mail Feedback</a></p>
-</div>
+
 
 
 

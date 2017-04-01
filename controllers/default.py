@@ -55,6 +55,7 @@ def questload():
 
     scope = session.view_scope or None
     category = session.category or None
+    q = request.vars.q or 'good'
 
     strquery = (db.activity.status == 'Complete')
 
@@ -72,12 +73,13 @@ def questload():
 
     no_page = request.vars.no_page
 
-    if request.vars.sortby == 'Rating':
+
+    if request.vars.sortby == 'rating':
         sortby = db.activity.rating
     else:
         sortby = ~db.activity.rating
     activity = db(strquery).select(orderby=[sortby], limitby=limitby)
-    return dict(activity=activity, page=page, items_per_page=items_per_page, no_page=no_page)
+    return dict(q=q, activity=activity, page=page, items_per_page=items_per_page, no_page=no_page)
 
 
 @request.restful()
