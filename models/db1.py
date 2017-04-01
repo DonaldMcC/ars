@@ -125,10 +125,16 @@ db.define_table('image',
 db.define_table('user_rating',
                 Field('activityid', db.activity, writable=False ),
                 Field('auth_userid', 'reference auth_user', writable=False, readable=False),
-                Field('rating', 'decimal(6,2)', default=5, label='We feel'),
-                Field('impact', 'decimal(6,2)', default=5, label='Importance', comment='How many people does this impact'),
+                Field('rating', 'integer', label='We feel'),
+                Field('impact', 'decimal(6,2)', label='Importance', comment='How many people does this impact'),
                 Field('reject', 'boolean', default=False),
                 Field('createdate', 'datetime', writable=False, label='Date Created', default=request.utcnow))
+
+db.user_rating.rating.requires = IS_IN_SET([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+db.user_rating.rating.widget = hradio_widget
+
+db.user_rating.impact.requires = IS_IN_SET([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+db.user_rating.impact.widget = hradio_widget
 
 scopes = ['1 Global', '2 Continental', '3 National', '4 Provincial', '5 Local']
 db.define_table('viewscope',

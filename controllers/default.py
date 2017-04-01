@@ -7,7 +7,8 @@
 # - user is required for authentication and authorization
 # - download is for downloading files uploaded in the db (does streaming)
 # -------------------------------------------------------------------------
-from datetime import timedelta
+# from datetime import timedelta
+
 
 def index():
     """
@@ -20,10 +21,7 @@ def index():
     """
 
     response.flash = "Welcome to ARS "
-    #if not init:
-    #    redirect(URL('admin', 'init'))
-
-    activities = db(db.activity.id>0).select()
+    activities = db(db.activity.id > 0).select()
 
     WEBSITE_PARAMETERS = db(db.website_parameters).select(cache=(cache.ram, 1200), cacheable=True).first()
     return dict(title=response.title, WEBSITE_PARAMETERS=WEBSITE_PARAMETERS, activities=activities)
@@ -59,14 +57,28 @@ def questload():
     category = session.category or None
 
     strquery = (db.activity.status == 'Complete')
-    
-    #quests = db(strquery).select(orderby=[sortby], limitby=limitby)
-    activity = db(strquery).select()
-    # remove excluded groups always
 
-    #return dict(strquery=strquery, quests=quests, page=page, source=source, items_per_page=items_per_page, q=q,
-    #           view=view, no_page=no_page, event=event)
-    return dict(activity=activity)
+    if request.vars.page:
+        page = int(request.vars.page)
+    else:
+        page = 0
+
+    if request.vars.items_per_page:
+        items_per_page = int(request.vars.items_per_page)
+    else:
+        items_per_page = 50
+
+    limitby = (page * items_per_page, (page + 1) * items_per_page + 1)
+
+    no_page = request.vars.no_page
+
+    if request.vars.sortby == 'Rating':
+        sortby = db.activity.rating
+    else:
+        sortby = ~db.activity.rating
+    activity = db(strquery).select(orderby=[sortby], limitby=limitby)
+    return dict(activity=activity, page=page, items_per_page=items_per_page, no_page=no_page)
+
 
 @request.restful()
 def api():
@@ -124,5 +136,3 @@ def call():
     supports xml, json, xmlrpc, jsonrpc, amfrpc, rss, csv
     """
     return service()
-
-
