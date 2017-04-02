@@ -4,16 +4,22 @@
 <table id='good' class='table issuetable2 table-bordered table-condensed  dt-responsive' >
 				<thead>
 					<tr>
-					<th>Category</th>
-                        <th>Activity</th>
+					<th>Who</th>
+                    <th>What</th>
+                    <th>When</th>
+                    <th>Where</th>
+                    <th>Why</th>
                     </tr>
                 </thead>
                     <tbody>
 {{for i,row in enumerate(activity):}}
 {{if i==items_per_page: break}}
 <tr>
-<td>{{=row.category.cat_desc}}</td>
-<td>{{=row.details}} {{=get_buttons(row.status, row.id, row.auth_userid, auth.user_id)}}</td>
+<td>{{=row.fullname}}</td>
+<td>{{=row.activity}} {{=get_buttons(row.status, row.id, row.auth_userid, auth.user_id)}}</td>
+<td>{{=prettydate(row.activity_time)}}</td>
+<td>{{=row.town}},{{=row.country.country_name}} </td>
+<td>{{=row.why}}</td>
 </tr>
 {{pass}}
 </tbody>
@@ -23,16 +29,22 @@
 <table id='bad' class='table issuetable2 table-bordered table-condensed  dt-responsive' >
 				<thead>
 					<tr>
-					<th>Category</th>
-                        <th>Activity</th>
+					<th>Who</th>
+                    <th>What</th>
+                    <th>When</th>
+                    <th>Where</th>
+                    <th>Why</th>
                     </tr>
                 </thead>
                     <tbody>
 {{for i,row in enumerate(activity):}}
 {{if i==items_per_page: break}}
 <tr>
-<td>{{=row.category.cat_desc}}</td>
-<td>{{=row.details}} {{=get_buttons(row.status, row.id, row.auth_userid, auth.user_id)}}</td>
+<td>{{=row.fullname}}</td>
+<td>{{=row.activity}} {{=get_buttons(row.status, row.id, row.auth_userid, auth.user_id)}}</td>
+<td>{{=prettydate(row.activity_time)}}</td>
+<td>{{=row.town}},{{=row.country.country_name}} </td>
+<td>{{=row.why}}</td>
 </tr>
 {{pass}}
 </tbody>
