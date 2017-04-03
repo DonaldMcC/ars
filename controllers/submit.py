@@ -17,7 +17,7 @@ def index():
     db.activity.status.requires = IS_IN_SET(['Draft', 'Complete'])
 
     heading = 'Submit Activity'
-    fields = ['activity', 'details', 'fullname', 'organisation', 'orgtype', 'town',
+    fields = ['activity', 'details', 'fullname', 'organisation', 'orgtype', 'activescope',
               'country', 'subdivision', 'coord', 'status', 'category']
 
     if activityid:

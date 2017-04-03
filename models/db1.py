@@ -10,6 +10,8 @@ else:
 from plugin_location_picker import IS_GEOLOCATION, location_widget
 
 not_empty = IS_NOT_EMPTY()
+scopes = ['1 International', '2 National', '3 Regional', '4 Local']
+
 
 db.define_table('website_parameters',
                 Field('website_name', label=T('Website name'), comment=T('Not currently used')),
@@ -87,11 +89,10 @@ db.define_table('activity',
                 Field('fbid','integer', label='Facebook Id'),
                 Field('organisation', label='Organisation Involved (if any)'),
                 Field('orgtype', label='Organisation Type', default='Not Known'),
-                Field('town', label='town/city where the person is based'),
-                Field('subdivision', 'reference subdivision', label='area/subdivision', default=3),
+                Field('activescope', 'string', default= '1 Internationl', label='Active Scope',
+                      requires=IS_IN_SET(scopes)),
                 Field('country', 'reference country', label='country', default=1),
-                Field('activity_scope', 'string', label='Activity Scope'),
-                Field('diff_locn', 'boolean', label='Check if activity at different location'),
+                Field('subdivision', 'reference subdivision', label='area/subdivision', default=3),
                 Field('coord', 'string', label='Where', comment='Approx location of the activity'),
                 Field('activity_long', 'double', default=0.0, label='Latitude', writable=False, readable=False),
                 Field('activity_lat', 'double', default=0.0, label='Longitude', writable=False, readable=False),

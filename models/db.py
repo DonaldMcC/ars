@@ -23,6 +23,7 @@ import os
 from gluon.tools import Auth, PluginManager, prettydate, Mail
 from gluon import *
 from gluon.custom_import import track_changes
+from plugin_location_picker import IS_GEOLOCATION, location_widget
 
 # once in production change to False
 track_changes(True)
@@ -109,7 +110,7 @@ plugins = PluginManager()
 # -------------------------------------------------------------------------
 # create all tables needed by auth if not custom tables
 # -------------------------------------------------------------------------
-auth.define_tables(username=False, signature=False)
+#auth.define_tables(username=False, signature=False)
 
 # -------------------------------------------------------------------------
 # configure email
@@ -153,8 +154,6 @@ userfields = [
           comment="Select categories you DON'T want to see"),
     Field('country', 'string', default='Unspecified', label='Country'),
     Field('subdivision', 'string', default='Unspecified', label='Sub-division'),
-    Field('privacypref', 'string', default='Standard', label='Privacy Preference',
-          comment='Std user+avator, extreme is id only'),
     Field('avatar', 'upload'),
     Field('avatar_thumb', 'upload', compute=lambda r: generate_thumbnail(r['avatar'], 120, 120, True)),
     Field('show_help', 'boolean', default=True, label='Show help')]
@@ -162,11 +161,9 @@ userfields = [
 
 
 userfields.append(Field('coord', 'string', label='Lat/Longitude'))
-userfields.append(Field('localrange', 'integer', default= 100, label='Radius for local issues', comment='In Kilometers',requires=IS_INT_IN_RANGE(1, 1000,
-                      error_message='Must be between 1 and 1000')))
-
-# , widget=range_widget #TODO see if this can be scalable
-
+userfields.append(Field('localrange', 'integer', default= 100, label='Radius for local issues',
+                        comment='In Kilometers',requires=IS_INT_IN_RANGE(1, 1000,
+                        error_message='Must be between 1 and 1000')))
 
 userfields.append(Field('emaildaily', 'boolean', label='Send daily email'))
 userfields.append(Field('emailweekly', 'boolean', default=True, label='Send weekly email'))
@@ -174,12 +171,17 @@ userfields.append(Field('emailmonthly', 'boolean', label='Send monthly email'))
 userfields.append(Field('emailresolved', 'boolean', default=True, label='Email when my items resolved'))
 
 auth.settings.extra_fields['auth_user'] = userfields
-auth.settings.username_case_sensitive = False
-auth.settings.email_case_sensitive = False
 
 # create all tables needed by auth if not custom tables
 auth.define_tables(username=username_field)
 auth.settings.auth_manager_role = 'manager'
+auth.settings.username_case_sensitive = False
+auth.settings.email_case_sensitive = False
+
+
+#db.auth_user.coord.requires = IS_GEOLOCATION()
+#db.auth_user.coord.widget = location_widget()
+# , widget=range_widget #TODO see if this can be scalable
 
 # -------------------------------------------------------------------------
 # configure auth policy
