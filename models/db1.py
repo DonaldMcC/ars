@@ -9,7 +9,7 @@ else:
     from plugin_haystack import SimpleBackend
 from plugin_location_picker import IS_GEOLOCATION, location_widget
 
-not_empty = IS_NOT_EMPTY()
+
 scopes = ['1 International', '2 National', '3 Regional', '4 Local']
 
 
@@ -59,27 +59,7 @@ db.define_table('system_scope',
                 Field('description', 'string'),
                 format='%(description)s')
 
-db.define_table('category',
-                Field('cat_desc', 'string', label='Category',
-                      requires=[not_empty, IS_NOT_IN_DB(db, 'category.cat_desc'), IS_LOWER()]),
-                Field('categorydesc', 'text', label='Description'),
-                format='%(cat_desc)s')
 
-db.define_table('continent',
-                Field('continent_name', 'string', label='Continent',
-                      requires=[not_empty, IS_SLUG(), IS_NOT_IN_DB(db, 'continent.continent_name')]),
-                format='%(continent_name)s')
-
-db.define_table('country',
-                Field('country_name', 'string', label='Country',
-                      requires=[not_empty, IS_SLUG(), IS_NOT_IN_DB(db, 'country.country_name')]),
-                Field('continent', 'string', label='Continent'),
-                format='%(country_name)s')
-
-db.define_table('subdivision',
-                Field('subdiv_name', 'string', label='Sub-division'),
-                Field('country', 'string'),
-                format='%(subdiv_name)s')
 
 db.define_table('activity',
                 Field('activity', 'string', label="What's happening"),

@@ -301,7 +301,6 @@ def fullreset():
 
     return dict(message='Everything cleared out')
 
-
 @auth.requires_login()
 def datasetup():
     # This now needs reworked as some of the data needs to be creaed prior to the models execution
@@ -312,6 +311,13 @@ def datasetup():
     if mgr is None:
         mgr = auth.add_group('manager', 'The admin group for the app')
         auth.add_membership(mgr, auth.user_id)
+    return locals()
+
+def initial_setup():
+    # This now needs reworked as some of the data needs to be creaed prior to the models execution
+    # and so tables won't be empty - I think approach is to add all missing data which is slow
+    # but effective will pull everything and then add the missing ones
+
 
     if db(db.category.id > 0).isempty():
         db.category.insert(cat_desc="None",
@@ -337,46 +343,15 @@ def datasetup():
     if db(db.system_scope.description == "4 Local").isempty():
         db.system_scope.insert(description="4 Local")
 
-    if db(db.continent.continent_name == "Unspecified").isempty():
-        db.continent.insert(continent_name="Unspecified")
-
     if db(db.country.country_name == "Unspecified").isempty():
         db.country.insert(country_name="Unspecified", continent="Unspecified")
+
+    if db(db.subdivision.subdiv_name == "Unspecified").isempty():
+        db.subdivision.insert(subdiv_name="Unspecified", country='Unspecified')
 
     # email_setup()
     # schedule_email_runs()
 
-    return locals()
-
-
-@auth.requires_login()
-def init():
-    # This function will be called to initialise the system the following
-    # activities are required here
-    # 1  Give the intial user manager role to admin the system
-    # 2  Populate the scoring table
-    # 3  Key in the subject of the database
-    # 4  Provide details of how to admin the system
-    # 5  Add a default category
-
-    login = myconf.take('login.logon_methods')
-    if db(db.website_parameters.id > 0).isempty():
-        google_analytics_id = myconf.take('google.analytics_id')
-        db.website_parameters.insert(shortdesc="This system should be used for any topic",
-                                     longdesc='This system should be used for questions on any topic that '
-                                              'you consider important to human progress',
-                                     google_analytics_id=google_analytics_id)
-
-    # Need to also ensure unspecified continent,region and country are present
-    # think values will now be mandatory for new user registration
-
-    # Update the first user to have manager access
-    # Add an auth_group record of manager if it doesn't exist
-
-    mgr = db(db.auth_group.role == 'manager').select().first()
-    if mgr is None:
-        mgr = auth.add_group('manager', 'The admin group for the app')
-        auth.add_membership(mgr, auth.user_id)
     return locals()
 
 

@@ -1,0 +1,34 @@
+{{extend 'layout.html'}}
+<h1>Question Counts Checking</h1>
+        {{if groupcat == 'G':}}
+        <p>This checks that all counts for groups are correct. To run for categories you should
+            click <a href="{{=URL('checkquestcounts',args=['C'])}}">here</a></p>
+        {{elif groupcat == 'C':}}
+         <p>This checks that all counts for categories are correct. To run for groups you should
+            click <a href="{{=URL('checkquestcounts',args=['G'])}}">here</a></p>
+        {{pass}}
+<p>{{=message}} </p>
+{{if errors:}}
+<table id='ErrorList' class='table table-bordered table-condensed'>
+				<thead>
+					<tr>
+                        <th>Existing</th>
+						<th>Calculated</th>
+                    </tr>
+                </thead>
+    <tbody>
+{{for row in errorlist:}}
+<tr>
+<td>{{=row[0]}}</td>
+<td>{{=row[1]}}</td>
+   </tr>
+{{pass}}
+</tbody>
+</table>
+        {{if fix == 'yes':}}<p>The errors have been corrected and if you
+    refresh with the same settings you should get no errors</p>
+        {{else:}}
+        <p>The errors can be corrected by clicking <a href="{{=URL('checkquestcounts',args=[groupcat,'yes'])}}">here</a></p>
+        {{pass}}
+
+{{pass}}

@@ -24,6 +24,8 @@ from gluon.tools import Auth, PluginManager, prettydate, Mail
 from gluon import *
 from gluon.custom_import import track_changes
 from plugin_location_picker import IS_GEOLOCATION, location_widget
+not_empty = IS_NOT_EMPTY()
+
 
 # once in production change to False
 track_changes(True)
@@ -148,12 +150,30 @@ ad_slot = myconf.take('google.ad_slot', cast=int)
 init = myconf.take('init.initialised', cast=int)
 
 
+db.define_table('category',
+                Field('cat_desc', 'string', label='Category',
+                      requires=[not_empty, IS_NOT_IN_DB(db, 'category.cat_desc'), IS_LOWER()]),
+                Field('categorydesc', 'text', label='Description'),
+                format='%(cat_desc)s')
+
+db.define_table('country',
+                Field('country_name', 'string', label='Country',
+                      requires=[not_empty, IS_SLUG(), IS_NOT_IN_DB(db, 'country.country_name')]),
+                Field('continent', 'string', label='Continent'),
+                format='%(country_name)s')
+
+db.define_table('subdivision',
+                Field('subdiv_name', 'string', label='Sub-division'),
+                Field('country', 'string'),
+                format='%(subdiv_name)s')
+
 userfields = [
     Field('numratings', 'integer', default=0, readable=False, writable=False, label='Answered'),
     Field('exclude_categories', 'list:string', label='Excluded Categories',
           comment="Select categories you DON'T want to see"),
-    Field('country', 'string', default='Unspecified', label='Country'),
-    Field('subdivision', 'string', default='Unspecified', label='Sub-division'),
+    Field('country', 'reference country', default='Unspecified', label='Country'),
+    Field('subdivision', 'reference subdivision', default='Unspecified', label='Sub-division'),
+    Field('town', 'string', default='Unspecified', label='Town'),
     Field('avatar', 'upload'),
     Field('avatar_thumb', 'upload', compute=lambda r: generate_thumbnail(r['avatar'], 120, 120, True)),
     Field('show_help', 'boolean', default=True, label='Show help')]
@@ -165,10 +185,7 @@ userfields.append(Field('localrange', 'integer', default= 100, label='Radius for
                         comment='In Kilometers',requires=IS_INT_IN_RANGE(1, 1000,
                         error_message='Must be between 1 and 1000')))
 
-userfields.append(Field('emaildaily', 'boolean', label='Send daily email'))
-userfields.append(Field('emailweekly', 'boolean', default=True, label='Send weekly email'))
-userfields.append(Field('emailmonthly', 'boolean', label='Send monthly email'))
-userfields.append(Field('emailresolved', 'boolean', default=True, label='Email when my items resolved'))
+
 
 auth.settings.extra_fields['auth_user'] = userfields
 
