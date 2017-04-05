@@ -313,7 +313,7 @@ def datasetup():
         auth.add_membership(mgr, auth.user_id)
     return locals()
 
-def initial_setup():
+def initialise():
     # This now needs reworked as some of the data needs to be creaed prior to the models execution
     # and so tables won't be empty - I think approach is to add all missing data which is slow
     # but effective will pull everything and then add the missing ones

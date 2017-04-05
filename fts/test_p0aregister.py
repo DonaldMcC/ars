@@ -46,12 +46,10 @@ class TestRegisterPage (FunctionalTest):
         verify_password.clear()
         verify_password.send_keys(passwd)
 
-        country= self.browser.find_element_by_name("country")
-        country.clear()
+        country = self.browser.find_element_by_name("country")
         country.send_keys('Unspecified')
 
         subdivision = self.browser.find_element_by_name("subdivision")
-        subdivision.clear()
         subdivision.send_keys('Unspecified')
 
         register_button = self.browser.find_element_by_css_selector("#submit_record__row input")

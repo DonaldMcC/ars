@@ -23,9 +23,6 @@ class AnswerAction (FunctionalTest):
           (USERS['USER4'], USERS['PASSWORD4'], 'is Agreed'))
     @unpack
     def test_answer_action(self, user, passwd, result):
-        #username = self.browser.find_element_by_name("username")
-        #username = WebDriverWait(self, 10).until(lambda self : self.browser.find_element_by_name("username"))
-        #username.send_keys(user)
         mailstring = user + '@user.com'
 
         email = WebDriverWait(self, 10).until(lambda self: self.browser.find_element_by_name("email"))

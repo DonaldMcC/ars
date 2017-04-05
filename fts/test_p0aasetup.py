@@ -1,6 +1,6 @@
 from functional_tests import FunctionalTest, ROOT, USERS
-import time
 from ddt import ddt, data, unpack
+import time
 from selenium.webdriver.support.ui import WebDriverWait
 
 
@@ -8,8 +8,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 @ddt
 class TestRegisterPage (FunctionalTest):
     def setUp(self):     
-        self.url = ROOT + '/admin/initial_setup'
+        self.url = ROOT + '/admin/initialise.html'
         get_browser = self.browser.get(self.url)
+        time.sleep(1)
 
     @data((USERS['USER1'], USERS['PASSWORD1']))
     @unpack
