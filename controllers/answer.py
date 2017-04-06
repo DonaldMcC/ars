@@ -63,26 +63,21 @@ def answer_question():
     form2.element(_type='submit')['_class'] = "btn btn-success"
 
     if ur: # already rated so will need to populate form vars with current values
-        form2.vars.activescope = quest['activescope']
-        form2.vars.continent = quest['continent']
-        form2.vars.country = quest['country']
-        form2.vars.subdivision = quest['subdivision']
-        form2.vars.category = quest['category']
+        form2.vars.activescope = ur['activescope']
+        form2.vars.continent = ur['continent']
+        form2.vars.country = ur['country']
+        form2.vars.subdivision = ur['subdivision']
+        form2.vars.category = ur['category']
 
 
     if form2.validate():
         form2.vars.auth_userid = auth.user.id
-        form2.vars.questionid = questid
-        form2.vars.uq_level = quest['question_level']
-        form2.vars.status = 'In Progress'
+        form2.vars.activityid = activityid
         # default to urgency 10 for testing so questions that are answered continue to get answered
 
-        form2.vars.id = db.userquestion.insert(**dict(form2.vars))
+        form2.vars.id = db.user_rating.insert(**dict(form2.vars))
         response.flash = 'form accepted'
-        status = score_question(questid, form2.vars.id)
-        if status == 'Resolved':
-            scheduler.queue_task('send_email_resolved', pvars=dict(questid=questid), period=600)
-        redirect(URL('viewquest', 'index', args=[questid, questtype]))
+        redirect(URL('viewquest', 'index', args=[activityid]))
     elif form2.errors:
         response.flash = 'form has errors'
 

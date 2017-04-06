@@ -1,0 +1,64 @@
+{{from ndspermt import get_buttons}}
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout.html'}}
+
+<h1>Details</h1>
+<p>{{=MARKMIN(activity['details'])}}</p>
+
+
+<div id="target"></div>
+
+<h2>Rating and impact</h2>
+
+{{if uqanswered:}}
+<p>Here is how you and other people have assessed this activity.</p>
+<table id='TabUrgency' class="table table-bordered table-condensed">
+				<thead>
+					<tr>
+						<th width="20%"></th>
+                        <th width="40%">Rating</th>
+                        <th width="40%">Importance</th>
+                    </tr>
+                </thead>
+                    <tbody>
+                    <tr>
+                        <th>Overall</th>
+                        <td><input id="urgslide" type = "range" name="urgslider"  min="1"    max="11" value="{{=activity['rating']}}" step="1" disabled /></td>
+                        <td><input id="urgslide" type = "range" name="urgslider"  min="1"    max="11" value="{{=activity['impact']}}" step="1" disabled/></td>
+                    </tr>
+                    <tr>
+                        <th>You</th>
+                        <td><input id="urgslide" type = "range" name="urgslider"  min="1"    max="11" value="{{=uqrating}}" step="1" disabled /></td>
+                        <td><input id="urgslide" type = "range" name="urgslider"  min="1"    max="11" value="{{=uqimpact}}" step="1" disabled/></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+{{else:}}
+<p>Here is how other people rated the urgency and importance of this question. </p>
+<table id='TabUrgency' class="table table-bordered table-condensed">
+				<thead>
+					<tr>
+						<th width="12%"></th>
+                        <th width="44%">Urgency</th>
+                        <th width="44%">Importance</th>
+                    </tr>
+                </thead>
+                    <tbody>
+                    <tr>
+                        <th>Overall</th>
+                        <td><input id="urgslide" type = "range" name="urgslider"  min="0"    max="10" value="{{=activity['rating']}}" step="1" disabled /></td>
+                        <td><input id="urgslide" type = "range" name="urgslider"  min="0"    max="10" value="{{=activity['impact']}}" step="1" disabled/></td>
+                    </tr>
+                    </tbody>
+                </table>
+{{pass}}
+
+
+<p>{{#get_buttons(quest['qtype'], quest['status'], quest['resolvemethod'], quest['id'], quest['auth_userid'], (auth.user and auth.user.id or 0), uqanswered, context, quest['eventid'])}}
+
+
+
+
+
+

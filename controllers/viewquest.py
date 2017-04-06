@@ -53,9 +53,9 @@
     """
 
 from ndsfunctions import updatequestcounts
-from ndspermt import can_view
-from time import strftime
-import gluon.contrib.simplejson
+# from ndspermt import can_view
+# from time import strftime
+# import gluon.contrib.simplejson
 
 
 def index():
@@ -72,136 +72,31 @@ def index():
     votetext = ''
     numpass = 0
     uqanswered = False
-    uqurg = 5
-    uqimp = 5
+    uqrating = 5
+    uqimpact = 5
     uqans = 0
     newansjson = ''
 
-    quests = db(db.question.id == request.args(0, cast=int, default=0)).select() or \
-                redirect(URL('notshowing/' + 'NoQuestion'))
-    quest = quests.first()
+    activities = db(db.activity.id == request.args(0, cast=int, default=0)).select() or \
+                redirect(URL('notshowing/' + 'NoActivity'))
+    activity = activities.first()
 
-    questtype = request.args(1, default='quest')  # This will remain as all for event flow and probably next item button
     uq = None
 
     if auth.user:
-        uqs = db((db.userquestion.auth_userid == auth.user.id) & (db.userquestion.questionid == quest.id)).select()
+        uqs = db((db.user_rating.auth_userid == auth.user.id) & (db.user_rating.activityid == activity.id)).select()
         if uqs:
             uqanswered = True
             uq = uqs.first()
 
-    viewable = can_view(quest.status, quest.resolvemethod, uqanswered, quest.answer_group,
-                        quest.duedate, auth.user_id, quest.auth_userid)
+    #viewable = can_view(quest.status, quest.resolvemethod, uqanswered, quest.answer_group,
+    #                    quest.duedate, auth.user_id, quest.auth_userid)
 
-    if viewable[0] is False:
-        redirect(URL('viewquest', 'notshowing', args=(viewable[1], str(quest.id))))
-    
-    resolve = db(db.resolve.resolve_name == quest['resolvemethod']).select().first()
-    if resolve and resolve.resolve_method == 'Vote':
-        if quest.duedate > datetime.datetime.utcnow():
-            votetext = 'Voting will end on ' + strftime("%a, %d %b %Y %H:%M ", quest.duedate.timetuple())
+    if uqanswered:
+        uqrating = uq.rating
+        uqimpact = uq.impact
 
-    if quest['qtype'] == 'quest':
-        response.view = 'viewquest/question.html'
-
-        # now three scenarios now either the user has answered the question
-        # or they haven't but it is resolved the population of the question variables
-        # v2 if not answered we will now open a link to answer the question
-        # to return to the view should be broadly the same in both scenarios
-        # or they have submitted question and are being allowed to see progress
-
-        numpass = quest['othercounts'][0]
-
-        zipanswers = zip(quest['answers'], quest['answercounts'])
-        # ansjson = gluon.contrib.simplejson.dumps(zipanswers)
-
-        # sample for testing
-        # vardata = [] vardata was for jqplot - now removing
-        ansdictlist = []
-        for x in zipanswers:
-            # vardata.append([x[0], int(x[1])])
-            tempdict = {'label': x[0], 'count': int(x[1])}
-            ansdictlist.append(tempdict)
-
-        newansjson = gluon.contrib.simplejson.dumps(ansdictlist)
-
-        # in terms of the user there are basically 3 things to pick-up on
-        # the user answer, users rating of urgency and importance
-        # did the user get this right (if resolved or under challenge)
-
-        if uqanswered:
-            uqurg = uq.urgency
-            uqimp = uq.importance
-            uqans = uq.answer
-
-        # Now work out what we can say about this question
-        # if resolved we can say if right or wrong and allow the question to be challenged
-        if quest['status'] == 'Resolved':
-            # Did the user answer the question
-            if uqanswered:
-                if uqans == -1:
-                    viewtext = 'You passed on this question but it has now been resolved.'
-                elif quest['correctans'] == uqans:
-                    viewtext = 'Well done - you helped resolve this question.'
-                else:
-                    viewtext = 'Your answer to this question disagrees with the resolved '
-                    'correct answer - you may want to request a challenge.'
-            else:
-                viewtext = "You didn't get to answer this question."
-        elif quest['status'] == 'Rejected':
-            viewtext = "This question has been rejected."
-        else:
-            # if not resolved can only say in progress and how many more answers are required
-            # at present should only be here if
-            # answered as we are not showing users unresolved and unanswered questions
-            viewtext = 'This question is in progress at level ' + str(quest['question_level']) + '.'
-
-            # That will do for now - display of challenges and probably numanswers remaining
-            # and level can be added later
-
-    else:  # action or issue
-        response.view = (quest['qtype'] == 'issue' and 'viewquest/issue.html') or 'viewquest/action.html'
-        # Get details of the action urgency and importance of actions is stored in a different table because they can
-        # be prioritised without answering
-        if auth.user is not None:
-            uq = db((db.questurgency.auth_userid == auth.user.id) & (
-                db.questurgency.questionid == quest.id)).select().first()
-
-            if uq is not None:
-                uqanswered = True
-                uqurg = uq.urgency
-                uqimp = uq.importance
-
-    # need to get priorquests and subsquests as lists which may be empty for each quest now
-    priorquestrows = db(db.questlink.targetid == quest.id).select(db.questlink.sourceid)
-    subsquestrows = db(db.questlink.sourceid == quest.id).select(db.questlink.targetid)
-    priorquests = [row.sourceid for row in priorquestrows]
-    subsquests = [row.targetid for row in subsquestrows]
-
-    # posx=100, posy=100, text='default', answer='', status='In Progress', qtype='quest', priority=50
-    # d3data = '[' + getd3dict(quest.id, 100, 100, quest.questiontext) + ']'
-
-    # vardata=XML(vardata)
-    
-    viewtext += votetext
-
-    if questtype == 'All':
-        context = 'View_Evt_Flow'
-    else:
-        context = 'View'
-
-    return dict(quest=quest, viewtext=viewtext, uqanswered=uqanswered, uqurg=uqurg, uqimp=uqimp, numpass=numpass,
-                priorquests=priorquests, subsquests=subsquests, newansjson=XML(newansjson), context=context)
-
-
-def end_vote():
-    # This allows owner to end a vote at any point and
-    questid = request.args(0, cast=int, default=0)
-    status = score_question(questid, endvote=True)
-    redirect(URL('viewquest', 'index', args=[questid]))
-    return
-
-# qmap function removed not now using
+    return dict(activity=activity, viewtext=viewtext, uqanswered=uqanswered, uqrating=uqrating, uqimpact=uqimpact)
 
 
 def comments():
@@ -268,49 +163,6 @@ def notshowing():
     return dict(reason=reason, questid=questid, shortreason=shortreason)
 
 
-def challenge():
-    # This allows users to challenge resolved questions - whether or not they have answered them - users are not
-    # allowed to challenge questions that are not currently in a state of resolved and this should be done by the
-    # viewquestion function rather than the challenge ie option isn't available if question isn't resolved - actions
-    # are similar and would only be challenged once they are in a state of Agreed
-
-    chquestid = request.args[0]
-    if auth.user is None:
-        responsetext = 'You must be logged in to challenge a question'
-    else:
-        # find out if user has previously challenged the question - this will be a userchallenge record
-        qcs = db((db.questchallenge.auth_userid == auth.user.id) & (db.questchallenge.questionid == chquestid)).select()
-        qc = qcs.first()
-        if qc is None:
-            db.questchallenge.insert(questionid=chquestid, auth_userid=auth.user.id,
-                                     challengereason=request.vars.challreason)
-            # Now also need to add 1 to the numchallenges figure - I think this will reset when back to resolved and
-            # It shouldn't be possible to challenge unless resolved
-            questrows = db(db.question.id == chquestid).select()
-            quest = questrows.first()
-            numchallenges = quest.othercounts
-            numchallenges[1] += 1
-            newlevel = quest.question_level
-            status = quest.status
-            challenge = False
-            if numchallenges[1] >= 3:
-                numchallenges[2] += 1
-                newlevel = quest.question_level + 2
-                status = 'In Progress'
-                challenge = True
-                updatequestcounts(quest.qtype, quest.category, quest.category, quest.status, status, quest.answer_group)
-                # thinking behind this is to restore question two levels higher which is where
-                # it would have been if the 6 people had mixed up ie 3 think wrong and 3 that agreed
-            db(db.question.id == chquestid).update(status=status, question_level=newlevel, othercounts=numchallenges,
-                                                   challengedate=request.utcnow, urgency=quest.urgency,
-                                                   importance=quest.importance, challenge=challenge)
-            responsetext = 'Challenge accepted'
-        else:
-            responsetext = 'You have already challenged this question and only 1 challenge is allowed at present'
-    return 'jQuery(".flash").html("' + responsetext + '").slideDown().delay(1500).slideUp();' \
-                                                      ' $("#target").html("' + responsetext + '");'
-
-
 def agree():
     # This allows users to record if they agree or disagree with resolve questions
     # - whether or not they have answered them - only resolved questions can
@@ -371,8 +223,6 @@ def agree():
     return 'jQuery(".w2p_flash").html("' + responsetext + '").slideDown().delay(1500).slideUp(); $("#target").html("' \
        + responsetext + '"); $("#btns' + str(chquestid) + ' .btn-success").addClass("disabled").removeClass("btn-success"); $("#btns'\
       + str(chquestid) + ' .btn-danger").addClass("disabled").removeClass("btn-danger");'
-
-
 
 
 def flagcomment():

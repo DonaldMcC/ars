@@ -169,7 +169,7 @@ db.define_table('subdivision',
 
 userfields = [
     Field('numratings', 'integer', default=0, readable=False, writable=False, label='Answered'),
-    Field('exclude_categories', 'list:string', label='Excluded Categories',
+    Field('exclude_categories', 'list:reference category', label='Excluded Categories',
           comment="Select categories you DON'T want to see"),
     Field('country', 'reference country', default='Unspecified', label='Country'),
     Field('subdivision', 'reference subdivision', default='Unspecified', label='Sub-division'),

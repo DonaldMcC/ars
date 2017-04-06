@@ -16,7 +16,8 @@
 {{if i==items_per_page: break}}
 <tr>
 <td>{{=row.fullname}}</td>
-<td>{{=row.activity}} {{=get_buttons(row.status, row.id, row.auth_userid, auth.user_id)}}</td>
+<td data-toggle =" popover" title ="{{=row.details}}" data-content="">
+{{=row.activity}} {{=get_buttons(row.status, row.id, row.auth_userid, auth.user_id)}}</td>
 <td>{{=prettydate(row.activity_time)}}</td>
 <td>{{=row.town}},{{=row.country.country_name}} </td>
 <td>{{=row.why}}</td>
@@ -41,7 +42,8 @@
 {{if i==items_per_page: break}}
 <tr>
 <td>{{=row.fullname}}</td>
-<td>{{=row.activity}} {{=get_buttons(row.status, row.id, row.auth_userid, auth.user_id)}}</td>
+<td data-toggle =" popover" title ="{{=row.details}}" data-content="">
+{{=row.activity}} {{=get_buttons(row.status, row.id, row.auth_userid, auth.user_id)}}</td>
 <td>{{=prettydate(row.activity_time)}}</td>
 <td>{{=row.town}},{{=row.country.country_name}} </td>
 <td>{{=row.why}}</td>
