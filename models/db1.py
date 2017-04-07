@@ -59,8 +59,6 @@ db.define_table('system_scope',
                 Field('description', 'string'),
                 format='%(description)s')
 
-
-
 db.define_table('activity',
                 Field('activity', 'string', label="What's happening"),
                 Field('details', 'text', label='Details'),
@@ -125,45 +123,34 @@ db.user_rating.rating.widget = hradio_widget
 db.user_rating.impact.requires = IS_IN_SET([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 db.user_rating.impact.widget = hradio_widget
 
-scopes = ['1 Global', '2 Continental', '3 National', '4 Provincial', '5 Local']
 db.define_table('viewscope',
                 Field('sortorder', 'string', default='1 Priority', label='Sort Order'),
                 Field('showscope', 'boolean', label='Show scope Filter', comment='Uncheck to show all'),
                 Field('filters', 'string'),
+                Field('selection', 'string', default=['Complete']),
                 Field('view_scope', 'string', default='1 Global'),
-                Field('continent', 'string', default='Unspecified', label='Continent'),
                 Field('country', 'string', default='Unspecified', label='Country'),
                 Field('subdivision', 'string', default='Unspecified', label='Sub-division'),
                 Field('showcat', 'boolean', label='Show Category Filter', comment='Uncheck to show all'),
-                Field('category', 'string', default='Unspecified', label='Category', comment='Optional'),
-                Field('selection', 'string', default=['Issue', 'Question', 'Action', 'Resolved']),
-                Field('execstatus', 'string', label='Execution Status',
-                      default=['Proposed', 'Planned', 'In Progress', 'Completed']),
-                Field('answer_group', 'string', default='Unspecified', label='Answer Group'),
+                Field('category', 'reference category', label='Category'),
+                Field('startdate', 'date', default=request.utcnow, label='From Date'),
+                Field('enddate', 'date', default=request.utcnow, label='To Date'),
                 Field('searchstring', 'string', label='Search:', default=session.searchstring),
                 Field('coord', 'string', label='Lat/Longitude'),
                 Field('searchrange', 'integer', default=100, label='Search Range in Kilometers'),
-                Field('startdate', 'date', default=request.utcnow, label='From Date'),
-                Field('enddate', 'date', default=request.utcnow, label='To Date'),
                 Field('linklevels', 'integer', default=1, label='No of generations of linked items',
                       requires=IS_IN_SET([0,1, 2, 3, 4, 5])))
 
 # default = (session.coord or (auth.user and auth.user.coord))
 db.viewscope.view_scope.requires = IS_IN_SET(scopes)
-db.viewscope.sortorder.requires = IS_IN_SET(['1 Priority', '2 Resolved Date', '3 Submit Date', '4 Answer Date'])
-db.viewscope.selection.requires = IS_IN_SET(['Issue', 'Question', 'Action', 'Proposed', 'Resolved', 'Draft'],
-                                            multiple=True)
-db.viewscope.selection.widget = hcheckbutton_widget
-db.viewscope.execstatus.requires=IS_IN_SET(['Proposed', 'Planned', 'In Progress', 'Completed'], multiple=True)
-db.viewscope.execstatus.widget = hcheckbutton_widget
-db.viewscope.filters.requires = IS_IN_SET(['Scope', 'Category', 'AnswerGroup', 'Date', 'Project', 'Event'], multiple=True)
+db.viewscope.sortorder.requires = IS_IN_SET(['1 Rating', '2 Importance', '3 Create Date'])
+db.viewscope.filters.requires = IS_IN_SET(['Scope', 'Category', 'Date'], multiple=True)
 db.viewscope.filters.widget = hcheckbutton_widget
-
-# db.viewscope.selection.widget = SQLFORM.widgets.checkboxes.widget
+db.viewscope.selection.requires = IS_IN_SET(['Complete', 'Draft'],multiple=True)
 db.viewscope.view_scope.widget = hradio_widget
 db.viewscope.sortorder.widget = hradio_widget
-# db.viewscope.sortorder.widget = SQLFORM.widgets.radio.widget
 db.viewscope.searchstring.requires = IS_NOT_EMPTY()
+db.viewscope.selection.widget = hcheckbutton_widget
 
 db.viewscope.coord.requires = IS_GEOLOCATION()
 db.viewscope.coord.widget = location_widget()

@@ -34,7 +34,7 @@
 
 @auth.requires(True, requires_login=requires_login)
 def newsearch():
-    fields = ['searchstring', 'linklevels']
+    fields = ['searchstring']
     form = SQLFORM(db.viewscope, fields=fields)
     form.element(_type='submit')['_class'] = "btn btn-success"
     results = None
@@ -48,18 +48,20 @@ def newsearch():
     else:
         session.networklist = []
     count = len(session.networklist)
-    return dict(form=form, results=results, count=count, linklevels=form.vars.linklevels)
+    return dict(form=form, results=results, count=count)
+
 
 @auth.requires_membership('manager')
 def delindex():
-    results = indsearch.index_delete('qtype', 'questiontext')
-    message = 'question index deleted'
+    results = indsearch.index_delete('activity', 'details')
+    message = 'activity index deleted'
     return dict(message=message, results=results)
+
 
 @auth.requires_membership('manager')
 def reindex():
-    rows = db(db.question.id > 0).select()
+    rows = db(db.activity.id > 0).select()
     for row in rows:
         indsearch.index_create(row, row.id)
-    message = 'question index recreated'
+    message = 'activity index recreated'
     return dict(message=message)

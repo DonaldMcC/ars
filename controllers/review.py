@@ -71,23 +71,13 @@ def newindex():
 
 
     v = request.args(0, default='None')  # lets use this for my
-    if v == 'plan':
-        fields = ['selection', 'execstatus', 'sortorder', 'filters', 'view_scope', 'continent', 'country',
-                  'subdivision', 'category', 'answer_group', 'startdate', 'enddate']
-    else:
-        fields = ['selection', 'sortorder', 'filters', 'view_scope', 'continent', 'country', 'subdivision',
-                  'category', 'answer_group', 'startdate', 'enddate', 'coord',
-                  'searchrange']
+
+    fields = ['selection', 'sortorder', 'filters', 'view_scope', 'country', 'subdivision',
+                  'category', 'startdate', 'enddate', 'coord', 'searchrange']
     q = request.args(1, default='None')  # this matters
     s = request.args(2, default='None')  # this is the sort order
     page = request.args(3, cast=int, default=0)
     reset = request.args(4, default='No')  # This will reset just the selection
-
-    if not session.execstatus:
-        if v == 'plan':
-            session.execstatus = ['Proposed', 'Planned', 'In Progress']
-        else:
-            session.execstatus = ['Proposed', 'Planned', 'In Progress', 'Completed']
 
     if not session.selection or reset == 'Yes':
         if v == 'quest':
