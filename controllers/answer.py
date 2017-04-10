@@ -50,37 +50,42 @@ def answer_question():
     """
 
     activityid = request.args(0, cast=int, default=0)
-    activity = db(db.activity.id == activityid).select().first()
+    activity = db.activity[activityid]
 
     ur = db((db.user_rating.activityid == activityid) & (db.user_rating.auth_userid == auth.user_id)).select().first()
     if ur:
-        pass # TODO will insert record ID here and define fields above
-
-    form2 = SQLFORM(db.user_rating, showid=False, fields=['rating', 'impact', 'reject'],
+        form2 = SQLFORM(db.user_rating, ur.id,  showid=False, fields=['rating', 'impact', 'reject'],
+                    submit_button='Submit', col3={'reject': 'Select if invalid or off subject '},
+                                                  formstyle='table3cols')
+    else:
+        form2 = SQLFORM(db.user_rating, showid=False, fields=['rating', 'impact', 'reject'],
                     submit_button='Submit', col3={'reject': 'Select if invalid or off subject '},
                                                   formstyle='table3cols')
 
     form2.element(_type='submit')['_class'] = "btn btn-success"
 
     if ur: # already rated so will need to populate form vars with current values
-        form2.vars.activescope = ur['activescope']
-        form2.vars.continent = ur['continent']
-        form2.vars.country = ur['country']
-        form2.vars.subdivision = ur['subdivision']
-        form2.vars.category = ur['category']
-
+        form2.vars.rating = ratings[int(ur['rating'])-1]
+        form2.vars.impact = int(ur['impact'])
 
     if form2.validate():
         form2.vars.auth_userid = auth.user.id
         form2.vars.activityid = activityid
-        # default to urgency 10 for testing so questions that are answered continue to get answered
+        form2.vars.rating = form2.vars.rating[0]
+        if form2.deleted:
+            db(db.user_rating.id == activityid).delete()
+            response.flash = 'Rating deleted'
+            redirect(URL('default', 'index'))
+        else:
+            ur.update_record(**dict(form2.vars))
+            response.flash = 'Rating updated'
+            redirect(URL('default', 'index'))
 
         form2.vars.id = db.user_rating.insert(**dict(form2.vars))
         response.flash = 'form accepted'
         redirect(URL('viewquest', 'index', args=[activityid]))
     elif form2.errors:
         response.flash = 'form has errors'
-
     return dict(form2=form2, activity=activity)
 
 

@@ -117,7 +117,12 @@ db.define_table('user_rating',
                 Field('reject', 'boolean', default=False),
                 Field('createdate', 'datetime', writable=False, label='Date Created', default=request.utcnow))
 
-db.user_rating.rating.requires = IS_IN_SET([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+#db.user_rating.rating.requires = IS_IN_SET([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+#db.user_rating.rating.requires = IS_IN_SET([1,2])
+ratings = ['1 Appalling','2 Very Bad', '3 Bad', '4 Poor', '5 OK', '6 Fine',
+           '7 Good', '8 Excellent', '9 Fantastic', '10 Best thing ever']
+db.user_rating.rating.requires = IS_IN_SET(ratings)
+
 db.user_rating.rating.widget = hradio_widget
 
 db.user_rating.impact.requires = IS_IN_SET([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
