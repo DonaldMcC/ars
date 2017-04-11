@@ -83,11 +83,10 @@ db.define_table('activity',
                 Field('createdate', 'datetime', writable=False, label='Date Created', default=request.utcnow),
                 Field('submitdate', 'datetime', writable=False, label='Date Completed'),
                 Field('category', 'reference category', default=1, label='Category'),
-                Field('rating', 'decimal(6,2)', default=5, writable=False, label='We feel'),
-                Field('impact', 'decimal(6,2)', default=5, writable=False, label='Importance'),
+                Field('rating', 'double', default=5, writable=False, label='We feel'),
+                Field('impact', 'double', default=5, writable=False, label='Importance'),
                 Field('tags', 'list:string'),
                 Field('numratings', 'integer', default=0),
-                Field('numimpacts', 'integer', default=0),
                 Field('numrejects', 'integer', default=0)
                 )
 

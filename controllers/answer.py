@@ -38,6 +38,9 @@ highest priority question out to all users and work on resolving it first
     
 """
 
+#TODO add reject handling to submit
+from arsfunctions import update_ratings
+
 #@auth.requires_signature()
 
 @auth.requires_login()
@@ -51,12 +54,16 @@ def answer_question():
 
     activityid = request.args(0, cast=int, default=0)
     activity = db.activity[activityid]
+    old_rating = 0
+    old_impact = 0
 
     ur = db((db.user_rating.activityid == activityid) & (db.user_rating.auth_userid == auth.user_id)).select().first()
     if ur:
         form2 = SQLFORM(db.user_rating, ur.id,  showid=False, fields=['rating', 'impact', 'reject'],
                     submit_button='Submit', col3={'reject': 'Select if invalid or off subject '},
                                                   formstyle='table3cols')
+        old_rating = ur.rating
+        old_impact = ur.impact
     else:
         form2 = SQLFORM(db.user_rating, showid=False, fields=['rating', 'impact', 'reject'],
                     submit_button='Submit', col3={'reject': 'Select if invalid or off subject '},
@@ -72,17 +79,25 @@ def answer_question():
         form2.vars.auth_userid = auth.user.id
         form2.vars.activityid = activityid
         form2.vars.rating = form2.vars.rating[0]
+        new_numratings = activity.numratings
         if form2.deleted:
             db(db.user_rating.id == activityid).delete()
             response.flash = 'Rating deleted'
-            redirect(URL('default', 'index'))
-        else:
+            action = 'delete'
+            new_numratings -= 1
+        elif ur:
             ur.update_record(**dict(form2.vars))
+            action='update'
             response.flash = 'Rating updated'
-            redirect(URL('default', 'index'))
+        else:
+            form2.vars.id = db.user_rating.insert(**dict(form2.vars))
+            action='create'
+            new_numratings += 1
+            response.flash = 'form accepted'
+        new_rating = update_ratings(activity.rating, int(form2.vars.rating[0]), activity.numratings, old_rating, action)
+        new_impact = update_ratings(activity.impact, int(form2.vars.impact[0]) , activity.numratings, old_impact, action)
 
-        form2.vars.id = db.user_rating.insert(**dict(form2.vars))
-        response.flash = 'form accepted'
+        activity.update_record(rating=new_rating, impact=new_impact, numratings=new_numratings)
         redirect(URL('viewquest', 'index', args=[activityid]))
     elif form2.errors:
         response.flash = 'form has errors'

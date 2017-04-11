@@ -24,6 +24,37 @@ if __name__ != '__main__':
     from gluon import *
 
 
+def update_ratings(curr_rating, newval, curr_raters, oldval=0, action='create'):
+    """ 
+    >>> update_ratings(10.0, 8, 2)
+    6.0
+
+    >>> update_ratings(24.0, 8, 3, 5, 'update')
+    9.0
+    
+    >>> update_ratings(24.0, 8, 3, 5, 'bla')
+    rating function called with incorrect values - only change and add are supported
+    24.0
+    """
+
+    if action == 'create':
+        new_rating = (curr_rating + newval) / (curr_raters + 1.0)
+    elif action == 'update':
+        if curr_raters > 0:
+            new_rating = (curr_rating + newval - oldval) / (curr_raters)
+        else:
+            new_rating = newval
+    elif action == 'deletee':
+        if curr_raters > 1:
+            new_rating = (curr_rating - oldval) / (curr_raters - 1.0)
+        else:
+            new_rating = 0
+    else:
+        print 'rating function called with incorrect values - only change and add are supported'
+        new_rating = curr_rating
+    return new_rating
+
+
 def convxml(value, tag, sanitize=False):
     value = str(value)
     value = value.replace('\n', ' ').replace('\r', '')
