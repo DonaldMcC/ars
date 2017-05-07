@@ -32,20 +32,38 @@ track_changes(True)
 
 from gluon import current
 from ndsfunctions import generate_thumbnail
+
+filename = 'private/appconfig.ini'
+path = os.path.join(request.folder, filename)
+if os.path.exists(path):
+    useappconfig = True
+else:
+    useappconfig = False
+
+requires_login=False
 # -------------------------------------------------------------------------
 # once in production, remove reload=True to gain full speed
 # -------------------------------------------------------------------------
-myconf = AppConfig(reload=True)
+if useappconfig:
+    myconf = AppConfig(reload=False)
+    debug = myconf.take('developer.debug', cast=int)
+    backend = myconf.take('search.backend')
+else:
+    debug = False
+    backend = 'SimpleBackend'
 
 if not request.env.web2py_runtime_gae:
     # ---------------------------------------------------------------------
     # if NOT running on Google App Engine use SQLite or other DB
     # ---------------------------------------------------------------------
-    db = DAL(myconf.take('db.uri'),
-             pool_size=myconf.take('db.pool_size', cast=int),
-             migrate=myconf.take('db.migrate', cast=int),
-             lazy_tables=myconf.take('db.lazy_tables', cast=int),
-             check_reserved=['all'])
+    if useappconfig:
+        db = DAL(myconf.take('db.uri'),
+                 pool_size=myconf.take('db.pool_size', cast=int),
+                 migrate=myconf.take('db.migrate', cast=int),
+                 lazy_tables=myconf.take('db.lazy_tables', cast=int),
+                 check_reserved=['all'])
+    else:
+        db = DAL('sqlite://storage.sqlite')
 else:
     # ---------------------------------------------------------------------
     # connect to Google BigTable (optional 'google:datastore://namespace')
@@ -70,8 +88,12 @@ response.generic_patterns = ['*'] if request.is_local else []
 # -------------------------------------------------------------------------
 # choose a style for forms
 # -------------------------------------------------------------------------
-response.formstyle = myconf.get('forms.formstyle')  # or 'bootstrap3_stacked' or 'bootstrap2' or other
-response.form_label_separator = myconf.get('forms.separator') or ''
+if useappconfig:
+    response.formstyle = myconf.get('forms.formstyle')  # or 'bootstrap3_stacked' or 'bootstrap2' or other
+    response.form_label_separator = myconf.get('forms.separator') or ''
+else:
+    response.formstyle = 'bootstrap3_stacked'
+    response.form_label_separator = ''
 
 # -------------------------------------------------------------------------
 # (optional) optimize handling of static files
@@ -93,15 +115,17 @@ response.form_label_separator = myconf.get('forms.separator') or ''
 # - old style crud actions
 # (more options discussed in gluon/tools.py)
 # -------------------------------------------------------------------------
-
-login = myconf.take('login.logon_methods')
+if useappconfig:
+    login = myconf.take('login.logon_methods')
+else:
+    login = 'web2py'
 
 if login == 'socialauth':
     from plugin_social_auth.utils import SocialAuth
     auth = SocialAuth(db)
     username_field = True  # This is required
 else:
-    auth = Auth(db, hmac_key=Auth.get_or_create_key())
+    auth = Auth(db)
     username_field = False  # can set to true if you want login by username rather than email
 
 # host names must be a list of allowed host names (glob syntax allowed)
@@ -121,33 +145,27 @@ mail = auth.settings.mailer
 #mail.settings.server = 'logging' if request.is_local else myconf.get('smtp.server')
 #mail.settings.sender = myconf.get('smtp.sender')
 #mail.settings.login = myconf.get('smtp.login')
-mail.settings.tls = myconf.get('smtp.tls') or False
-mail.settings.ssl = myconf.get('smtp.ssl') or False
+if useappconfig:
+    mail.settings.tls = myconf.get('smtp.tls') or False
+    mail.settings.ssl = myconf.get('smtp.ssl') or False
+    mail.settings.server = myconf.take('smtp.server')
+    mail.settings.sender = myconf.take('smtp.sender')
+    mail.settings.login = myconf.take('smtp.login')
 
 
-
-mail.settings.server = myconf.take('smtp.server')
-mail.settings.sender = myconf.take('smtp.sender')
-mail.settings.login = myconf.take('smtp.login')
-
-
-debug = myconf.take('developer.debug', cast=int)
 if debug:
     mail.settings.server = 'logging:emailout.html'
 
 # -------------------------------------------------------------------------
 # configure other settings
 # -------------------------------------------------------------------------
-
-backend = myconf.take('search.backend')
-response.formstyle = myconf.take('forms.formstyle')  # or 'bootstrap3_stacked'
-response.form_label_separator = myconf.take('forms.separator')
-requires_login = myconf.take('site.require_login', cast=int)
-dbtype = myconf.take('db.dbtype')
-hostadds = myconf.take('google.hostadds', cast=int)
-ad_client = myconf.take('google.ad_client')
-ad_slot = myconf.take('google.ad_slot', cast=int)
-init = myconf.take('init.initialised', cast=int)
+if useappconfig:
+    requires_login = myconf.take('site.require_login', cast=int)
+    dbtype = myconf.take('db.dbtype')
+    hostadds = myconf.take('google.hostadds', cast=int)
+    ad_client = myconf.take('google.ad_client')
+    ad_slot = myconf.take('google.ad_slot', cast=int)
+    init = myconf.take('init.initialised', cast=int)
 
 
 db.define_table('category',

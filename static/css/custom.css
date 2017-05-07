@@ -1,0 +1,497 @@
+div.flash {
+	background: green;
+}
+
+/* make bootstrap forms smaller */
+.help-block {
+
+   margin-top: 0px; 
+  margin-bottom: 0px;
+
+}
+
+.form-group {
+     margin-bottom: 5px;
+}
+
+.helpboxfill {
+width: 100%;
+}
+
+.deck-current {
+    font-size: 22px;
+}
+
+[type="text"], [type="password"], select {
+  margin-right: 5px; width: 100%; height: 32px;
+}
+
+body {background-color: rgba(252, 252, 252, 0.95);}
+
+.graph-svg-component {
+    background-color: rgba(150,230,255,.2);
+}
+
+h1 {font-size:1.50em;}
+h2 {font-size:1.25em;}
+h3 {font-size:1.00em;}
+h4 {font-size:1.00em;}
+h5 {font-size:1.00em;}
+h6 {font-size:1.00em;}
+
+h2 {
+    text-align:left;
+}
+
+h1 {
+    text-align:left;
+}
+
+.answer {
+	margin-left: 25px;	
+}
+
+li {text-align:left;}
+
+.correct {
+    background-color: #9c9;
+}
+
+.wrong {
+    background-color: #c99;
+}
+
+
+.resolved {
+    background-color: rgba(32, 208, 32, .15); 
+}
+
+.actresolved {
+    background-color: rgba(32, 208, 32, .15);
+}
+
+.inprog {
+    background-color: rgba(255, 180, 0, .05);
+}
+
+.resquest {
+    background-color: rgba(40, 100, 1, .2);
+}
+
+.actinprog {
+    background-color: rgba(80,230,250 .05);
+}
+.rejected {
+    background-color: #c99;
+}
+
+.quest-vlow {
+    background-color: rgba(220, 255, 220, .5);
+}
+.quest-low {
+    background-color: rgba(193, 255, 193, .5);
+}
+.quest-medium{
+    background-color: rgba(166, 255, 166, .5);
+}
+.quest-high {
+    background-color: rgba(138, 255, 138, .5);
+}
+.quest-vhigh {
+    background-color: rgba(110, 255, 110, .5);
+}
+
+.action-vlow {
+    background-color: rgba(255, 255, 220, .5);
+}
+.action-low {
+    background-color: rgba(255, 255, 193, .5);
+}
+.action-medium{
+    background-color: rgba(255, 255, 166, .5);
+}
+.action-high {
+    background-color: rgba(255, 255, 138, .5);
+}
+.action-vhigh {
+    background-color: rgba(255, 255, 110, .50);
+}
+
+.issue-vlow {
+    background-color: rgba(220, 220, 255 .5);
+}
+.issue-low {
+    background-color: rgba(193, 193, 255, .5);
+}
+.issue-medium{
+    background-color: rgba(166, 166, 255, .5);
+}
+.issue-high {
+    background-color: rgba(138, 138, 255, .5);
+}
+.issue-vhigh {
+    background-color: rgba(110, 110, 255, .50);
+}
+
+.taskyellow {
+    background-color: rgba(247, 228, 56 .5);
+}
+.taskblue {
+    background-color: rgba(58, 132, 195, .5);
+}
+.taskred {
+    background-color: rgba(196, 58, 58, .5);
+}
+.taskpurple {
+    background-color: rgba(193, 58, 193, .3);
+}
+.taskgreen {
+    background-color: rgba(80, 193, 58, .50);
+}
+
+
+input[type="range"] {
+     -webkit-appearance:none;
+
+}
+
+input[type="range"]::-webkit-slider-thumb {
+     -webkit-appearance:none;
+    background-color:  blue;
+    width: 6px;
+    height: 10px;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    width: 300px;
+    height: 10px;
+    background: #ddd;
+    border: none;
+    border-radius: 3px;
+}
+
+input[type=range]::-moz-range-track {
+    width: 360px;
+    height: 10px;
+    background: #ddd;
+    border: none;
+    border-radius: 3px;
+}
+
+
+
+input[type=range]::-moz-range-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: blue;
+}
+
+/*hide the outline behind the border*/
+input[type=range]:-moz-focusring{
+    outline: 1px solid white;
+    outline-offset: -1px;
+}
+
+input[type=range]:focus::-moz-range-track {
+    background: #ccc;
+}
+
+/* this caused display problems
+input[type=range]::-ms-track {
+    width: 180px;
+    height: 12px;
+    background: #ddd;
+    border: none;
+    border-radius: 10px;
+
+    /* remove default tick marks
+    color: transparent;*/
+}*/
+
+input[type=range]::-ms-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: blue;
+}
+
+input[type="range"]:disabled::-ms-fill-lower {
+     background-color: rgba(255, 0, 0, 0.80);
+
+}
+
+input[type="range"]:active::-ms-fill-lower {
+     background-color: rgba(255, 255, 0, 0.80);
+
+}
+
+input[type="range"]::-ms-fill-lower {
+     background-color: rgba(0, 255, 0, 0.80);
+
+}
+
+input[type="range"]::-ms-fill-upper {
+     background-color: #ddd;;
+
+}
+
+#comments td
+ {
+ border:1px solid green;
+
+ }
+
+ #comments th
+ {
+ background-color:green;
+ color:white;
+ }
+
+.question {
+    background-color: #fff;
+}
+
+.answers {
+    background-color: #fff;
+}
+
+.category {
+    border-radius: 15px;
+    border: 1px solid darkblue;
+
+}
+
+.issuetable {
+    text-align:center;
+    table-layout:fixed;
+    width: 100%;
+    border: 1px solid darkblue;
+    border-collapse: separate;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    box-shadow: 3px 3px 2px #BBBBBB;
+
+}
+
+.issuetable2 {
+    table-layout:fixed;
+    width: 100%;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    box-shadow: 2px 2px 1px #BBBBBB;
+}
+
+.issuetable th {
+    text-align:center;
+    }
+
+.page-header {
+    padding-top: 5px;
+    border-bottom: 1px solid #eee;
+    margin: 10px 0;
+    padding-bottom: 9px;
+}
+
+#newchart {
+  height: 280px;
+  position: relative;
+  width: 800px;
+    border-style: solid;
+        -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+}
+
+#chartside {
+  height: 160px;
+  position: relative;
+  width: 300px;
+    border-style: solid;
+        -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+}
+
+.d3label {
+     font-size: 14px;
+     font-weight: bold;
+}
+
+.d3tooltip {
+  background: #eee;
+  box-shadow: 0 0 5px #999999;
+  color: #333;
+  display: none;
+  font-size: 12px;
+  left: 130px;
+  padding: 10px;
+  position: absolute;
+  text-align: center;
+  top: 95px;
+  width: 150px;
+  z-index: 10;
+}
+
+.d3sidetip {
+  background: #eee;
+  box-shadow: 0 0 5px #999999;
+  color: #333;
+  display: none;
+  font-size: 12px;
+  left: 50px;
+  padding: 10px;
+  position: absolute;
+  text-align: center;
+  top: 95px;
+  width: 50px;
+  z-index: 10;
+}
+
+#logo {
+      border-style: solid;
+      border-width: 2px;
+      border-color: #00f;
+      background:#FFF;
+    }
+
+rect {
+      stroke-width: 1;
+      stroke:steelblue;
+      fill:#FFF;
+    /* fill-opacity: .5; */
+    }
+
+/* CSS for the logo and removed fill opacity as messing up graph legends */
+.logorect {
+     fill-opacity: .5; 
+}
+
+#toolbox{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    margin-bottom: 0.5em;
+    margin-left: 1em;
+    border: 2px solid #EEEEEE;
+    border-radius: 5px;
+    padding: 1em;
+    z-index: 5;
+}
+
+#toolbox input{
+    width: 30px;
+    opacity: 0.4;
+}
+#toolbox input:hover{
+    opacity: 1;
+    cursor: pointer;
+}
+
+#hidden-file-upload{
+    display: none;
+}
+
+#download-input{
+    margin: 0 0.5em;
+}
+
+.conceptG text{
+    font-size: 20px
+    pointer-events: none;
+}
+
+marker{
+    fill: #333;
+}
+
+g.conceptG circle{
+    fill: #F6FBFF;
+    stroke: #333;
+    stroke-width: 2px;
+}
+
+g.conceptG:hover circle{
+    fill: rgb(200, 238, 241);
+}
+
+g.selected circle{
+    fill: rgb(250, 232, 255);
+}
+g.selected:hover circle{
+    fill: rgb(250, 232, 255);
+}
+
+path.link {
+    fill: none;
+    stroke-width: 6px;
+    cursor: default;
+}
+
+path.link:hover{
+    stroke: rgb(94, 196, 204);
+}
+
+g.connect-node circle{
+    fill: #BEFFFF;
+}
+
+path.link.hidden{
+    stroke-width: 0;
+}
+
+path.link.selected {
+    stroke: rgb(229, 172, 247);
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    color: #fff;
+    background-image: linear-gradient(#04519b, #044687 60%, #033769);
+    background-color: #033c73;
+    border-color: #022f5a;
+    background-repeat: no-repeat;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff04519b', endColorstr='#ff033769', GradientType=0);
+    filter: none;
+    border-bottom: 1px solid #022241;
+}
+
+#radioBtn .notActive{
+    color: #999;
+}
+
+.svgselect {
+      opacity: .6;
+}
+
+.graph-V {
+    border-style: solid;
+    border-color: green;
+}
+
+.graph-A {
+    border-style: solid;
+    border-color: orange;
+}
+
+.graph-D {
+    border-style: solid;
+    border-color: red;
+}
+
+.graph-L {
+    border-style: solid;
+    border-color: blue;
+}
+
+.graph-E {
+    border-style: solid;
+    border-color: yellow;
+}
