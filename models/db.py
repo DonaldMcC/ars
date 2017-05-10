@@ -12,7 +12,7 @@
 # if SSL/HTTPS is properly configured and you want all HTTP requests to
 # be redirected to HTTPS, uncomment the line below:
 # -------------------------------------------------------------------------
-# request.requires_https()
+
 
 # -------------------------------------------------------------------------
 # app configuration made easy. Look inside private/appconfig.ini
@@ -40,6 +40,8 @@ if os.path.exists(path):
 else:
     useappconfig = False
 
+
+
 requires_login=False
 # -------------------------------------------------------------------------
 # once in production, remove reload=True to gain full speed
@@ -51,6 +53,9 @@ if useappconfig:
 else:
     debug = False
     backend = 'SimpleBackend'
+
+if useappconfig and myconf.take('site.require_https', cast=int):
+    request.requires_https()
 
 if not request.env.web2py_runtime_gae:
     # ---------------------------------------------------------------------

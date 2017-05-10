@@ -21,33 +21,17 @@
 # Lets change to a 2 dim list
 # need to pip install pycountry and incf.countryutils before this code will work
 
-
-import time
 import pycountry
-from incf.countryutils import transformations
 
 
 @auth.requires_membership('manager')
 def countries():
-    continents = {"Unspecified"}
-    # for country in pycountry.countries:
-    #    try:
-    #        continents.add(transformations.cn_to_ctn(country.name))
-    #    except KeyError, e:
-    #        print 'KeyError - reason "%s"' % str(e)
-            
-    # for x in continents:
-    #    if db(db.continent.continent_name == x).isempty():
-    #        db.continent.insert(continent_name=x)
-            
     for country in pycountry.countries:
-        try:  # seems som
-            #continent = transformations.cn_to_ctn(country.name)
-            if db(db.country.country_name == country).isempty():
+        try:
+            if db(db.country.country_name == country.name).isempty():
                 db.country.insert(country_name=country.name)
-        except KeyError, e:
-            print 'IKeyError - reason "%s"' % str(e)
-            
+        except KeyError as e:
+            print('IKeyError - reason "%s"' % str(e))
     return locals()
 
 
@@ -55,13 +39,10 @@ def countries():
 def subdivns():
     for country in pycountry.countries:
         try: 
-            subdivns = pycountry.subdivisions.get(country_code=country.alpha_2)
-            for x in subdivns:
+            subdivn = pycountry.subdivisions.get(country_code=country.alpha_2)
+            for x in subdivn:
                 if db(db.subdivision.subdiv_name == x.name).isempty():
                     db.subdivision.insert(subdiv_name=x.name, country=country.name)
-        except KeyError, e:
-            print 'I got a KeyError - reason "%s"' % str(e)
-            
-    #setup_complete = db(db.initialised.id > 0).update(website_init=True)
-    #INIT = db(db.initialised).select().first()
+        except KeyError as e:
+            print('I got a KeyError - reason "%s"' % str(e))
     return locals()
