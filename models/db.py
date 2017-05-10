@@ -46,6 +46,8 @@ requires_login=False
 # -------------------------------------------------------------------------
 if useappconfig:
     myconf = AppConfig(reload=False)
+    if myconf.take('site.require_https', cast=int):
+        request.requires_https()
     debug = myconf.take('developer.debug', cast=int)
     backend = myconf.take('search.backend')
 else:
