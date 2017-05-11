@@ -58,7 +58,7 @@
 <p>{{#get_buttons(quest['qtype'], quest['status'], quest['resolvemethod'], quest['id'], quest['auth_userid'], (auth.user and auth.user.id or 0), uqanswered, context, quest['eventid'])}}
 
 
-
+{{=LOAD('plugin_comments','index',args=('activity',activity['id']),ajax=True,user_signature=True)}}
 
 
 
