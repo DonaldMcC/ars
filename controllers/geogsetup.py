@@ -38,11 +38,12 @@ def countries():
 @auth.requires_membership('manager')
 def subdivns():
     for country in pycountry.countries:
-        try: 
+        try:
+            arscountry = db(db.country.country_name == country.name).select().first()
             subdivn = pycountry.subdivisions.get(country_code=country.alpha_2)
             for x in subdivn:
                 if db(db.subdivision.subdiv_name == x.name).isempty():
-                    db.subdivision.insert(subdiv_name=x.name, country=country.name)
+                    db.subdivision.insert(subdiv_name=x.name, country=country.name, countryid =arscountry.id)
         except KeyError as e:
             print('I got a KeyError - reason "%s"' % str(e))
     return locals()

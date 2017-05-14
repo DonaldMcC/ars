@@ -61,3 +61,29 @@ def accept_activity():
     activity = db(db.activity.id == activityid).select().first()
 
     return dict(status=status, item=item, activity=activity)
+
+def subdivn():
+    # This is called via Ajax to populate the subdivision dropdown on change of country
+    # now changed to derelationalise country subdivision
+    result = "<option value='Unspecified'>Unspecified</option>"
+    print request.vars.country
+    subdivns = db(db.subdivision.countryid == request.vars.country).select(
+        db.subdivision.subdiv_name, cache=(cache.ram, 1200), cacheable=True)
+    for row in subdivns:
+        if row.subdiv_name != request.vars.subdivision:
+            result += "<option value='" + str(row.subdiv_name) + "'>" + row.subdiv_name + "</option>"
+        else:
+            result += "<option value='" + str(row.subdiv_name) + "' selected>" + row.subdiv_name + "</option>"
+
+    return XML(result)
+
+def country():
+    result = "<option value='Unspecified'>Unspecified</option>"
+    countries = db(db.country.id>0).select(
+        db.country.country_name, cache=(cache.ram, 6000), cacheable=True)
+    for countrie in countries:
+        if countrie.country_name != request.vars.country:
+            result += "<option value='" + str(countrie.country_name) + "'>" + countrie.country_name + "</option>"
+        else:
+            result += "<option value='" + str(countrie.country_name) + "' selected>" + countrie.country_name + "</option>"
+    return XML(result)

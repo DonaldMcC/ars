@@ -344,10 +344,10 @@ def initialise():
         db.system_scope.insert(description="4 Local")
 
     if db(db.country.country_name == "Unspecified").isempty():
-        db.country.insert(country_name="Unspecified", continent="Unspecified")
+        unspecid = db.country.insert(country_name="Unspecified", continent="Unspecified")
 
     if db(db.subdivision.subdiv_name == "Unspecified").isempty():
-        db.subdivision.insert(subdiv_name="Unspecified", country='Unspecified')
+        db.subdivision.insert(subdiv_name="Unspecified", country='Unspecified', countryid=unspecid)
 
     # email_setup()
     # schedule_email_runs()

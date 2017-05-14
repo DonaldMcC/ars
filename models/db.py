@@ -190,6 +190,7 @@ db.define_table('country',
 db.define_table('subdivision',
                 Field('subdiv_name', 'string', label='Sub-division'),
                 Field('country', 'string'),
+                Field('countryid', 'reference country'),
                 format='%(subdiv_name)s')
 
 userfields = [
