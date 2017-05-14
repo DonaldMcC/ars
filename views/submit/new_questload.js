@@ -7,13 +7,11 @@ var qtext ='';
 
 $(document).ready(function(){
    $(" body").tooltip({selector: '[data-toggle = popover]'});
-   $('#activity_subdivision__row .help-block').html('<select id="subdivopt" name="subdivopt" onchange="showsubdivValue(this.value)"> <option value="Unspecified">Unspecified</option> </select>');
-    /*$('#activity_country').hide();*/
-    $('#activity_subdivision').hide();
-    
+
             $('#activity_country').change(function(){
-            $('#subdivopt').empty();
-            ajax('{{=URL('submit','subdivn')}}', ['country'], 'subdivopt');
+                console.log('I fired');
+            $('#activity_subdivision').empty();
+            ajax('{{=URL('submit','subdivn')}}', ['country'], 'activity_subdivision');
             document.getElementById("activity_subdivision").value="Unspecified";
             });
 
