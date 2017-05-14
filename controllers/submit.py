@@ -68,7 +68,8 @@ def subdivn():
     result = "<option value='Unspecified'>Unspecified</option>"
     print request.vars.country
     subdivns = db(db.subdivision.countryid == request.vars.country).select(
-        db.subdivision.id, db.subdivision.subdiv_name, cache=(cache.ram, 1200), cacheable=True)
+        db.subdivision.id, db.subdivision.subdiv_name, orderby=db.subdivision.subdiv_name,
+        cache=(cache.ram, 1200), cacheable=True)
     for row in subdivns:
         if row.subdiv_name != request.vars.subdivision:
             result += "<option value='" + str(row.id) + "'>" + row.subdiv_name + "</option>"
