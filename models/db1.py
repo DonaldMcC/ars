@@ -112,7 +112,7 @@ db.define_table('user_rating',
                 Field('activityid', db.activity, writable=False ),
                 Field('auth_userid', 'reference auth_user', writable=False, readable=False),
                 Field('rating', 'integer', label='We feel'),
-                Field('impact', 'decimal(6,2)', label='Importance', comment='How many people does this impact'),
+                Field('impact', 'integer', label='Importance', comment='How many people does this impact'),
                 Field('reject', 'boolean', default=False),
                 Field('createdate', 'datetime', writable=False, label='Date Created', default=request.utcnow))
 
