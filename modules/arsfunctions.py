@@ -38,7 +38,10 @@ def update_ratings(curr_rating, newval, curr_raters, oldval=0, action='create'):
     """
 
     if action == 'create':
-        new_rating = (curr_rating + newval) / (curr_raters + 1.0)
+        try:
+            new_rating = (curr_rating + newval) / (curr_raters + 1.0)
+        except TypeError:
+            new_rating = newval #  should only happen with first rating
     elif action == 'update':
         if curr_raters > 0:
             new_rating = (curr_rating + newval - oldval) / (curr_raters)
