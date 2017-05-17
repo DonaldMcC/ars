@@ -123,7 +123,10 @@ def newindex():
     else:
         form.vars.startdate = form.vars.enddate - timedelta(days=numdays)
 
-    form.vars.category = session.category
+    if session.category:
+        form.vars.category = session.category
+    else:
+        form.vars.category = 'Unspecified'
     if session.view_scope:
         form.vars.view_scope = session.view_scope
     form.vars.continent = session.vwcontinent
@@ -144,9 +147,6 @@ def newindex():
         
     if session.projid:
         form.vars.projid = session.projid
-        
-    if q == 'Draft':
-        session.selection = ['Issue', 'Question', 'Action', 'Draft']
 
     form.vars.sortorder = session.sortorder
     form.vars.selection = session.selection
@@ -160,6 +160,7 @@ def newindex():
     # print form.vars.filters
 
     if form.validate():
+        print session.selection
         session.view_scope = form.vars.view_scope
         session.category = form.vars.category
         session.vwcontinent = form.vars.continent

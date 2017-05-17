@@ -8,15 +8,14 @@
 
 <div id="target"></div>
 
-{{if 'Question' in session.selection and 'Resolved' in session.selection:}}
-<h1>Activities</h1>
-<div id="questresolved">
-    <script>
-$( "#questresolved" ).load("{{=URL('default', 'questload.load', vars=dict(selection='QR',items_per_page=50,sortby='ResDate'))}}","test", function() {
-  $('#QR').DataTable({dom: 'Bfrtip', responsive: true});} );
-</script>
+<div id="activity">
+
+{{#LOAD('default','questload.load',args=['default'],vars=dict(items_per_page=5,sortby='Rating',no_page=False),ajax=True,target="questload")}}
+        <script>
+$( "#activity" ).load("{{=URL('default', 'questload.load', vars=dict(q='good', items_per_page=10, sortby='rating'))}}","test", function() {
+  $('#good').DataTable({dom: 'Bfrtip', responsive: true});} );
+      </script>
 </div>
-{{pass}}
 
 <script>
 {{include 'review/newindex.js'}}

@@ -219,6 +219,7 @@ $(document).ready(function(){
 
 });
 
+
  var lwlat = "#lw_lat";
  var lwlng = "#lw_lng";
 

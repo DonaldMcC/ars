@@ -57,7 +57,16 @@ def questload():
     category = session.category or None
     q = request.vars.q or 'good'
 
-    strquery = (db.activity.status == 'Complete')
+
+    if not session.selection:
+        strquery = (db.activity.id>0)
+    else:
+        if len(session.selection)== 2:
+            strquery = (db.activity.id>0)
+        elif 'Draft' in session.selection:
+            strquery = (db.activity.status == 'Draft')
+        else:
+            strquery = (db.activity.status == 'Complete')
 
     if request.vars.page:
         page = int(request.vars.page)
@@ -73,11 +82,11 @@ def questload():
 
     no_page = request.vars.no_page
 
-
     if request.vars.sortby == 'rating':
         sortby = db.activity.rating
     else:
         sortby = ~db.activity.rating
+    print strquery
     activity = db(strquery).select(orderby=[sortby], limitby=limitby)
     return dict(q=q, activity=activity, page=page, items_per_page=items_per_page, no_page=no_page)
 
