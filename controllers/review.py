@@ -28,14 +28,13 @@ from datetime import timedelta
 
 @auth.requires(True, requires_login=requires_login)
 def newindex():
-    # this replaces index and will now aim to provide an ajax version of review and 4 sections being this
-    # issues, questions and actions which can all be shown or hidden and we may have a map section thereafter
+    # this provides an ajax version of review and 2 sections being draft and completed issues.
+    # Users can only see their own draft issue
 
-    # this will also need an arg of some sort to determine if session variables should be heeded initially or default
-    # to preset values - but whole thing is getting there now
+    # session variables will generally be used to preset values - but certain calls and views may use
+    # an arg to override this
 
-    # this is a new file aiming to replace action index and review resolved and finally review my answers
-    # Plan is to have up to 3 arguments for this which I thnk will be
+    # Plan is to have up to 5 arguments for this which I thnk will be
     # 1 View - v
     # 2 Query - q
     # 3 Sort Order - s
@@ -43,68 +42,32 @@ def newindex():
     # 5 Items Per Page
 
     # Valid values for view are:
-    # quest, action
+    # draft,  completed, all - default will be completed
     # Valid values for query are:
-    # resolved, agreed, proposed and my - my is only valid if logged in
-    # Valid values for sort order are dependant on the view but may be
-
-    # priority, resolvedate, duedate, submitdate or responsible for actions
+    # reviewed, notreviewed, all and my - my is only valid if logged in
+    # Valid values for sort order are
+    # priority and  submitdate for now
     #
-    # so view changes to be a panel selection - the query will be all the record filters
-    # sort order should be on the loaded sections and ideally might be a default but clickable on the gride
-    # however I think this would need to then be stored as parameer for pagination 
-    # items per page should also be on the subsections I think - so all this has is the query parameters and some sort
-    # of parameter for which sections to load and the status of the questions may impact the load
-    # potentially rest of this might be a form but - probably simpler to just build a layout and a call from there
-    # so lets go with this
-    # was thinking about doing this with some sort of form submission javascript - however I think we will change tack,
-    # do with session variables as these are sort of setup and it makes the loading piece much easier so the load forms
-    # will generally apply session variables of no request variables suplied and then would more or less be as is
-    # advantage of this is that system will remember your last query - however it may not default it in the form
-    #  - may need to display somewhere in the meantime
+    # the query will be all the record filters and these will be managed with session variables
 
     heading = 'Resolved Questions'
-    # v = 'quest' if set this overrides the session variables
-    # q = 'resolved'
-    # s = 'resolved'
     message = ''
 
 
-    v = request.args(0, default='None')  # lets use this for my
+    v = request.args(0, default='Completed')  # lets use this for my
+    q = request.args(1, default='All')  # this matters
+    s = request.args(2, default='Date')  # this is the sort order
 
     fields = ['selection', 'sortorder', 'filters', 'view_scope', 'country', 'subdivision',
                   'category', 'startdate', 'enddate', 'coord', 'searchrange']
-    q = request.args(1, default='None')  # this matters
-    s = request.args(2, default='None')  # this is the sort order
+
     page = request.args(3, cast=int, default=0)
     reset = request.args(4, default='No')  # This will reset just the selection
 
     if not session.selection or reset == 'Yes':
-        if v == 'quest':
-            session.selection = ['Question']
-        elif v == 'issue':
-            session.selection = ['Issue']
-        elif v == 'action' or v == 'plan':
-            session.selection = ['Action']
-        else:
-            session.selection = ['Issue', 'Question', 'Action']
-
-        if q == 'InProg':
-            session.selection.append('Proposed')
-        elif q == 'Draft':
-            session.selection.append('Draft')
-        else:
-            session.selection.append('Resolved')
-
-    if not session.sortorder:
-        if s == 'priority':
-            session.sortorder = '1 Priority'
-        elif s == 'submit':
-            session.sortorder = '3 Submit Date'
-        elif s == 'answer':
-            session.sortorder = '4 Answer Date'
-        else:
-            session.sortorder = '2 Resolved Date'
+        session.selection = v
+        session.query = q
+        session.sortorder = s
 
     form = SQLFORM(db.viewscope, fields=fields, formstyle='table3cols',
                    buttons=[TAG.button('Submit', _type="submit", _class="btn btn-primary btn-group"),
@@ -129,24 +92,18 @@ def newindex():
         form.vars.category = 'Unspecified'
     if session.view_scope:
         form.vars.view_scope = session.view_scope
-    form.vars.continent = session.vwcontinent
-    form.vars.country = session.vwcountry
-    form.vars.subdivision = session.vwsubdivision
-    form.vars.selection = session.selection
-    form.vars.coord = session.coord
-    form.vars.searchrange = session.searchrange
+
+    if session.country:
+        form.vars.country = session.vwcountry
+        form.vars.subdivision = session.vwsubdivision
+
+    if session.coord:
+        form.vars.coord = session.coord
+    if session.searchrange:
+        form.vars.searchrange = session.searchrange
     
     if session.filters:
         form.vars.filters = session.filters
-        
-    if v == 'plan' and session.execstatus:
-        form.vars.execstatus = session.execstatus
-    
-    if session.evtid:
-        form.vars.eventid = session.evtid
-        
-    if session.projid:
-        form.vars.projid = session.projid
 
     form.vars.sortorder = session.sortorder
     form.vars.selection = session.selection
@@ -154,16 +111,10 @@ def newindex():
     items_per_page = 50
     limitby = (page * items_per_page, (page + 1) * items_per_page + 1)
 
-    if v == 'activity':
-        response.view = 'review/activity2.html'
-
-    # print form.vars.filters
-
     if form.validate():
         print session.selection
         session.view_scope = form.vars.view_scope
         session.category = form.vars.category
-        session.vwcontinent = form.vars.continent
         session.vwcountry = form.vars.country
         session.vwsubdivision = form.vars.subdivision
         session.selection = form.vars.selection
@@ -171,21 +122,14 @@ def newindex():
         session.startdate = form.vars.startdate
         session.enddate = form.vars.enddate
         session.sortorder = form.vars.sortorder
-        session.evtid = form.vars.eventid
-        session.projid = form.vars.projid
         session.searchrange = form.vars.searchrange
         session.coord = form.vars.coord
-        if v == 'plan':
-            session.execstatus = form.vars.execstatus
 
         page = 0
         # redirect(URL('newindex', args=[v, q, s], vars=request.vars))
         # so thinking is that on initial call the args can over-ride the session variables
 
-        if v == 'activity':
-            redirect(URL('newindex', args='activity'))
-        else:
-            redirect(URL('newindex', args=[v]))
+        redirect(URL('newindex', args=[v]))
 
     return dict(form=form, page=page, items_per_page=items_per_page, v=v, q=q,
                 s=s, heading=heading, message=message)
