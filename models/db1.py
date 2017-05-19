@@ -10,7 +10,7 @@ else:
 from plugin_location_picker import IS_GEOLOCATION, location_widget
 
 
-scopes = ['1 International', '2 National', '3 Regional', '4 Local']
+scopes = ['1 Global', '2 National', '3 Regional', '4 Local']
 
 
 db.define_table('website_parameters',

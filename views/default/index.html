@@ -19,7 +19,7 @@
 
 {{#LOAD('default','questload.load',args=['default'],vars=dict(items_per_page=5,sortby='Rating',no_page=False),ajax=True,target="questload")}}
         <script>
-$( "#goodload" ).load("{{=URL('default', 'questload.load', vars=dict(q='good', items_per_page=5,sortby='rating'))}}","test", function() {
+$( "#goodload" ).load("{{=URL('default', 'questload.load',args=['default'], vars=dict(q='good', items_per_page=5,sortby='rating'))}}","test", function() {
   $('#good').DataTable({dom: 'Bfrtip', responsive: true});} );
       </script>
 </div>
@@ -30,7 +30,7 @@ $( "#goodload" ).load("{{=URL('default', 'questload.load', vars=dict(q='good', i
 
 {{#LOAD('default','questload.load',args=['default'],vars=dict(items_per_page=5,sortby='Rating',no_page=False),ajax=True,target="questload")}}
         <script>
-$( "#badload" ).load("{{=URL('default', 'questload.load', vars=dict(q='bad', items_per_page=5,sortby='revrating'))}}","test", function() {
+$( "#badload" ).load("{{=URL('default', 'questload.load',args=['default'], vars=dict(q='bad', items_per_page=5,sortby='revrating'))}}","test", function() {
   $('#bad').DataTable({dom: 'Bfrtip', responsive: true});} );
       </script>
 </div>

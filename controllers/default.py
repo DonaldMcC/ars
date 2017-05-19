@@ -7,7 +7,7 @@
 # - user is required for authentication and authorization
 # - download is for downloading files uploaded in the db (does streaming)
 # -------------------------------------------------------------------------
-# from datetime import timedelta
+from datetime import timedelta
 
 
 def index():
@@ -36,13 +36,9 @@ def questload():
     #   session.showscope
     #   session.view_scope
     #   session.category
-    #   session.vwcontinent
     #   session.vwcountry
     #   session.vwsubdivision
-    #   session.answer_group
     #   session.sortorder
-    #   session.evtid
-    #   session.projid
     #   session.searchrange
     #   session.coord
     # if source is default we don't care about session variables it's a standard view with request vars applied
@@ -52,21 +48,52 @@ def questload():
 
     source = request.args(0, default='std')
     view = request.args(1, default='Action')
-
     scope = session.view_scope or None
     category = session.category or None
     q = request.vars.q or 'good'
 
+    scope = request.vars.scope or (source != 'default' and session.view_scope) or '1 Global'
+    category = request.vars.category or (source != 'default' and session.category) or 'Unspecified'
+    vwcountry = request.vars.vwcountry or (source != 'default' and session.vwcountry) or 'Unspecified'
+    vwsubdivision = request.vars.vwsubdivision or (source != 'default' and session.vwsubdivision) or 'Unspecified'
+    sortorder = request.vars.sortorder or (source != 'default' and session.sortorder) or 'Unspecified'
+    startdate = request.vars.startdate or (source != 'default' and session.startdate) or (
+        request.utcnow - timedelta(days=1000))
+    enddate = request.vars.enddate or (source != 'default' and session.enddate) or request.utcnow
 
-    if not session.selection:
-        strquery = (db.activity.id>0)
-    else:
-        if len(session.selection)== 2:
-            strquery = (db.activity.id>0)
-        elif 'Draft' in session.selection:
-            strquery = (db.activity.status == 'Draft')
-        else:
-            strquery = (db.activity.status == 'Complete')
+    filters = (source != 'default' and session.filters) or []
+    # this can be Scope, Category, AnswerGroup and probably Event in due course
+
+    scope_filter = request.vars.scope_filter or 'Scope' in filters
+    cat_filter = request.vars.cat_filter or 'Category' in filters
+    date_filter = request.vars.datefilter or 'Date' in filters
+
+
+    if q=='Draft':
+        strquery = ((db.activity.status == 'Draft') & (db.activity.owner == auth.userid))
+    else: # good, bad or complete
+        strquery = (db.activity.status == 'Complete')
+
+    if date_filter: #TODO make sure createdate gets updated when draft is completed
+        strquery &= (db.activity.createdate >= startdate) & (db.activity.createdate <= enddate)
+
+    if cat_filter and cat_filter != 'False':
+        strquery &= (db.activity.category == category)
+
+    if scope_filter is True:
+        strquery &= db.activity.activescope == scope
+        if session.view_scope == '1 Global':
+            strquery &= db.activity.activescope == scope
+        elif session.view_scope == '2 National':
+            strquery = strquery  & (db.activity.country == vwcountry)
+        elif session.view_scope == '3 Subdivision':
+            strquery = strquery & (db.activity.subdivision == vwsubdivision)
+        elif session.view_scope == '4 Local':
+            minlat, minlong, maxlat, maxlong = getbbox(session.coord, session.searchrange)
+            strquery = strquery & ((current.db.activity.question_lat > minlat) &
+                                  (current.db.activity.question_lat < maxlat) &
+                                  (current.db.activity.question_long > minlong) &
+                                  (current.db.activity.question_long < maxlong))
 
     if request.vars.page:
         page = int(request.vars.page)
@@ -79,13 +106,17 @@ def questload():
         items_per_page = 50
 
     limitby = (page * items_per_page, (page + 1) * items_per_page + 1)
-
     no_page = request.vars.no_page
 
+    
+    #TODO lets sort this later
     if request.vars.sortby == 'rating':
         sortby = db.activity.rating
-    else:
+    elif request.vars.sortby == 'revrating':
         sortby = ~db.activity.rating
+    else:
+        sortby = db.activity.createdate
+        
     print strquery
     activity = db(strquery).select(orderby=[sortby], limitby=limitby)
     return dict(q=q, activity=activity, page=page, items_per_page=items_per_page, no_page=no_page)

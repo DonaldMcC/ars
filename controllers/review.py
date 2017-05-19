@@ -56,7 +56,7 @@ def newindex():
 
     v = request.args(0, default='Completed')  # lets use this for my
     q = request.args(1, default='All')  # this matters
-    s = request.args(2, default='Date')  # this is the sort order
+    s = request.args(2, default='Rating')  # this is the sort order
 
     fields = ['selection', 'sortorder', 'filters', 'view_scope', 'country', 'subdivision',
                   'category', 'startdate', 'enddate', 'coord', 'searchrange']
@@ -67,7 +67,6 @@ def newindex():
     if not session.selection or reset == 'Yes':
         session.selection = v
         session.query = q
-        session.sortorder = s
 
     form = SQLFORM(db.viewscope, fields=fields, formstyle='table3cols',
                    buttons=[TAG.button('Submit', _type="submit", _class="btn btn-primary btn-group"),
@@ -92,10 +91,18 @@ def newindex():
         form.vars.category = 'Unspecified'
     if session.view_scope:
         form.vars.view_scope = session.view_scope
+    else:
+        form.vars.view_scope = '1 Global'
 
-    if session.country:
+    if session.vwcountry:
         form.vars.country = session.vwcountry
+    else:
+        form.vars.country = 1 #TODO this will change to default country at some point
+
+    if session.vwsubdivision:
         form.vars.subdivision = session.vwsubdivision
+    else:
+        form.vars.subdivision = 1
 
     if session.coord:
         form.vars.coord = session.coord
@@ -105,13 +112,21 @@ def newindex():
     if session.filters:
         form.vars.filters = session.filters
 
-    form.vars.sortorder = session.sortorder
-    form.vars.selection = session.selection
+    if session.sortorder:
+        form.vars.sortorder = session.sortorder
+    else:
+        form.vars.sortorder = '1 Rating'
+    if session.selection:
+        form.vars.sortorder = session.selection
+    else:
+        form.vars.selection = 'Complete'
 
     items_per_page = 50
     limitby = (page * items_per_page, (page + 1) * items_per_page + 1)
 
     if form.validate():
+    #   session.showcat
+    #   session.showscope
         print session.selection
         session.view_scope = form.vars.view_scope
         session.category = form.vars.category
@@ -124,6 +139,8 @@ def newindex():
         session.sortorder = form.vars.sortorder
         session.searchrange = form.vars.searchrange
         session.coord = form.vars.coord
+        print 'valid'
+
 
         page = 0
         # redirect(URL('newindex', args=[v, q, s], vars=request.vars))
