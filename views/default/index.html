@@ -17,7 +17,7 @@
 
 <div id="goodload">
 
-{{#LOAD('default','questload.load',args=['default'],vars=dict(items_per_page=5,sortby='Rating',no_page=False),ajax=True,target="questload")}}
+{{#LOAD('default','questload.load',args=['default'],vars=dict(q='good', items_per_page=5,sortby='rating'),ajax=True,target="goodload")}}
         <script>
 $( "#goodload" ).load("{{=URL('default', 'questload.load',args=['default'], vars=dict(q='good', items_per_page=5,sortby='rating'))}}","test", function() {
   $('#good').DataTable({dom: 'Bfrtip', responsive: true});} );
