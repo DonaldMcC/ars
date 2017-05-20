@@ -8,24 +8,25 @@
 
 <div id="target"></div>
 
+<h2>Completed Items</h2>
 <div id="completeload">
 
         <script>
-$( "#complete" ).load("{{=URL('default', 'questload.load', vars=dict(q='Complete', items_per_page=10, sortby='rating'))}}","test", function() {
+$( "#completeload" ).load("{{=URL('default', 'questload.load', vars=dict(q='Complete', items_per_page=10, sortby='rating'))}}","test", function() {
   $('#Complete').DataTable({dom: 'Bfrtip', responsive: true});} );
       </script>
 </div>
 
+<h2>Draft Items</h2>
 <div id="draftload">
-
         <script>
-$( "#draft" ).load("{{=URL('default', 'questload.load', vars=dict(q='Draft', items_per_page=10, sortby='rating'))}}","test", function() {
+$( "#draftload" ).load("{{=URL('default', 'questload.load', vars=dict(q='Draft', items_per_page=10, sortby='rating'))}}","test", function() {
   $('#Draft').DataTable({dom: 'Bfrtip', responsive: true});} );
       </script>
 </div>
 
-<script>
-{{include 'review/newindex.js'}}
+<script>/*
+{{include 'review/newindex.js'}}*/
 </script>
 
 

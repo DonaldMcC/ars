@@ -70,7 +70,7 @@ def questload():
 
 
     if q=='Draft':
-        strquery = ((db.activity.status == 'Draft') & (db.activity.owner == auth.userid))
+        strquery = ((db.activity.status == 'Draft') & (db.activity.auth_userid == auth.user_id))
     else: # good, bad or complete
         strquery = (db.activity.status == 'Complete')
 

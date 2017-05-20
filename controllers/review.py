@@ -117,7 +117,7 @@ def newindex():
     else:
         form.vars.sortorder = '1 Rating'
     if session.selection:
-        form.vars.sortorder = session.selection
+        form.vars.selection = session.selection
     else:
         form.vars.selection = 'Complete'
 
