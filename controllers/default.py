@@ -86,7 +86,7 @@ def questload():
             strquery &= db.activity.activescope == scope
         elif session.view_scope == '2 National':
             strquery = strquery  & (db.activity.country == vwcountry)
-        elif session.view_scope == '3 Subdivision':
+        elif session.view_scope == '3 Regional':
             strquery = strquery & (db.activity.subdivision == vwsubdivision)
         elif session.view_scope == '4 Local':
             minlat, minlong, maxlat, maxlong = getbbox(session.coord, session.searchrange)

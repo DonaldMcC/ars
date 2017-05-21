@@ -54,7 +54,7 @@ def newindex():
     message = ''
 
 
-    v = request.args(0, default='Completed')  # lets use this for my
+    v = request.args(0, default='Complete')  # lets use this for my
     q = request.args(1, default='All')  # this matters
     s = request.args(2, default='Rating')  # this is the sort order
 
@@ -65,7 +65,7 @@ def newindex():
     reset = request.args(4, default='No')  # This will reset just the selection
 
     if not session.selection or reset == 'Yes':
-        session.selection = v
+        session.selection = [v]
         session.query = q
 
     form = SQLFORM(db.viewscope, fields=fields, formstyle='table3cols',
@@ -124,6 +124,7 @@ def newindex():
     items_per_page = 50
     limitby = (page * items_per_page, (page + 1) * items_per_page + 1)
 
+    print 'sel', session.selection
     if form.validate():
     #   session.showcat
     #   session.showscope

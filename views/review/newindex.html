@@ -7,7 +7,7 @@
 {{=form}}
 
 <div id="target"></div>
-
+{{if 'Complete' in session.selection:}}
 <h2>Completed Items</h2>
 <div id="completeload">
 
@@ -16,7 +16,9 @@ $( "#completeload" ).load("{{=URL('default', 'questload.load', vars=dict(q='Comp
   $('#Complete').DataTable({dom: 'Bfrtip', responsive: true});} );
       </script>
 </div>
+        {{pass}}
 
+{{if 'Draft' in session.selection:}}
 <h2>Draft Items</h2>
 <div id="draftload">
         <script>
@@ -24,9 +26,10 @@ $( "#draftload" ).load("{{=URL('default', 'questload.load', vars=dict(q='Draft',
   $('#Draft').DataTable({dom: 'Bfrtip', responsive: true});} );
       </script>
 </div>
+        {{pass}}
 
-<script>/*
-{{include 'review/newindex.js'}}*/
+<script>
+{{include 'review/newindex.js'}}
 </script>
 
 
