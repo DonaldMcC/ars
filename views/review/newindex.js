@@ -37,20 +37,16 @@ $(document).ready(function(){
         });
 
     if($("[id='view_scope1 Global']").prop('checked'))
-            {$('#viewscope_continent__row').hide();
-            $('#viewscope_country__row').hide();
+            {$('#viewscope_country__row').hide();
             $('#viewscope_subdivision__row').hide()
             $('#viewscope_coord__row').hide()
             $('#viewscope_searchrange__row').hide()};
-    if($("[id='view_scope2 Continental']").prop('checked'))
-            {$('#viewscope_continent__row').show();
-            $('#viewscope_country__row').hide();
+    if($("[id='view_scope2 National']").prop('checked'))
+            {$('#viewscope_country__row').show();
             $('#viewscope_subdivision__row').hide()};
-    if($("[id='view_scope3 National']").prop('checked'))
-            {$('#viewscope_continent__row').show();
-            $('#viewscope_country__row').show();
-            $('#viewscope_country__row .w2p_fw').hide();
-            $('#viewscope_subdivision__row').hide()};
+    if($("[id='view_scope3 Regional']").prop('checked'))
+            {$('#viewscope_country__row').show();
+            $('#viewscope_subdivision__row').show()};
      if($("[id='view_scope4 Provincial']").prop('checked'))
             {$('#viewscope_continent__row').show();
             $('#viewscope_country__row').show();
@@ -67,7 +63,6 @@ $(document).ready(function(){
 
     if ($('#filtersScope').prop('checked')==false){
        $('#viewscope_view_scope__row').hide();
-       $('#viewscope_continent__row').hide();
        $('#viewscope_country__row').hide();
        $('#viewscope_subdivision__row').hide();
        $('#viewscope_coord__row').hide();
@@ -130,15 +125,13 @@ $(document).ready(function(){
                 $('#viewscope_searchrange__row').hide();;}
             else
                 {$('#viewscope_view_scope__row').show();
-            if($("[id='scope3 National']").prop('checked'))
-            {$('#viewscope_continent__row').show();
-            $('#viewscope_country__row').show();
+            if($("[id='scope2 National']").prop('checked'))
+            {$('#viewscope_country__row').show();
             $('#viewscope_subdivision__row').hide()};
             $('#viewscope_coord__row').hide();
             $('#viewscope_searchrange__row').hide();
             if($("[id='scope1 Global']").prop('checked'))
-            {$('#viewscope_continent__row').hide();
-            $('#viewscope_country__row').hide();
+            {$('#viewscope_country__row').hide();
             $('#viewscope_subdivision__row').hide()
             $('#viewscope_coord__row').hide();
             $('#viewscope_searchrange__row').hide();};
@@ -169,35 +162,22 @@ $(document).ready(function(){
    $('input[name=view_scope]').change(function(){
             console.log('scope change')
             if($("[id='view_scope1 Global']").prop('checked'))
-            {$('#viewscope_continent__row').hide();
-            $('#viewscope_country__row').hide();
+            {$('#viewscope_country__row').hide();
             $('#viewscope_subdivision__row').hide()
             $('#viewscope_coord__row').hide()
             $('#viewscope_searchrange__row').hide()};
-            if($("[id='view_scope2 Continental']").prop('checked'))
-            {$('#viewscope_continent__row').show();
-            $('#viewscope_country__row').hide();
+            if($("[id='view_scope2 National']").prop('checked'))
+            {$('#viewscope_country__row').show();
             $('#viewscope_subdivision__row').hide()
             $('#viewscope_coord__row').hide()
             $('#viewscope_searchrange__row').hide()};
-            if($("[id='view_scope3 National']").prop('checked'))
-            {$('#viewscope_continent__row').show();
-            $('#viewscope_country__row').show();
-            $('#viewscope_country__row .w2p_fw').hide();
-            $('#viewscope_subdivision__row').hide()
+            if($("[id='view_scope3 Regional']").prop('checked'))
+            {$('#viewscope_country__row').show();
+            $('#viewscope_subdivision__row').show()
             $('#viewscope_coord__row').hide()
             $('#viewscope_searchrange__row').hide()};
-            if($("[id='view_scope4 Provincial']").prop('checked'))
-            {$('#viewscope_continent__row').show();
-            $('#viewscope_country__row').show();
-            $('#viewscope_country__row .w2p_fw').hide();
-            $('#viewscope_subdivision__row').show();
-            $('#viewscope_subdivision__row .w2p_fw').hide()
-            $('#viewscope_coord__row').hide()
-            $('#viewscope_searchrange__row').hide()};
-            if($("[id='view_scope5 Local']").prop('checked'))
-            {$('#viewscope_continent__row').hide();
-            $('#viewscope_country__row').hide();
+            if($("[id='view_scope4 Local']").prop('checked'))
+            {$('#viewscope_country__row').hide();
             $('#viewscope_subdivision__row').hide();
             $('#viewscope_coord__row').show()
             $('#viewscope_searchrange__row').show()
@@ -207,9 +187,6 @@ $(document).ready(function(){
             }
             });
 
-            $('#viewscope_continent ').change(function(){
-            $('#countryopt').empty();
-            ajax('{{=URL('submit','country')}}', ['continent'], 'countryopt');});
 
             $('#viewscope_country').change(function(){
             $('#subdivopt').empty();
