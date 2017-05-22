@@ -16,12 +16,7 @@ function showsubdivValue(newValue)
 $(document).ready(function(){
           $(" body").tooltip({selector: '[data-toggle = popover]'});
 
-     $('#viewscope_country__row .w2p_fc').html('<select id="countryopt" name="countryopt" onchange="showcountryValue(this.value)"> <option value="{{=form.vars.country}}">{{=form.vars.country}}</option>   </select>');
-   $('#viewscope_subdivision__row .w2p_fc').html('<select id="subdivopt" name="subdivopt" onchange="showsubdivValue(this.value)"> <option value="{{=form.vars.subdivision}}">{{=form.vars.subdivision}}</option> </select>');
 
-    $('#viewscope_continent__row').hide();
-    $('#viewscope_country__row .w2p_fw').hide();
-    $('#viewscope_subdivision__row .w2p_fw').hide();
     $('#viewscope_coord__row').hide();
     $('#viewscope_searchrange__row').hide();
 
@@ -47,15 +42,8 @@ $(document).ready(function(){
     if($("[id='view_scope3 Regional']").prop('checked'))
             {$('#viewscope_country__row').show();
             $('#viewscope_subdivision__row').show()};
-     if($("[id='view_scope4 Provincial']").prop('checked'))
-            {$('#viewscope_continent__row').show();
-            $('#viewscope_country__row').show();
-            $('#viewscope_country__row .w2p_fw').hide();
-            $('#viewscope_subdivision__row').show();
-            $('#viewscope_subdivision__row .w2p_fw').hide()};
-     if($("[id='view_scope5 Local']").prop('checked'))
-            {$('#viewscope_continent__row').hide();
-            $('#viewscope_country__row').hide();
+     if($("[id='view_scope4 Local']").prop('checked'))
+            {$('#viewscope_country__row').hide();
             $('#viewscope_subdivision__row').hide();
             $('#viewscope_coord__row').show();
             $('#viewscope_searchrange__row').show();};
@@ -189,8 +177,11 @@ $(document).ready(function(){
 
 
             $('#viewscope_country').change(function(){
-            $('#subdivopt').empty();
-            ajax('{{=URL('submit','subdivn')}}', ['country'], 'subdivopt');});
+                console.log('I fired')
+            $('#viewscope_subdivision').empty();
+            ajax('{{=URL('submit','subdivn')}}', ['country'], 'viewscope_subdivision');
+            document.getElementById("viewscope_subdivision").value="Unspecified";
+            });
 
 
 

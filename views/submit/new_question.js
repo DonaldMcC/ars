@@ -57,10 +57,7 @@ $(document).ready(function(){
             };})
             
             });
-            
-            $('#question_continent').change(function(){
-            $('#countryopt').empty();
-            ajax('{{=URL('submit','country')}}', ['continent'], 'countryopt');});
+
 
             $('#question_country').change(function(){
             $('#subdivopt').empty();

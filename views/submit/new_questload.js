@@ -9,7 +9,6 @@ $(document).ready(function(){
    $(" body").tooltip({selector: '[data-toggle = popover]'});
 
             $('#activity_country').change(function(){
-                console.log('I fired');
             $('#activity_subdivision').empty();
             ajax('{{=URL('submit','subdivn')}}', ['country'], 'activity_subdivision');
             document.getElementById("activity_subdivision").value="Unspecified";
