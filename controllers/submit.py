@@ -1,5 +1,6 @@
 from ndsfunctions import getitem
 
+
 @auth.requires_login()
 def index():
     # This allows creation of questions, actions and issues so the first
@@ -53,6 +54,7 @@ def index():
 
     return dict(form=form, heading=heading)
 
+
 def accept_activity():
     response.flash = "Details Submitted"
     activityid = request.args(0, default=0)
@@ -62,11 +64,12 @@ def accept_activity():
 
     return dict(status=status, item=item, activity=activity)
 
+
 def subdivn():
     # This is called via Ajax to populate the subdivision dropdown on change of country
     # now changed to derelationalise country subdivision
     result = "<option value='Unspecified'>Unspecified</option>"
-    print request.vars.country
+    # print request.vars.country
     subdivns = db(db.subdivision.countryid == request.vars.country).select(
         db.subdivision.id, db.subdivision.subdiv_name, orderby=db.subdivision.subdiv_name,
         cache=(cache.ram, 1200), cacheable=True)
@@ -75,16 +78,4 @@ def subdivn():
             result += "<option value='" + str(row.id) + "'>" + row.subdiv_name + "</option>"
         else:
             result += "<option value='" + str(row.id) + "' selected>" + row.subdiv_name + "</option>"
-
-    return XML(result)
-
-def country():
-    result = "<option value='Unspecified'>Unspecified</option>"
-    countries = db(db.country.id>0).select(
-        db.country.country_name, cache=(cache.ram, 6000), cacheable=True)
-    for countrie in countries:
-        if countrie.country_name != request.vars.country:
-            result += "<option value='" + str(countrie.country_name) + "'>" + countrie.country_name + "</option>"
-        else:
-            result += "<option value='" + str(countrie.country_name) + "' selected>" + countrie.country_name + "</option>"
     return XML(result)

@@ -64,5 +64,6 @@ def download():
     downloads = db().select(db.download.ALL, orderby=db.download.title)
     return dict(downloads=downloads)
 
+
 def getfile():
     return response.download(request, db)

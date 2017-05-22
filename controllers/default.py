@@ -8,7 +8,7 @@
 # - download is for downloading files uploaded in the db (does streaming)
 # -------------------------------------------------------------------------
 from datetime import timedelta
-
+from geogfunctions import getbbox
 
 def index():
     """
@@ -108,16 +108,17 @@ def questload():
     limitby = (page * items_per_page, (page + 1) * items_per_page + 1)
     no_page = request.vars.no_page
 
-    
-    #TODO lets sort this later
+    # TODO lets sort this later
     if request.vars.sortby == 'rating':
         sortby = db.activity.rating
     elif request.vars.sortby == 'revrating':
         sortby = ~db.activity.rating
     else:
         sortby = db.activity.createdate
-        
-    print strquery
+
+    if debug:
+        print(strquery)
+
     activity = db(strquery).select(orderby=[sortby], limitby=limitby)
     return dict(q=q, activity=activity, page=page, items_per_page=items_per_page, no_page=no_page)
 

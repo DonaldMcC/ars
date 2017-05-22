@@ -52,7 +52,7 @@
 
     """
 
-from ndsfunctions import updatequestcounts
+# from ndsfunctions import updatequestcounts
 # from ndspermt import can_view
 # from time import strftime
 # import gluon.contrib.simplejson
@@ -89,7 +89,7 @@ def index():
             uqanswered = True
             uq = uqs.first()
 
-    #viewable = can_view(quest.status, quest.resolvemethod, uqanswered, quest.answer_group,
+    # viewable = can_view(quest.status, quest.resolvemethod, uqanswered, quest.answer_group,
     #                    quest.duedate, auth.user_id, quest.auth_userid)
 
     if uqanswered:
@@ -217,8 +217,6 @@ def agree():
                 qc.update_record(agree=agreeval)
 
         db(db.question.id == chquestid).update(othercounts=othcounts)
-    #return 'jQuery(".flash").html("' + responsetext + '").slideDown().delay(1500).slideUp();' \
-    #                                                  ' $("#target").html("' + responsetext + '");'
 
     return 'jQuery(".w2p_flash").html("' + responsetext + '").slideDown().delay(1500).slideUp(); $("#target").html("' \
        + responsetext + '"); $("#btns' + str(chquestid) + ' .btn-success").addClass("disabled").removeClass("btn-success"); $("#btns'\

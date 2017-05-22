@@ -17,9 +17,7 @@
 # With thanks to Guido, Massimo and many other that make this sort of thing
 # much easier than it used to be
 
-from ndsfunctions import score_question,  getitem
-from ndspermt import get_exclude_groups
-
+from ndsfunctions import score_question
 
 """
 This controller handles the selection of an available question and the 
@@ -38,10 +36,11 @@ highest priority question out to all users and work on resolving it first
     
 """
 
-#TODO add reject handling to submit
+# TODO add reject handling to submit
 from arsfunctions import update_ratings
 
-#@auth.requires_signature()
+# @auth.requires_signature()
+
 
 @auth.requires_login()
 def answer_question():
@@ -71,7 +70,7 @@ def answer_question():
 
     form2.element(_type='submit')['_class'] = "btn btn-success"
 
-    if ur: # already rated so will need to populate form vars with current values
+    if ur:  # already rated so will need to populate form vars with current values
         form2.vars.rating = ratings[int(ur['rating'])-1]
         form2.vars.impact = int(ur['impact'])
 
@@ -87,7 +86,7 @@ def answer_question():
             new_numratings -= 1
         elif ur:
             ur.update_record(**dict(form2.vars))
-            action='update'
+            action = 'update'
             response.flash = 'Rating updated'
         else:
             form2.vars.id = db.user_rating.insert(**dict(form2.vars))
