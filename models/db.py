@@ -53,7 +53,7 @@ if useappconfig:
     debug = myconf.take('developer.debug', cast=int)
     backend = myconf.take('search.backend')
 else:
-    debug = False
+    debug = True
     backend = 'SimpleBackend'
 
 if useappconfig and myconf.take('site.require_https', cast=int):

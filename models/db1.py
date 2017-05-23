@@ -10,7 +10,7 @@ else:
 from plugin_location_picker import IS_GEOLOCATION, location_widget
 
 
-scopes = ['1 Global', '2 National', '3 Regional', '4 Local']
+scopes = ['1 National', '2 Regional', '3 Local']
 
 
 db.define_table('website_parameters',
@@ -136,7 +136,7 @@ db.define_table('viewscope',
                 Field('country', 'reference country', default=1, label='Country'),
                 Field('subdivision', 'reference subdivision', default=1, label='Sub-division'),
                 Field('showcat', 'boolean', label='Show Category Filter', comment='Uncheck to show all'),
-                Field('category', 'reference category', label='Category'),
+                Field('category', 'reference category', default=1, label='Category'),
                 Field('startdate', 'date', default=request.utcnow, label='From Date'),
                 Field('enddate', 'date', default=request.utcnow, label='To Date'),
                 Field('searchstring', 'string', label='Search:', default=session.searchstring),

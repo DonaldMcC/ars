@@ -1,17 +1,4 @@
 
-function showcountryValue(newValue)
-{
-	document.getElementById("viewscope_country").value=newValue;
-    $('#subdivopt').empty();
-    ajax('{{=URL('submit','subdivn')}}', ['country'], 'subdivopt');
-    document.getElementById("viewscope_subdivision").value="Unspecified";
-}
-
-function showsubdivValue(newValue)
-{
-	document.getElementById("viewscope_subdivision").value=newValue;
-}
-
 
 $(document).ready(function(){
           $(" body").tooltip({selector: '[data-toggle = popover]'});
@@ -19,8 +6,6 @@ $(document).ready(function(){
 
     $('#viewscope_coord__row').hide();
     $('#viewscope_searchrange__row').hide();
-
-
     $('input[type=checkbox]').each(function() {
         if ($(this).prop('checked')) {
     $(this).next().addClass('btn-success');
@@ -92,21 +77,11 @@ $(document).ready(function(){
        $('#viewscope_startdate__row').toggle();
        $('#viewscope_enddate__row').toggle();
     });
-    
-        $('#filtersAnswerGroup').change(function(){
-              $('#viewscope_answer_group__row').toggle()});
-
-        $('#filtersEvent').change(function(){
-              $('#viewscope_eventid__row').toggle()});
-              
-        $('#filtersProject').change(function(){
-              $('#viewscope_projid__row').toggle()});
 
 
    $('#filtersScope').change(function(){
             if($('#filtersScope').prop('checked')==false) {
                 $('#viewscope_view_scope__row').hide();
-                $('#viewscope_continent__row').hide();
                 $('#viewscope_country__row').hide();
                 $('#viewscope_subdivision__row').hide()
                 $('#viewscope_coord__row').hide();
@@ -123,21 +98,18 @@ $(document).ready(function(){
             $('#viewscope_subdivision__row').hide()
             $('#viewscope_coord__row').hide();
             $('#viewscope_searchrange__row').hide();};
-            if($("[id='scope2 Continental']").prop('checked'))
-            {$('#viewscope_continent__row').show();
-            $('#viewscope_country__row').hide();
+            if($("[id='scope2 Natioanal']").prop('checked'))
+            {$('#viewscope_country__row').hide();
             $('#viewscope_subdivision__row').hide()
             $('#viewscope_coord__row').hide();
             $('#viewscope_searchrange__row').hide();};
-            if($("[id='scope4 Provincial']").prop('checked'))
-            {$('#viewscope_continent__row').show();
-            $('#viewscope_country__row').show();
+            if($("[id='scope3 Regional']").prop('checked'))
+            {$('#viewscope_country__row').show();
             $('#viewscope_subdivision__row').show()
             $('#viewscope_coord__row').hide();
             $('#viewscope_searchrange__row').hide()}
-            if($("[id='scope5 Local']").prop('checked'))
-            {$('#viewscope_continent__row').hide();
-            $('#viewscope_country__row').hide();
+            if($("[id='scope4 Local']").prop('checked'))
+            {$('#viewscope_country__row').hide();
             $('#viewscope_subdivision__row').hide()
             $('#viewscope_coord__row').show()
             $('#viewscope_searchrange__row').show()}
@@ -145,7 +117,6 @@ $(document).ready(function(){
             ;}
 
             });
-
 
    $('input[name=view_scope]').change(function(){
             console.log('scope change')
@@ -175,15 +146,11 @@ $(document).ready(function(){
             }
             });
 
-
             $('#viewscope_country').change(function(){
-                console.log('I fired')
             $('#viewscope_subdivision').empty();
             ajax('{{=URL('submit','subdivn')}}', ['country'], 'viewscope_subdivision');
             document.getElementById("viewscope_subdivision").value="Unspecified";
             });
-
-
 
 });
 

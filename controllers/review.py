@@ -88,7 +88,7 @@ def newindex():
     if session.category:
         form.vars.category = session.category
     else:
-        form.vars.category = 'Unspecified'
+        form.vars.category = 1
     if session.view_scope:
         form.vars.view_scope = session.view_scope
     else:
@@ -236,7 +236,7 @@ def activity():
         numdays = 1
 
     scope = request.vars.scope or (source != 'default' and session.view_scope) or '1 Global'
-    category = request.vars.category or (source != 'default' and session.category) or 'Unspecified'
+    category = request.vars.category or (source != 'default' and session.category) or 1
     vwcontinent = request.vars.vwcontinent or (source != 'default' and session.vwcontinent) or 'Unspecified'
     vwcountry = request.vars.vwcountry or (source != 'default' and session.vwcountry) or 'Unspecified'
     vwsubdivision = request.vars.vwsubdivision or (source != 'default' and session.vwsubdivision) or 'Unspecified'
