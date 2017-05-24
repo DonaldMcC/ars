@@ -32,5 +32,10 @@
 {{elif request.args(0)=='change_password':}}
     web2py_validate_entropy(jQuery('#no_table_new_password'),100);
 {{pass}}
+    $('#auth_user_country').change(function() {
+        $('#auth_user_subdivision').empty();
+        ajax('{{=URL('submit','subdivn')}}', ['country'], 'auth_user_subdivision');
+    });
+
 </script>
 {{end page_js}}

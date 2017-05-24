@@ -92,12 +92,12 @@ def newindex():
     if session.view_scope:
         form.vars.view_scope = session.view_scope
     else:
-        form.vars.view_scope = '1 Global'
+        form.vars.view_scope = '1 National'
 
     if session.vwcountry:
         form.vars.country = session.vwcountry
     else:
-        form.vars.country = 1 #TODO this will change to default country at some point
+        form.vars.country = auth.c1 #TODO this will change to default country at some point
 
     if session.vwsubdivision:
         form.vars.subdivision = session.vwsubdivision
@@ -126,9 +126,8 @@ def newindex():
 
     print 'sel', session.selection
     if form.validate():
-    #   session.showcat
-    #   session.showscope
-        print session.selection
+        if debug:
+            print(session.selection)
         session.view_scope = form.vars.view_scope
         session.category = form.vars.category
         session.vwcountry = form.vars.country
@@ -140,8 +139,6 @@ def newindex():
         session.sortorder = form.vars.sortorder
         session.searchrange = form.vars.searchrange
         session.coord = form.vars.coord
-        print 'valid'
-
 
         page = 0
         # redirect(URL('newindex', args=[v, q, s], vars=request.vars))
@@ -151,62 +148,6 @@ def newindex():
 
     return dict(form=form, page=page, items_per_page=items_per_page, v=v, q=q,
                 s=s, heading=heading, message=message)
-
-
-@auth.requires(True, requires_login=requires_login)
-def newlist():
-    # this now uses load functionality - but more sorting out of answer_groups to be looked at once we have
-    # better data
-    message = 'test message'
-    groupcat = request.args(0, default='C')
-    groupcatname = request.args(1, default='Unspecified')
-    qtype = request.args(2, default='quest')
-    status = request.args(3, default='Resolved')
-    items_per_page = 50
-
-    if groupcat == 'C':
-        category = groupcatname
-        answer_group = 'Unspecified'
-        group_filter = 'False'
-        if category != 'Total':
-            cat_filter = 'True'
-        else:
-            cat_filter = 'False'
-    else:
-        category = 'Unspecified'
-        answer_group = groupcatname
-        cat_filter = 'False'
-        if answer_group != 'Total':
-            group_filter = 'True'
-        else:
-            group_filter = 'False'
-
-    selection = qtype[0].upper()
-    if status == 'Resolved':
-        selection += 'R'
-    else:
-        selection += 'P'
-
-    if qtype == 'quest':
-        qprint = 'Question'
-    elif qtype == 'action':
-        qprint = 'Action'
-    else:
-        qprint = 'Issue'
-        
-    if status == 'InProg':
-        dispstatus = 'In Progress'
-    else:
-        dispstatus = status
-
-    heading = 'Item:' + qprint + ' Filter:' + groupcatname + ' Status:' + status
-    heading = dispstatus + ' ' + qprint + 's'
-    if groupcatname != 'Total':
-        heading += ' Filter:' + groupcatname
-
-    return dict(category=category, answer_group=answer_group, qtype=qtype, status=status,
-                selection=selection, heading=heading, message=message, cat_filter=cat_filter,
-                group_filter=group_filter, items_per_page=items_per_page)
 
 
 @auth.requires_login()
@@ -302,10 +243,6 @@ def activity():
     resolved = db(resquery).select(orderby=resolvestr)
     challenged = db(challquery).select(orderby=challstr)
 
-    # remove excluded groups always
-    if session.exclude_groups is None:
-        session.exclude_groups = get_exclude_groups(auth.user_id)
-
     if session.exclue_groups:
         alreadyans = resolved.exclude(lambda r: r.answer_group in session.exclude_groups)
         alreadyans = submitted.exclude(lambda r: r.answer_group in session.exclude_groups)
@@ -332,7 +269,6 @@ def my_answers():
         form.vars.showcat = session.showcat
         form.vars.category = session.category
         form.vars.view_scope = session.view_scope
-        form.vars.continent = session.vwcontinent
         form.vars.country = session.vwcountry
         form.vars.subdivision = session.vwsubdivision
 
@@ -362,8 +298,6 @@ def my_answers():
         session.showscope = form.vars.showscope
         session.view_scope = form.vars.view_scope
         session.category = form.vars.category
-
-        session.vwcontinent = form.vars.continent
         session.vwcountry = form.vars.country
         session.vwsubdivision = form.vars.subdivision
         session.sortorder = form.vars.asortorder
@@ -391,18 +325,11 @@ def my_answers():
         query &= (db.userquestion.category == session.category)
     if session.showscope is True:
         query &= (db.userquestion.activescope == session.view_scope)
-        if session.view_scope == '1 Global':
-            query &= db.userquestion.activescope == session.view_scope
-        elif session.view_scope == '2 Continental':
-            query = query & (db.userquestion.activescope == session.view_scope) & (
-                db.userquestion.continent == session.vwcontinent)
-        elif session.view_scope == '3 National':
-            query = query & (db.userquestion.activescope == session.view_scope) & (
-                db.userquestion.country == session.vwcountry)
-        elif session.view_scope == '4 Provincial':
-            query = query & (db.userquestion.activescope == session.view_scope) & (
-                db.userquestion.subdivision == session.vwsubdivision)
-        elif session.view_scope == '5 Local':
+        if session.view_scope == '1 National':
+            query = query & (db.userquestion.country == session.vwcountry)
+        elif session.view_scope == '2 Regional':
+            query = query & (db.userquestion.subdivision == session.vwsubdivision)
+        elif session.view_scope == '3 Local':
             # TO DO make this use geoquery
             query = query & (db.userquestion.activescope == session.view_scope) & (
                 db.userquestion.subdivision == session.vwsubdivision)

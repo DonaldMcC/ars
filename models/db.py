@@ -193,11 +193,14 @@ db.define_table('subdivision',
                 Field('countryid', 'reference country'),
                 format='%(subdiv_name)s')
 
+unspec_country=db(db.country.country_name == 'Unspecified').select(
+            db.country.id, cache=(cache.ram, 3600), cacheable=True).first().id
+
 userfields = [
     Field('numratings', 'integer', default=0, readable=False, writable=False, label='Answered'),
     Field('exclude_categories', 'list:reference category', label='Excluded Categories',
           comment="Select categories you DON'T want to see"),
-    Field('country', 'reference country', default='Unspecified', label='Country'),
+    Field('country', 'reference country', default=unspec_country, label='Country'),
     Field('subdivision', 'reference subdivision', default='Unspecified', label='Sub-division'),
     Field('town', 'string', default='Unspecified', label='Town'),
     Field('avatar', 'upload'),
@@ -221,6 +224,8 @@ auth.settings.auth_manager_role = 'manager'
 auth.settings.username_case_sensitive = False
 auth.settings.email_case_sensitive = False
 
+# query = (db.subdivision.countryid == db.auth_user.country)
+# db.auth_user.subdivision.requires=[IS_IN_DB(db(query), db.subdivision.id, '%(subdiv_name)s')]
 
 #db.auth_user.coord.requires = IS_GEOLOCATION()
 #db.auth_user.coord.widget = location_widget()

@@ -16,18 +16,15 @@ $(document).ready(function(){
         $(this).next().toggleClass("btn-success")
         });
 
-    if($("[id='view_scope1 Global']").prop('checked'))
-            {$('#viewscope_country__row').hide();
-            $('#viewscope_subdivision__row').hide()
-            $('#viewscope_coord__row').hide()
-            $('#viewscope_searchrange__row').hide()};
-    if($("[id='view_scope2 National']").prop('checked'))
+    if($("[id='view_scope1 National']").prop('checked'))
             {$('#viewscope_country__row').show();
-            $('#viewscope_subdivision__row').hide()};
-    if($("[id='view_scope3 Regional']").prop('checked'))
+            $('#viewscope_subdivision__row').hide();
+            $('#viewscope_coord__row').hide();
+            $('#viewscope_searchrange__row').hide()};
+    if($("[id='view_scope2 Regional']").prop('checked'))
             {$('#viewscope_country__row').show();
             $('#viewscope_subdivision__row').show()};
-     if($("[id='view_scope4 Local']").prop('checked'))
+     if($("[id='view_scope3 Local']").prop('checked'))
             {$('#viewscope_country__row').hide();
             $('#viewscope_subdivision__row').hide();
             $('#viewscope_coord__row').show();
@@ -88,54 +85,38 @@ $(document).ready(function(){
                 $('#viewscope_searchrange__row').hide();;}
             else
                 {$('#viewscope_view_scope__row').show();
-            if($("[id='scope2 National']").prop('checked'))
+            if($("[id='scope1 National']").prop('checked'))
             {$('#viewscope_country__row').show();
             $('#viewscope_subdivision__row').hide()};
             $('#viewscope_coord__row').hide();
             $('#viewscope_searchrange__row').hide();
-            if($("[id='scope1 Global']").prop('checked'))
-            {$('#viewscope_country__row').hide();
-            $('#viewscope_subdivision__row').hide()
-            $('#viewscope_coord__row').hide();
-            $('#viewscope_searchrange__row').hide();};
-            if($("[id='scope2 Natioanal']").prop('checked'))
-            {$('#viewscope_country__row').hide();
-            $('#viewscope_subdivision__row').hide()
-            $('#viewscope_coord__row').hide();
-            $('#viewscope_searchrange__row').hide();};
-            if($("[id='scope3 Regional']").prop('checked'))
+            if($("[id='scope2 Regional']").prop('checked'))
             {$('#viewscope_country__row').show();
             $('#viewscope_subdivision__row').show()
             $('#viewscope_coord__row').hide();
             $('#viewscope_searchrange__row').hide()}
-            if($("[id='scope4 Local']").prop('checked'))
+            if($("[id='scope3 Local']").prop('checked'))
             {$('#viewscope_country__row').hide();
             $('#viewscope_subdivision__row').hide()
             $('#viewscope_coord__row').show()
             $('#viewscope_searchrange__row').show()}
-            
             ;}
 
             });
 
    $('input[name=view_scope]').change(function(){
             console.log('scope change')
-            if($("[id='view_scope1 Global']").prop('checked'))
-            {$('#viewscope_country__row').hide();
-            $('#viewscope_subdivision__row').hide()
-            $('#viewscope_coord__row').hide()
-            $('#viewscope_searchrange__row').hide()};
-            if($("[id='view_scope2 National']").prop('checked'))
+            if($("[id='view_scope1 National']").prop('checked'))
             {$('#viewscope_country__row').show();
             $('#viewscope_subdivision__row').hide()
             $('#viewscope_coord__row').hide()
             $('#viewscope_searchrange__row').hide()};
-            if($("[id='view_scope3 Regional']").prop('checked'))
+            if($("[id='view_scope2 Regional']").prop('checked'))
             {$('#viewscope_country__row').show();
             $('#viewscope_subdivision__row').show()
             $('#viewscope_coord__row').hide()
             $('#viewscope_searchrange__row').hide()};
-            if($("[id='view_scope4 Local']").prop('checked'))
+            if($("[id='view_scope3 Local']").prop('checked'))
             {$('#viewscope_country__row').hide();
             $('#viewscope_subdivision__row').hide();
             $('#viewscope_coord__row').show()
