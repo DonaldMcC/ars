@@ -59,6 +59,13 @@ db.define_table('system_scope',
                 Field('description', 'string'),
                 format='%(description)s')
 
+if auth.user:
+    defcountry=db(db.country.id == auth.user.country).select(db.country.id).first().id
+    defsubdivision=db(db.subdivision.id == auth.user.subdivision).select(db.subdivision.id).first().id
+else:
+    defcountry=db(db.country.country_name == 'Unspecified').select(db.country.id).first().id
+    defsubdivision=db(db.subdivision.subdiv_name == 'Unspecified').select(db.subdivision.id).first().id
+
 db.define_table('activity',
                 Field('activity', 'string', label="What's happening"),
                 Field('details', 'text', label='Details'),
@@ -67,10 +74,9 @@ db.define_table('activity',
                 Field('fbid','integer', label='Facebook Id'),
                 Field('organisation', label='Organisation Involved (if any)'),
                 Field('orgtype', label='Organisation Type', default='Not Known'),
-                Field('country', 'reference country', label='country',
-                      default=db(db.country.id == auth.user.country).select(db.country.id).first().id),
+                Field('country', 'reference country', label='country',default=defcountry),
                 Field('subdivision', 'reference subdivision', label='area/subdivision',
-                      default=db(db.subdivision.id == auth.user.subdivision).select(db.subdivision.id).first().id),
+                      default=defsubdivision),
                 Field('town', 'string', label='Town'),
                 Field('coord', 'string', label='Where', comment='Approx location of the activity'),
                 Field('activity_long', 'double', default=0.0, label='Latitude', writable=False, readable=False),

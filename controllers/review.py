@@ -97,12 +97,12 @@ def newindex():
     if session.vwcountry:
         form.vars.country = session.vwcountry
     else:
-        form.vars.country = auth.c1 #TODO this will change to default country at some point
+        form.vars.country = defcountry
 
     if session.vwsubdivision:
         form.vars.subdivision = session.vwsubdivision
     else:
-        form.vars.subdivision = 1
+        form.vars.subdivision = defsubdivision
 
     if session.coord:
         form.vars.coord = session.coord
@@ -253,7 +253,7 @@ def activity():
 
 @auth.requires_login()
 def my_answers():
-    fields = ['sortorder', 'showscope', 'view_scope', 'continent', 'country', 'subdivision',
+    fields = ['sortorder', 'showscope', 'view_scope', 'country', 'subdivision',
               'showcat', 'category']
     form = SQLFORM(db.viewscope, fields=fields, formstyle='table3cols')
 
