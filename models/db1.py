@@ -63,8 +63,8 @@ if auth.user:
     defcountry=db(db.country.id == auth.user.country).select(db.country.id).first().id
     defsubdivision=db(db.subdivision.id == auth.user.subdivision).select(db.subdivision.id).first().id
 else:
-    defcountry=db(db.country.country_name == 'Unspecified').select(db.country.id).first().id
-    defsubdivision=db(db.subdivision.subdiv_name == 'Unspecified').select(db.subdivision.id).first().id
+    defcountry=unspec_country
+    defsubdivision=unspec_subdivision
 
 db.define_table('activity',
                 Field('activity', 'string', label="What's happening"),

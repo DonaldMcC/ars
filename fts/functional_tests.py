@@ -9,6 +9,7 @@ import sys, urllib2
 from selenium import webdriver
 import subprocess
 import sys
+import os
 import os.path
 
 sys.path.append('./fts/lib')
@@ -46,10 +47,11 @@ class FunctionalTest(unittest.TestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument('--disable-extensions')
 
-        #self.browser = webdriver.Chrome('c:\python27\scripts\chromedriver.exe',chrome_options=chrome_options)
-        #self.browser.maximize_window()
-
-        self.browser = webdriver.Chrome()
+        if os.name == 'nt':
+            self.browser = webdriver.Chrome('c:\python27\scripts\chromedriver.exe',chrome_options=chrome_options)
+        else:
+            self.browser = webdriver.Chrome() #this is on path in linux in /usr/local/bin
+        self.browser.maximize_window()
         self.browser.implicitly_wait(10)
 
     @classmethod    

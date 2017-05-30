@@ -193,15 +193,23 @@ db.define_table('subdivision',
                 Field('countryid', 'reference country'),
                 format='%(subdiv_name)s')
 
-unspec_country=db(db.country.country_name == 'Unspecified').select(
+try:
+    unspec_country=db(db.country.country_name == 'Unspecified').select(
             db.country.id, cache=(cache.ram, 3600), cacheable=True).first().id
+except AttributeError:
+    unspec_country=None
+
+try:
+    unspec_subdivision = db(db.subdivision.subdiv_name == 'Unspecified').select(db.subdivision.id).first().id
+except AttributeError:
+    unspec_subdivision = None
 
 userfields = [
     Field('numratings', 'integer', default=0, readable=False, writable=False, label='Answered'),
     Field('exclude_categories', 'list:reference category', label='Excluded Categories',
           comment="Select categories you DON'T want to see"),
     Field('country', 'reference country', default=unspec_country, label='Country'),
-    Field('subdivision', 'reference subdivision', default='Unspecified', label='Sub-division'),
+    Field('subdivision', 'reference subdivision', default=unspec_subdivision, label='Sub-division'),
     Field('town', 'string', default='Unspecified', label='Town'),
     Field('avatar', 'upload'),
     Field('avatar_thumb', 'upload', compute=lambda r: generate_thumbnail(r['avatar'], 120, 120, True)),
