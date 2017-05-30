@@ -194,8 +194,7 @@ db.define_table('subdivision',
                 format='%(subdiv_name)s')
 
 try:
-    unspec_country=db(db.country.country_name == 'Unspecified').select(
-            db.country.id, cache=(cache.ram, 3600), cacheable=True).first().id
+    unspec_country=db(db.country.country_name == 'Unspecified').select(db.country.id).first().id
 except AttributeError:
     unspec_country=None
 

@@ -41,9 +41,6 @@ class AddBasicAction (FunctionalTest):
         questiontext = WebDriverWait(self, 10).until(lambda self: self.browser.find_element_by_name('details'))
         questiontext.send_keys(itemtext)
 
-        scope = WebDriverWait(self, 10).until(lambda self: self.browser.find_element_by_name('activescope'))
-        scope.send_keys('1 International')
-
         submit_button = self.browser.find_element_by_css_selector("#submit_record__row input")
         submit_button.click()
         time.sleep(1)
