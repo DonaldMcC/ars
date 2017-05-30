@@ -46,10 +46,10 @@ class FunctionalTest(unittest.TestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument('--disable-extensions')
 
-        self.browser = webdriver.Chrome('c:\python27\scripts\chromedriver.exe',chrome_options=chrome_options)
-        self.browser.maximize_window()
+        #self.browser = webdriver.Chrome('c:\python27\scripts\chromedriver.exe',chrome_options=chrome_options)
+        #self.browser.maximize_window()
 
-        #self.browser = webdriver.Chrome()
+        self.browser = webdriver.Chrome()
         self.browser.implicitly_wait(10)
 
     @classmethod    
@@ -86,7 +86,7 @@ def run_functional_tests(pattern=None):
         tests = unittest.defaultTestLoader.discover('fts', pattern=pattern_with_globs)
 
     # neither of these actually write to file so just using >filename.html on the command line
-    # runner = unittest.TextTestRunner()
+    #runner = unittest.TextTestRunner()
     runner = HTMLTestRunner.HTMLTestRunner(verbosity=2)
     runner.run(tests)
 
