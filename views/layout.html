@@ -76,8 +76,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-            <div id="logo"></div>
-         <!-- {{=response.logo or ''}} -->
+            <div id="logo"><img src="{{=URL('static','images/arslogo1.png')}}" alt="ARS Logo" style="width:80px;height:50px;"></div>
         </div>
         <div class="collapse navbar-collapse navbar-ex1-collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -159,7 +158,7 @@
     <script src="{{=URL('static','js/jquery.dataTables.min.js')}}"></script>
     <script src="{{=URL('static','js/dataTables.bootstrap.min.js')}}"></script>
     <script src="{{=URL('static','js/dataTables.responsive.min.js')}}"></script>
-    <script src="{{=URL('static','js/logod3v4.js')}}"></script>
+
 
     {{load_multiselect = globals().get('load_multiselect', False)}}
     {{if load_multiselect:}}

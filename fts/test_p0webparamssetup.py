@@ -39,7 +39,7 @@ class AnswerQuestion (FunctionalTest):
         self.browser.find_element_by_name("website_url").send_keys("127.0.0.1:8081")
 
         self.browser.find_element_by_name("website_title").clear()
-        self.browser.find_element_by_name("website_title").send_keys("Net Decision Making")
+        self.browser.find_element_by_name("website_title").send_keys("Activity Recording System")
 
 
         submit_button = self.browser.find_element_by_css_selector("#submit_record__row input")
