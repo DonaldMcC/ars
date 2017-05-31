@@ -254,9 +254,19 @@ def activity():
 
 @auth.requires_login()
 def my_ratings():
-    fields = ['sortorder', 'showscope', 'view_scope', 'country', 'subdivision',
-              'showcat', 'category']
-    form = SQLFORM(db.viewscope, fields=fields, formstyle='table3cols')
+    # start of this should be the same as new index
+
+    fields = ['selection', 'sortorder', 'filters', 'view_scope', 'country', 'subdivision',
+              'category', 'startdate', 'enddate', 'coord', 'searchrange']
+
+    page = request.args(3, cast=int, default=0)
+    reset = request.args(4, default='No')  # This will reset just the selection
+
+
+    form = SQLFORM(db.viewscope, fields=fields, formstyle='table3cols',
+                   buttons=[TAG.button('Submit', _type="submit", _class="btn btn-primary btn-group"),
+                            TAG.button('Reset', _type="button", _class="btn btn-primary btn-group",
+                                       _onClick="parent.location='%s' " % URL('newindex', 'my_ratings'))])
 
     page = 0
     q = 'Que'
