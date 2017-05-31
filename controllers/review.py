@@ -25,6 +25,7 @@
 
 from datetime import timedelta
 
+# my activity not working
 
 @auth.requires(True, requires_login=requires_login)
 def newindex():
@@ -42,7 +43,7 @@ def newindex():
     # 5 Items Per Page
 
     # Valid values for view are:
-    # draft,  completed, all - default will be completed
+    # Draft,  Complete, all - default will be completed
     # Valid values for query are:
     # reviewed, notreviewed, all and my - my is only valid if logged in
     # Valid values for sort order are
@@ -252,7 +253,7 @@ def activity():
 
 
 @auth.requires_login()
-def my_answers():
+def my_ratings():
     fields = ['sortorder', 'showscope', 'view_scope', 'country', 'subdivision',
               'showcat', 'category']
     form = SQLFORM(db.viewscope, fields=fields, formstyle='table3cols')
@@ -315,32 +316,27 @@ def my_answers():
     # Actions can be selected for all or status of Agreed, In Progress or Disagreed
     # Rejected actions cannot be reviewed
 
-    query = (db.userquestion.auth_userid == auth.user.id)
+    query = (db.user_rating.auth_userid == auth.user.id)
     if q == 'Resolved':
-        query &= db.userquestion.status == 'Resolved'
+        query &= db.user_rating.status == 'Resolved'
     elif q == 'InProg':  # we are not showing this for philosophical reasons at the moment
-        query &= db.userquestion.status == 'In Progress'
+        query &= db.user_rating.status == 'In Progress'
 
     if session.showcat is True:
-        query &= (db.userquestion.category == session.category)
+        query &= (db.user_rating.category == session.category)
     if session.showscope is True:
-        query &= (db.userquestion.activescope == session.view_scope)
+        query &= (db.user_rating.activescope == session.view_scope)
         if session.view_scope == '1 National':
-            query = query & (db.userquestion.country == session.vwcountry)
+            query = query & (db.user_rating.country == session.vwcountry)
         elif session.view_scope == '2 Regional':
-            query = query & (db.userquestion.subdivision == session.vwsubdivision)
+            query = query & (db.user_rating.subdivision == session.vwsubdivision)
         elif session.view_scope == '3 Local':
             # TO DO make this use geoquery
-            query = query & (db.userquestion.activescope == session.view_scope) & (
-                db.userquestion.subdivision == session.vwsubdivision)
+            query = query & (db.user_rating.activescope == session.view_scope) & (
+                db.user_rating.subdivision == session.vwsubdivision)
 
     # And they can be sorted by create date, priority and due date    
-    sortby = ~db.userquestion.ansdate
-
-    if s == 'Resolved':
-        sortby = ~db.userquestion.resolvedate
-    elif s == 'Category':
-        sortby = db.userquestion.category
+    sortby = ~db.user_rating.createdate
 
     quests = db(query).select(orderby=[sortby], limitby=limitby)
 

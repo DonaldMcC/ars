@@ -99,7 +99,7 @@ if useappconfig:
     response.formstyle = myconf.get('forms.formstyle')  # or 'bootstrap3_stacked' or 'bootstrap2' or other
     response.form_label_separator = myconf.get('forms.separator') or ''
 else:
-    response.formstyle = 'bootstrap3_stacked'
+    response.formstyle = 'bootstrap3_inline' # bootstrap3_stacked
     response.form_label_separator = ''
 
 # -------------------------------------------------------------------------

@@ -64,9 +64,9 @@ response.menu = [
       ('Create', False, URL('submit', 'index')),
       ('Review', False, URL('review', 'newindex')),
       ('My ARS', False, '#',
-     [('My Reports', False, URL('review', 'newindex', args=['issue', 'my'])),
-      ('My Draft Reports', False, URL('review', 'newindex', args=['items', 'Draft'])),
-      ('My Reviews', False, URL('review', 'my_answers'))])
+     [('My Reports', False, URL('review', 'newindex', args=['Complete', 'my'])),
+      ('My Draft Reports', False, URL('review', 'newindex', args=['Draft', 'my'])),
+      ('My Reviews', False, URL('review', 'my_ratings'))])
 ]
 
 
