@@ -27,6 +27,7 @@ from datetime import timedelta
 
 # my activity not working
 
+
 @auth.requires(True, requires_login=requires_login)
 def newindex():
     # this provides an ajax version of review and 2 sections being draft and completed issues.
@@ -54,13 +55,12 @@ def newindex():
     heading = 'Resolved Questions'
     message = ''
 
-
     v = request.args(0, default='Complete')  # lets use this for my
     q = request.args(1, default='All')  # this matters
     s = request.args(2, default='Rating')  # this is the sort order
 
     fields = ['selection', 'sortorder', 'filters', 'view_scope', 'country', 'subdivision',
-                  'category', 'startdate', 'enddate', 'coord', 'searchrange']
+              'category', 'startdate', 'enddate', 'coord', 'searchrange']
 
     page = request.args(3, cast=int, default=0)
     reset = request.args(4, default='No')  # This will reset just the selection
@@ -125,7 +125,7 @@ def newindex():
     items_per_page = 50
     limitby = (page * items_per_page, (page + 1) * items_per_page + 1)
 
-    print 'sel', session.selection
+    #   print ('sel', session.selection)
     if form.validate():
         if debug:
             print(session.selection)
@@ -243,25 +243,17 @@ def activity():
     submitted = db(crtquery).select(orderby=orderstr)
     resolved = db(resquery).select(orderby=resolvestr)
     challenged = db(challquery).select(orderby=challstr)
-
-    if session.exclue_groups:
-        alreadyans = resolved.exclude(lambda r: r.answer_group in session.exclude_groups)
-        alreadyans = submitted.exclude(lambda r: r.answer_group in session.exclude_groups)
-        alreadyans = challenged.exclude(lambda r: r.answer_group in session.exclude_groups)
-
     return dict(submitted=submitted, resolved=resolved, challenged=challenged)
 
 
 @auth.requires_login()
 def my_ratings():
     # start of this should be the same as new index
-
     fields = ['selection', 'sortorder', 'filters', 'view_scope', 'country', 'subdivision',
               'category', 'startdate', 'enddate', 'coord', 'searchrange']
 
     page = request.args(3, cast=int, default=0)
     reset = request.args(4, default='No')  # This will reset just the selection
-
 
     form = SQLFORM(db.viewscope, fields=fields, formstyle='table3cols',
                    buttons=[TAG.button('Submit', _type="submit", _class="btn btn-primary btn-group"),
@@ -321,33 +313,32 @@ def my_ratings():
             s = 'Category'
 
         page = 0
-        redirect(URL('my_answers', args=[page, q, s]))
+        redirect(URL('my_ratings', args=[page, q, s]))
 
     # Actions can be selected for all or status of Agreed, In Progress or Disagreed
     # Rejected actions cannot be reviewed
 
-    query = (db.user_rating.auth_userid == auth.user.id)
-    if q == 'Resolved':
-        query &= db.user_rating.status == 'Resolved'
-    elif q == 'InProg':  # we are not showing this for philosophical reasons at the moment
-        query &= db.user_rating.status == 'In Progress'
+    query = (db.user_rating.auth_userid == auth.user.id) & (db.user_rating.activityid == db.activity.id)
 
-    if session.showcat is True:
-        query &= (db.user_rating.category == session.category)
+    if session.date_filter: #TODO make sure createdate gets updated when draft is completed
+        query &= (db.activity.createdate >= startdate) & (db.activity.createdate <= enddate)
+
     if session.showscope is True:
-        query &= (db.user_rating.activescope == session.view_scope)
         if session.view_scope == '1 National':
-            query = query & (db.user_rating.country == session.vwcountry)
+            query = query & (db.activity.country == session.vwcountry)
         elif session.view_scope == '2 Regional':
-            query = query & (db.user_rating.subdivision == session.vwsubdivision)
+            query = query & (db.activity.subdivision == session.vwsubdivision)
         elif session.view_scope == '3 Local':
             # TO DO make this use geoquery
-            query = query & (db.user_rating.activescope == session.view_scope) & (
-                db.user_rating.subdivision == session.vwsubdivision)
+            minlat, minlong, maxlat, maxlong = getbbox(session.coord, session.searchrange)
+            query &= ((current.db.activity.question_lat > minlat) &
+                      (current.db.activity.question_lat < maxlat) &
+                      (current.db.activity.question_long > minlong) &
+                      (current.db.activity.question_long < maxlong))
 
     # And they can be sorted by create date, priority and due date    
     sortby = ~db.user_rating.createdate
 
-    quests = db(query).select(orderby=[sortby], limitby=limitby)
+    activity = db(query).select(orderby=[sortby], limitby=limitby)
 
-    return dict(form=form, quests=quests, page=page, items_per_page=items_per_page, q=q, s=s, query=query)
+    return dict(form=form, activity=activity, page=page, items_per_page=items_per_page, q=q, s=s, query=query)

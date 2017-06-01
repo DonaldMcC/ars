@@ -3,30 +3,29 @@
 {{from ndsfunctions import truncquest}}
 <h1>My Ratings</h1>
 {{=form}}
-
-{{if quests:}}
+{{if activity:}}
 <table id='TabAnswers' class='table issuetable2 table-bordered table-condensed'>
 				<thead>
 					<tr>
-						<th width="5%">Level</th>
-                        <th width="50%">Question</th>
-                        <th width="8%">Status</th>
-                        <th width="15%">My Answer</th>
-                        <th width="16%">Correct Ans</th>
-                        <th width="6%">Score</th>                     
+						<th width="10%">Date</th>
+                        <th width="58%">Summary</th>
+                        <th width="8%">My Rating</th>
+                        <th width="8%">Avg Rating</th>
+                        <th width="8%">My Impact</th>
+                        <th width="8%">Avg Impact</th>
                     </tr>
                 </thead>
                     <tbody>
-{{for i,row in enumerate(quests):}}
+{{for i,row in enumerate(activity):}}
 {{if i==items_per_page: break}}
 {{rowans=0}}
-<tr class={{if row.questionid.status == 'In Progress':}}"text-info"{{elif row.answer == row.questionid.correctans:}}"text-success"((rowans=1}}{{else:}}"text-warning"((rowans=2}}{{pass}}>
-<th><a href="{{=URL('viewquest','index',args=[row.questionid.id])}}">{{=row.questionid.question_level}}</a></th>
-<td>{{=truncquest(row.questionid.questiontext)}}</td>
-<td>{{if row.status == 'In Progress':}}In Progress{{else:}}{{=row.questionid.status}} {{pass}}</td>
-<td>{{=row.questionid.answers[row.answer]}}</td>
-<td>{{if row.status == 'In Progress':}}-{{else:}}{{=row.questionid.correctanstext()}} {{pass}}</td>
-<td>{{=row.score}}</td>
+<tr>
+<th><a href="{{=URL('viewquest','index',args=[row.activity.id])}}">{{=prettydate(row.user_rating.createdate)}}</a></th>
+<td>{{=truncquest(row.activity.activity)}}</td>
+<td>{{=row.user_rating.rating}}</td>
+<td>{{=row.activity.rating}}</td>
+<td>{{=row.user_rating.impact}}</td>
+<td>{{=row.activity.impact}}</td>
 </tr>
 {{pass}}
  </tbody>
@@ -36,7 +35,7 @@
 <INPUT TYPE=BUTTON class="btn btn-primary btn-sm" onClick="parent.location='{{=URL(args=[page-1,q,s])}}'" VALUE="Previous">
 {{pass}}
 
-{{if len(quests)>items_per_page:}}
+{{if len(activity)>items_per_page:}}
 <INPUT TYPE=BUTTON class="btn btn-primary btn-sm" onClick="parent.location='{{=URL(args=[page+1,q,s])}}'" VALUE="Next">
 {{pass}}
 
