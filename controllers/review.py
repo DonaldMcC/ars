@@ -264,19 +264,19 @@ def my_ratings():
     q = 'Que'
     s = 'Resolved'
 
-    if session.showscope is None:
-        form.vars.showscope = False
-        form.vars.showcat = False
-    else:
-        form.vars.showscope = session.showscope
-        form.vars.showcat = session.showcat
-        form.vars.category = session.category
-        form.vars.view_scope = session.view_scope
-        form.vars.country = session.vwcountry
-        form.vars.subdivision = session.vwsubdivision
 
-    if session.sortorder is not None:
-        form.vars.asortorder = session.sortorder
+    form.vars.showscope = session.showscope
+    form.vars.filters = session.filters
+    form.vars.showcat = session.showcat
+    form.vars.category = session.category
+    form.vars.view_scope = session.view_scope
+    form.vars.country = session.vwcountry
+    form.vars.subdivision = session.vwsubdivision
+
+    if session.sortorder:
+        form.vars.sortorder = session.sortorder
+    else:
+        form.vars.sortorder = '3 Create Date'
 
     if len(request.args):
         page = int(request.args[0])
@@ -298,6 +298,7 @@ def my_ratings():
 
     if form.validate():
         session.showcat = form.vars.showcat
+        session.filters = form.vars.filters
         session.showscope = form.vars.showscope
         session.view_scope = form.vars.view_scope
         session.category = form.vars.category
@@ -320,10 +321,14 @@ def my_ratings():
 
     query = (db.user_rating.auth_userid == auth.user.id) & (db.user_rating.activityid == db.activity.id)
 
-    if session.date_filter: #TODO make sure createdate gets updated when draft is completed
-        query &= (db.activity.createdate >= startdate) & (db.activity.createdate <= enddate)
+    if 'Date' in session.filters: #TODO make sure createdate gets updated when draft is completed
+        query &= (db.activity.createdate >= form.vars.startdate) & (db.activity.createdate <= form.vars.enddate)
 
-    if session.showscope is True:
+    if 'Category' in session.filters:
+        query &= (db.activity.category == session.category)
+
+    if 'Scope' in session.filters:
+        print 'here'
         if session.view_scope == '1 National':
             query = query & (db.activity.country == session.vwcountry)
         elif session.view_scope == '2 Regional':

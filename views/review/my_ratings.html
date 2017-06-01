@@ -3,6 +3,7 @@
 {{from ndsfunctions import truncquest}}
 <h1>My Ratings</h1>
 {{=form}}
+        {{=query}}
 {{if activity:}}
 <table id='TabAnswers' class='table issuetable2 table-bordered table-condensed'>
 				<thead>
@@ -18,7 +19,6 @@
                     <tbody>
 {{for i,row in enumerate(activity):}}
 {{if i==items_per_page: break}}
-{{rowans=0}}
 <tr>
 <th><a href="{{=URL('viewquest','index',args=[row.activity.id])}}">{{=prettydate(row.user_rating.createdate)}}</a></th>
 <td>{{=truncquest(row.activity.activity)}}</td>
