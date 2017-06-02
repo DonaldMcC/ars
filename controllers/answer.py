@@ -78,6 +78,7 @@ def answer_question():
         form2.vars.auth_userid = auth.user.id
         form2.vars.activityid = activityid
         form2.vars.rating = form2.vars.rating[0]
+        form2.vars.impact = form2.vars.impact[0]  # TODO check this works with 10 ratings 2 chars
         new_numratings = activity.numratings
         if form2.deleted:
             db(db.user_rating.id == activityid).delete()
