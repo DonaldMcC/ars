@@ -1,7 +1,3 @@
-function showsubdivValue(newValue)
-{
-	document.getElementById("activity_subdivision").value=newValue;
-}
 
 var qtext ='';
 

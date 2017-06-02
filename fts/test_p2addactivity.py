@@ -27,25 +27,35 @@ class AddBasicAction (FunctionalTest):
 
         submit_button = self.browser.find_element_by_css_selector("#submit_record__row input")
         submit_button.click()
-        time.sleep(1)    
+        time.sleep(1)
+
+        fields = ['activity', 'details', 'fullname', 'organisation', 'orgtype',
+                  'country', 'subdivision', 'town', 'coord', 'status', 'category']
 
     # probably a different dict here as well
-    @data(('/submit/index', 'Lets get this done', dict('country' 'Thailand')),
-          ('/submit/index', 'The world is under-achieving', dict('country' 'Thailand')))
+    @data(('/submit/index', 'Lets get this done', {'fullname': 'DMcC', 'orgtype': 'Cther', 'organisation': 'DMcC Ltd',
+                                                    'town': 'bla'}),
+          ('/submit/index', 'The world is under-achieving',
+           {'fullname': 'DMcC', 'orgtype': 'Cther', 'organisation': 'DMcC Ltd',
+            'country': 'Thailand', 'subdivision': 'Unspecified', 'town': 'bla', 'category': 'Energy'}))
     @unpack
     def test_question(self, urltxt, itemtext, othervals):
         self.url = ROOT + urltxt
         get_browser = self.browser.get(self.url)
-        time.sleep(2)  # still getting blank category for some reason but not if loaded manually
-        # questiontext = self.browser.find_element_by_name('questiontext')
+        time.sleep(1)  # still getting blank category for some reason but not if loaded manually
         questiontext = WebDriverWait(self, 10).until(lambda self: self.browser.find_element_by_name('activity'))
         questiontext.send_keys(itemtext)
         questiontext = WebDriverWait(self, 10).until(lambda self: self.browser.find_element_by_name('details'))
         questiontext.send_keys(itemtext)
 
+        for key in sorted(othervals):  # sorting to ensure country before subdivision
+            keycode = WebDriverWait(self, 10).until(lambda self: self.browser.find_element_by_name(key))
+            keycode.send_keys(othervals[key])
+            if key == 'country':
+                time.sleep(1)
+
         submit_button = self.browser.find_element_by_css_selector("#submit_record__row input")
         submit_button.click()
-        time.sleep(1)
-  
+
         welcome_message = self.browser.find_element_by_css_selector(".w2p_flash")
         self.assertIn('Details Submitted', welcome_message.text)

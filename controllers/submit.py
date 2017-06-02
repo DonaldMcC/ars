@@ -18,7 +18,7 @@ def index():
     db.activity.status.requires = IS_IN_SET(['Draft', 'Complete'])
 
     heading = 'Submit Activity'
-    fields = ['activity', 'details', 'fullname', 'organisation', 'orgtype',
+    fields = ['activity', 'details', 'fullname', 'orgtype', 'organisation',
               'country', 'subdivision', 'town', 'coord', 'status', 'category']
 
     if activityid:
@@ -68,7 +68,7 @@ def accept_activity():
 def subdivn():
     # This is called via Ajax to populate the subdivision dropdown on change of country
     # now changed to derelationalise country subdivision
-    result = "<option value='Unspecified'>Unspecified</option>"
+    result = "<option value='%s'>Unspecified</option>" % unspec_subdivision # TODO make this unspec subdivn id later
     # print request.vars.country
     subdivns = db(db.subdivision.countryid == request.vars.country).select(
         db.subdivision.id, db.subdivision.subdiv_name, orderby=db.subdivision.subdiv_name,
