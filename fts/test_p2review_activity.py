@@ -19,7 +19,10 @@ class AnswerAction (FunctionalTest):
         self.url = ROOT + '/default/user/login'        
         get_browser = self.browser.get(self.url)
 
-    @data((USERS['USER2'], USERS['PASSWORD2'], 'The world is under-achieving'), (USERS['USER3'], USERS['PASSWORD3'], 'Lets get this done'))
+
+    # think we add dictionary with keys linked to selectiosn and then do same to ratings
+    @data((USERS['USER2'], USERS['PASSWORD2'], 'The world is under-achieving'),
+          (USERS['USER3'], USERS['PASSWORD3'], 'Lets get this done'))
     @unpack
     def test_answer_action(self, user, passwd, result):
         mailstring = user + '@user.com'

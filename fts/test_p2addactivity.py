@@ -29,9 +29,11 @@ class AddBasicAction (FunctionalTest):
         submit_button.click()
         time.sleep(1)    
 
-    @data(('/submit/index', 'Lets get this done'), ('/submit/index', 'The world is under-achieving'))
+    # probably a different dict here as well
+    @data(('/submit/index', 'Lets get this done', dict('country' 'Thailand')),
+          ('/submit/index', 'The world is under-achieving', dict('country' 'Thailand')))
     @unpack
-    def test_question(self, urltxt, itemtext):
+    def test_question(self, urltxt, itemtext, othervals):
         self.url = ROOT + urltxt
         get_browser = self.browser.get(self.url)
         time.sleep(2)  # still getting blank category for some reason but not if loaded manually
