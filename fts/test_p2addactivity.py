@@ -29,15 +29,20 @@ class AddBasicAction (FunctionalTest):
         submit_button.click()
         time.sleep(1)
 
-        fields = ['activity', 'details', 'fullname', 'organisation', 'orgtype',
-                  'country', 'subdivision', 'town', 'coord', 'status', 'category']
-
-    # probably a different dict here as well
     @data(('/submit/index', 'Lets get this done', {'fullname': 'DMcC', 'orgtype': 'Cther', 'organisation': 'DMcC Ltd',
                                                     'town': 'bla'}),
           ('/submit/index', 'The world is under-achieving',
            {'fullname': 'DMcC', 'orgtype': 'Cther', 'organisation': 'DMcC Ltd',
-            'country': 'Thailand', 'subdivision': 'Unspecified', 'town': 'bla', 'category': 'Energy'}))
+            'country': 'United States', 'subdivision': 'Unspecified', 'town': 'bla', 'category': 'Energy'}),
+          ('/submit/index', 'The world is under-achieving',
+           {'fullname': 'DMcC', 'orgtype': 'Cther', 'organisation': 'DMcC Ltd',
+            'country': 'Thailand', 'subdivision': 'Unspecified', 'town': 'bla', 'category': 'Energy'}),
+          ('/submit/index', 'Trump is causing trouble',
+           {'fullname': 'Donald Trump', 'orgtype': 'Cther', 'organisation': 'DMcC Ltd',
+            'country': 'United States', 'Umspecified': 'Unspecified', 'town': 'bla', 'category': 'Energy'}),
+          ('/submit/index', 'Ransomware is infecting computers',
+           {'fullname': 'Not Yet Known', 'orgtype': 'Cther', 'organisation': 'Unknown',
+            'country': 'United Kingdom', 'subdivision': 'Scotland', 'town': 'Glasgow', 'category': 'Energy'}))
     @unpack
     def test_question(self, urltxt, itemtext, othervals):
         self.url = ROOT + urltxt

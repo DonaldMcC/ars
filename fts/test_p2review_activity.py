@@ -19,12 +19,14 @@ class AnswerAction (FunctionalTest):
         self.url = ROOT + '/default/user/login'        
         get_browser = self.browser.get(self.url)
 
+    fields = ['selection', 'sortorder', 'filters', 'view_scope', 'country', 'subdivision',
+              'category', 'startdate', 'enddate', 'coord', 'searchrange']
 
     # think we add dictionary with keys linked to selectiosn and then do same to ratings
-    @data((USERS['USER2'], USERS['PASSWORD2'], 'The world is under-achieving'),
-          (USERS['USER3'], USERS['PASSWORD3'], 'Lets get this done'))
+    @data((USERS['USER2'], USERS['PASSWORD2'], 'The world is under-achieving', {'fullname': 'DMcC', 'orgtype': 'Cther'}),
+          (USERS['USER3'], USERS['PASSWORD3'], 'Lets get this done'), {'fullname': 'DMcC', 'orgtype': 'Cther'})
     @unpack
-    def test_answer_action(self, user, passwd, result):
+    def test_answer_action(self, user, passwd, result, othervals):
         mailstring = user + '@user.com'
 
         email = WebDriverWait(self, 10).until(lambda self: self.browser.find_element_by_name("email"))
