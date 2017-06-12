@@ -9,9 +9,7 @@ else:
     from plugin_haystack import SimpleBackend
 from plugin_location_picker import IS_GEOLOCATION, location_widget
 
-
 scopes = ['1 National', '2 Regional', '3 Local']
-
 
 db.define_table('website_parameters',
                 Field('website_name', label=T('Website name'), comment=T('Not currently used')),
@@ -101,13 +99,11 @@ db.activity.orgtype.requires=IS_IN_SET(['Corporation', 'Government', 'Not For Pr
 db.activity.coord.requires = IS_GEOLOCATION()
 db.activity.coord.widget = location_widget()
 
-
 if backend == 'SimpleBackend':
     indsearch = Haystack(db.activity, backend=SimpleBackend)
 else:
     indsearch = Haystack(db.activity, backend=WhooshBackend, indexdir='whoosh_' + request.application)
 indsearch.indexes('activity', 'details')
-
 
 db.define_table('image',
                 Field('activity', 'reference activity'),

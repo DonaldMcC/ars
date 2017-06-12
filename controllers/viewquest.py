@@ -89,9 +89,6 @@ def index():
             uqanswered = True
             uq = uqs.first()
 
-    # viewable = can_view(quest.status, quest.resolvemethod, uqanswered, quest.answer_group,
-    #                    quest.duedate, auth.user_id, quest.auth_userid)
-
     if uqanswered:
         uqrating = uq.rating
         uqimpact = uq.impact

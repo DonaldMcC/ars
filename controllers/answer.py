@@ -1,7 +1,7 @@
 # - Coding UTF8 -
 #
-# Networked Decision Making
-# Development Sites (source code): http://github.com/DonaldMcC/gdms
+# Activity Recording System
+# Development Sites (source code): http://github.com/DonaldMcC/ars
 #
 # Demo Sites (Pythonanywhere)
 #   http://netdecisionmaking.com/nds/
@@ -17,14 +17,8 @@
 # With thanks to Guido, Massimo and many other that make this sort of thing
 # much easier than it used to be
 
-from ndsfunctions import score_question
-
 """
-This controller handles the selection of an available question and the 
-answering of it
-6 Mar 2013 - rewrite to improve logic and consider 'late' answers to questions
-which might be quite common as operation of selection is to always give the
-highest priority question out to all users and work on resolving it first
+This controller handles the review and rating of activities
 
     exposes:
     http://..../[app]/answer/all_questiona - basically still the same
@@ -109,6 +103,8 @@ def quickanswer():
     """
     This will be left as may be persuaded to allow quick rating of activity - however current thinking is
     that users should not be rating activity they have not looked at in some detail
+
+    NOT CURRENTLY CALLED
     """
 
     activityid = request.args(0, cast=int, default=0)

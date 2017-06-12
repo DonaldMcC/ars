@@ -5,7 +5,6 @@ db.define_table('plugin_comments_post',
                 Field('body', 'text', requires=IS_NOT_EMPTY()),
                 auth.signature)
 
-
 def fullname(user_id):
     if user_id is None:
         return "Unknown"

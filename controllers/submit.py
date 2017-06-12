@@ -61,7 +61,6 @@ def accept_activity():
     status = request.args(1, default='InProg')
     item = getitem(activityid)
     activity = db(db.activity.id == activityid).select().first()
-
     return dict(status=status, item=item, activity=activity)
 
 

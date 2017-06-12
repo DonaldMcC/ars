@@ -18,7 +18,8 @@
 # much easier than it used to be
 
 
-from ndsfunctions import creategraph
+#
+# from ndsfunctions import creategraph
 
 if __name__ != '__main__':
     from gluon import *

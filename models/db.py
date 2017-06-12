@@ -13,7 +13,6 @@
 # be redirected to HTTPS, uncomment the line below:
 # -------------------------------------------------------------------------
 
-
 # -------------------------------------------------------------------------
 # app configuration made easy. Look inside private/appconfig.ini
 # -------------------------------------------------------------------------
@@ -25,7 +24,6 @@ from gluon import *
 from gluon.custom_import import track_changes
 from plugin_location_picker import IS_GEOLOCATION, location_widget
 not_empty = IS_NOT_EMPTY()
-
 
 # once in production change to False
 track_changes(True)
@@ -39,7 +37,6 @@ if os.path.exists(path):
     useappconfig = True
 else:
     useappconfig = False
-
 
 
 requires_login=False
@@ -149,9 +146,6 @@ plugins = PluginManager()
 # configure email
 # -------------------------------------------------------------------------
 mail = auth.settings.mailer
-#mail.settings.server = 'logging' if request.is_local else myconf.get('smtp.server')
-#mail.settings.sender = myconf.get('smtp.sender')
-#mail.settings.login = myconf.get('smtp.login')
 if useappconfig:
     mail.settings.tls = myconf.get('smtp.tls') or False
     mail.settings.ssl = myconf.get('smtp.ssl') or False
@@ -173,7 +167,6 @@ if useappconfig:
     ad_client = myconf.take('google.ad_client')
     ad_slot = myconf.take('google.ad_slot', cast=int)
     init = myconf.take('init.initialised', cast=int)
-
 
 db.define_table('category',
                 Field('cat_desc', 'string', label='Category',
@@ -214,14 +207,10 @@ userfields = [
     Field('avatar_thumb', 'upload', compute=lambda r: generate_thumbnail(r['avatar'], 120, 120, True)),
     Field('show_help', 'boolean', default=True, label='Show help')]
 
-
-
 userfields.append(Field('coord', 'string', label='Lat/Longitude'))
 userfields.append(Field('localrange', 'integer', default= 100, label='Radius for local issues',
                         comment='In Kilometers',requires=IS_INT_IN_RANGE(1, 1000,
                         error_message='Must be between 1 and 1000')))
-
-
 
 auth.settings.extra_fields['auth_user'] = userfields
 
@@ -231,11 +220,9 @@ auth.settings.auth_manager_role = 'manager'
 auth.settings.username_case_sensitive = False
 auth.settings.email_case_sensitive = False
 
-# query = (db.subdivision.countryid == db.auth_user.country)
-# db.auth_user.subdivision.requires=[IS_IN_DB(db(query), db.subdivision.id, '%(subdiv_name)s')]
 
-#db.auth_user.coord.requires = IS_GEOLOCATION()
-#db.auth_user.coord.widget = location_widget()
+db.auth_user.coord.requires = IS_GEOLOCATION()
+db.auth_user.coord.widget = location_widget()
 # , widget=range_widget #TODO see if this can be scalable
 
 # -------------------------------------------------------------------------
@@ -244,25 +231,3 @@ auth.settings.email_case_sensitive = False
 auth.settings.registration_requires_verification = False
 auth.settings.registration_requires_approval = False
 auth.settings.reset_password_requires_verification = True
-
-# -------------------------------------------------------------------------
-# Define your tables below (or better in another model file) for example
-#
-# >>> db.define_table('mytable', Field('myfield', 'string'))
-#
-# Fields can be 'string','text','password','integer','double','boolean'
-#       'date','time','datetime','blob','upload', 'reference TABLENAME'
-# There is an implicit 'id integer autoincrement' field
-# Consult manual for more options, validators, etc.
-#
-# More API examples for controllers:
-#
-# >>> db.mytable.insert(myfield='value')
-# >>> rows = db(db.mytable.myfield == 'value').select(db.mytable.ALL)
-# >>> for row in rows: print row.id, row.myfield
-# -------------------------------------------------------------------------
-
-# -------------------------------------------------------------------------
-# after defining tables, uncomment below to enable auditing
-# -------------------------------------------------------------------------
-# auth.enable_record_versioning(db)
