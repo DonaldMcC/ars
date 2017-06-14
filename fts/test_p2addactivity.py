@@ -39,7 +39,7 @@ class AddBasicAction (FunctionalTest):
             'country': 'Thailand', 'subdivision': 'Unspecified', 'town': 'bla', 'category': 'Energy'}),
           ('/submit/index', 'Trump is causing trouble',
            {'fullname': 'Donald Trump', 'orgtype': 'Cther', 'organisation': 'DMcC Ltd',
-            'country': 'United States', 'Umspecified': 'Unspecified', 'town': 'bla', 'category': 'Energy'}),
+            'country': 'United States', 'subdivision': 'Unspecified', 'town': 'bla', 'category': 'Energy'}),
           ('/submit/index', 'Ransomware is infecting computers',
            {'fullname': 'Not Yet Known', 'orgtype': 'Cther', 'organisation': 'Unknown',
             'country': 'United Kingdom', 'subdivision': 'Scotland', 'town': 'Glasgow', 'category': 'Energy'}))

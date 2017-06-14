@@ -24,7 +24,7 @@ class AnswerAction (FunctionalTest):
 
     # think we add dictionary with keys linked to selectiosn and then do same to ratings
     @data((USERS['USER2'], USERS['PASSWORD2'], 'The world is under-achieving', {'fullname': 'DMcC', 'orgtype': 'Cther'}),
-          (USERS['USER3'], USERS['PASSWORD3'], 'Lets get this done'), {'fullname': 'DMcC', 'orgtype': 'Cther'})
+          (USERS['USER3'], USERS['PASSWORD3'], 'Lets get this done', {'fullname': 'DMcC', 'orgtype': 'Cther'}))
     @unpack
     def test_answer_action(self, user, passwd, result, othervals):
         mailstring = user + '@user.com'

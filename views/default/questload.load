@@ -1,4 +1,4 @@
-{{from ndsfunctions import truncquest}}
+{{from arsfunctions import truncquest}}
 {{from ndspermt import get_buttons}}
 <table id='{{=q}}' class='table issuetable2 table-bordered table-condensed  dt-responsive' >
 				<thead>

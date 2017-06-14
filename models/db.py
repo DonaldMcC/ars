@@ -29,7 +29,7 @@ not_empty = IS_NOT_EMPTY()
 track_changes(True)
 
 from gluon import current
-from ndsfunctions import generate_thumbnail
+from arsfunctions import generate_thumbnail
 
 filename = 'private/appconfig.ini'
 path = os.path.join(request.folder, filename)

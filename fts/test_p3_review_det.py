@@ -1,3 +1,4 @@
+# - Coding UTF8 -
 # These tests are all based on the tutorial at http://killer-web-development.com/
 # if registration is successful this may work but lets
 # try and get user logged in first
@@ -10,7 +11,6 @@ from ddt import ddt, data, unpack
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-
 
 @ddt
 class AnswerAction (FunctionalTest):
@@ -49,7 +49,7 @@ class AnswerAction (FunctionalTest):
         scope2.click()
 
         #Select(self.browser.find_element_by_id("viewscope_country")).select_by_visible_text("United Arab Emirates")
-        #Select(self.browser.find_element_by_id("viewscope_subdivision")).select_by_visible_text(u"Abū Ȥaby [Abu Dhabi]")
+        #Select(self.browser.find_element_by_id("viewscope_subdivision")).select_by_visible_text("[Abu Dhabi]")
         #Select(self.browser.find_element_by_id("viewscope_category")).select_by_visible_text("No Poverty")
 
         #startdate = self.browser.find_element_by_id("viewscope_startdate").click()
