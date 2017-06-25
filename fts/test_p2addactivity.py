@@ -34,15 +34,15 @@ class AddBasicAction (FunctionalTest):
           ('/submit/index', 'The world is under-achieving',
            {'fullname': 'DMcC', 'orgtype': 'Cther', 'organisation': 'DMcC Ltd',
             'country': 'United States', 'subdivision': 'Unspecified', 'town': 'bla', 'category': 'Energy'}),
-          ('/submit/index', 'The world is under-achieving',
+          ('/submit/index', 'Thailand Unspecified Subdivision Category Energy',
            {'fullname': 'DMcC', 'orgtype': 'Cther', 'organisation': 'DMcC Ltd',
             'country': 'Thailand', 'subdivision': 'Unspecified', 'town': 'bla', 'category': 'Energy'}),
-          ('/submit/index', 'Trump is causing trouble',
-           {'fullname': 'Donald Trump', 'orgtype': 'Cther', 'organisation': 'DMcC Ltd',
-            'country': 'United States', 'subdivision': 'Unspecified', 'town': 'bla', 'category': 'Energy'}),
+          ('/submit/index', 'United Kingdom subdivision Staffordshire',
+           {'fullname': 'King James VI', 'orgtype': 'Government', 'organisation': 'DMcC Ltd',
+            'country': 'United Kingdom', 'subdivision': 'Staffordshire', 'town': 'bla', 'category': 'Energy'}),
           ('/submit/index', 'Ransomware is infecting computers',
            {'fullname': 'Not Yet Known', 'orgtype': 'Cther', 'organisation': 'Unknown',
-            'country': 'United Kingdom', 'subdivision': 'Scotland', 'town': 'Glasgow', 'category': 'Energy'}))
+            'country': 'Unspecified', 'subdivision': 'Unspecified', 'town': 'Not Known', 'category': 'Industry'}))
     @unpack
     def test_question(self, urltxt, itemtext, othervals):
         self.url = ROOT + urltxt
