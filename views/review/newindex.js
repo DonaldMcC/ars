@@ -84,23 +84,23 @@ $(document).ready(function(){
                 $('#viewscope_coord__row').hide();
                 $('#viewscope_searchrange__row').hide();;}
             else
-                {$('#viewscope_view_scope__row').show();
-            if($("[id='scope1 National']").prop('checked'))
+            {$('#viewscope_view_scope__row').show();
+            if($("[id='view_scope1 National']").prop('checked'))
             {$('#viewscope_country__row').show();
             $('#viewscope_subdivision__row').hide()};
             $('#viewscope_coord__row').hide();
             $('#viewscope_searchrange__row').hide();
-            if($("[id='scope2 Regional']").prop('checked'))
+            if($("[id='view_scope2 Regional']").prop('checked'))
             {$('#viewscope_country__row').show();
-            $('#viewscope_subdivision__row').show()
+            $('#viewscope_subdivision__row').show();
             $('#viewscope_coord__row').hide();
             $('#viewscope_searchrange__row').hide()}
-            if($("[id='scope3 Local']").prop('checked'))
+            if($("[id='view_scope3 Local']").prop('checked'))
             {$('#viewscope_country__row').hide();
-            $('#viewscope_subdivision__row').hide()
-            $('#viewscope_coord__row').show()
+            $('#viewscope_subdivision__row').hide();
+            $('#viewscope_coord__row').show();
             $('#viewscope_searchrange__row').show()}
-            ;}
+            }
 
             });
 
